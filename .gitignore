@@ -2,3 +2,8 @@
 /.classpath
 /.settings
 /target
+
+*.jsfdia
+
+.DS_Store
+
