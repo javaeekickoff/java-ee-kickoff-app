@@ -37,7 +37,7 @@
 
 		<dependency>
 			<groupId>javax</groupId>
-			<artifactId>javaee-web-api</artifactId>
+			<artifactId>javaee-api</artifactId>
 			<version>${jee.version}</version>
 			<scope>provided</scope>
 		</dependency>
