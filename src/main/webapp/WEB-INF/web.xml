@@ -1,16 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee    http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
-	<context-param>
-		<param-name>org.omnifaces.FACES_VIEWS_SCAN_PATHS</param-name>
-		<param-value>/*.xhtml</param-value>
-	</context-param>
+
+
 	<context-param>
 		<param-name>org.omnifaces.FACES_VIEWS_SCANNED_VIEWS_ALWAYS_EXTENSIONLESS</param-name>
 		<param-value>true</param-value>
 	</context-param>
+	<context-param>
+		<param-name>org.omnifaces.FACES_VIEWS_SCAN_PATHS</param-name>
+		<param-value>/*.xhtml</param-value>
+	</context-param>
+	
 	
 	<welcome-file-list>
 		<welcome-file>index</welcome-file>
 	</welcome-file-list>
+
+	<data-source>
+		<name>java:app/KickoffApp/kickoffDS</name>
+		<class-name>org.h2.jdbcx.JdbcDataSource</class-name>
+		<url>jdbc:h2:~/kickoff;DB_CLOSE_DELAY=-1</url>
+		<user>sa</user>
+		<password>sa</password>
+		<transactional>true</transactional>
+		<isolation-level>TRANSACTION_READ_COMMITTED</isolation-level>
+		<initial-pool-size>2</initial-pool-size>
+		<max-pool-size>10</max-pool-size>
+		<min-pool-size>5</min-pool-size>
+		<max-statements>0</max-statements>
+	</data-source>
 </web-app>
