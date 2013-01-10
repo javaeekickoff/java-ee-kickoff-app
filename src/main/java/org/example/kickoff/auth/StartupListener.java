@@ -1,4 +1,4 @@
-package org.example.auth;
+package org.example.kickoff.auth;
 
 import javax.security.auth.message.config.AuthConfigFactory;
 import javax.servlet.ServletContextEvent;

@@ -1,4 +1,4 @@
-package org.example.auth;
+package org.example.kickoff.auth;
 
 import java.util.Map;
 

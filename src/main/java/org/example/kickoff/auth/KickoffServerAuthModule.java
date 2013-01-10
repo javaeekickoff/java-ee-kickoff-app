@@ -1,4 +1,4 @@
-package org.example.auth;
+package org.example.kickoff.auth;
 
 import static javax.security.auth.message.AuthStatus.SEND_SUCCESS;
 import static javax.security.auth.message.AuthStatus.SUCCESS;
