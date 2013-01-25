@@ -21,6 +21,8 @@ import javax.security.auth.message.module.ServerAuthModule;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.example.kickoff.cdi.Beans;
+
 /**
  * The actual Server Authentication Module AKA SAM.
  *
@@ -39,6 +41,8 @@ public class KickoffServerAuthModule implements ServerAuthModule {
 	@Override
 	public AuthStatus validateRequest(MessageInfo messageInfo, Subject clientSubject, Subject serviceSubject) throws AuthException {
 
+		Authenticator authenticator = Beans.getReference(Authenticator.class);
+		
 		// Normally we would check here for authentication credentials being
 		// present and perform actual authentication, or in absence of those
 		// ask the user in some way to authenticate.
@@ -49,12 +53,12 @@ public class KickoffServerAuthModule implements ServerAuthModule {
 		// user principal) "test" (=basically user name, or user id)
 		// This will be the name of the principal returned by e.g.
 		// HttpServletRequest#getUserPrincipal
-		CallerPrincipalCallback callerPrincipalCallback = new CallerPrincipalCallback(clientSubject, "test");
+		CallerPrincipalCallback callerPrincipalCallback = new CallerPrincipalCallback(clientSubject, authenticator.getUserName());
 
 		// Create a handler to add the group (AKA role) "architect"
 		// This is what e.g. HttpServletRequest#isUserInRole and @RolesAllowed
 		// test for
-		GroupPrincipalCallback groupPrincipalCallback = new GroupPrincipalCallback(clientSubject, new String[] { "architect" });
+		GroupPrincipalCallback groupPrincipalCallback = new GroupPrincipalCallback(clientSubject, (String[]) authenticator.getApplicationRoles().toArray());
 
 		// Execute the handlers we created above. This will typically add the
 		// "test" principal and the "architect"
