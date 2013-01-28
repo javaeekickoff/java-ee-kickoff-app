@@ -1,0 +1,15 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+>    
+    <h:body>
+ 
+       #{backingBean.hello}
+ 
+        <h:form>      
+            <h:inputText value="#{loginBean.loginUserName}" />
+            <h:inputText value="#{loginBean.loginPassword}" />                  
+            <h:commandButton value="Say Hello" action="#{loginBean.login}" />
+        </h:form>
+ 
+    </h:body>
+</html>

@@ -5,10 +5,10 @@
 	<security-constraint>
 		<web-resource-collection>
 			<web-resource-name>Admin</web-resource-name>
-			<url-pattern>/admin/*</url-pattern>
+			<url-pattern>/servlet</url-pattern>
 		</web-resource-collection>
 		<auth-constraint>
-			<role-name>administrator</role-name>
+			<role-name>architect</role-name>
 		</auth-constraint>
 	</security-constraint>
 
