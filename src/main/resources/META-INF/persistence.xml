@@ -4,6 +4,9 @@
 	<persistence-unit name="kickoffApp">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<jta-data-source>java:app/KickoffApp/kickoffDS</jta-data-source>
+
+		<mapping-file>META-INF/User.xml</mapping-file>
+
 		<properties>
 
 			<!-- Hibernate properties -->
