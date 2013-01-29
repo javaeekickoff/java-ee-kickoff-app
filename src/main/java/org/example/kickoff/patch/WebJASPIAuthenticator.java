@@ -36,9 +36,11 @@ import javax.security.auth.Subject;
 import javax.security.auth.message.callback.CallerPrincipalCallback;
 import javax.security.auth.message.callback.GroupPrincipalCallback;
 import javax.security.auth.message.callback.PasswordValidationCallback;
+import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.catalina.Realm;
 import org.apache.catalina.Session;
 import org.apache.catalina.authenticator.AuthenticatorBase;
 import org.apache.catalina.authenticator.Constants;
@@ -70,6 +72,21 @@ public class WebJASPIAuthenticator extends AuthenticatorBase {
     protected String serverAuthenticationManagerClass;
 
     protected boolean secureResponse;
+//    
+//	public void login(Request request, String username, String password) throws ServletException {
+//
+//		// Is there an SSO session against which we can try to reauthenticate?
+//		String ssoId = (String) request.getNote(Constants.REQ_SSOID_NOTE);
+//		if (ssoId != null && reauthenticateFromSSO(ssoId, request)) {
+//			return;
+//		}
+//
+//		Realm realm = context.getRealm();
+//		Principal principal = realm.authenticate(username, password);
+//		if (principal != null) {
+//			register(request, request.getResponseFacade(), principal, Constants.LOGIN_METHOD, username, password);
+//		}
+//	}
 
     @Override
     protected boolean authenticate(Request request, HttpServletResponse response, LoginConfig config) throws IOException {

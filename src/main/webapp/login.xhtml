@@ -3,13 +3,32 @@
 >    
     <h:body>
  
-       #{backingBean.hello}
+ 	
+ 		<p>
+			Logged in name: #{request.userPrincipal.name}
+		</p>
+		
+		<hr/>
  
         <h:form>      
-            <h:inputText value="#{loginBean.loginUserName}" />
-            <h:inputText value="#{loginBean.loginPassword}" />                  
-            <h:commandButton value="Say Hello" action="#{loginBean.login}" />
+        	<p>
+            	User name: <h:inputText value="#{loginBean.loginUserName}" />
+            </p>
+            <p>
+            	Password: <h:inputText value="#{loginBean.loginPassword}" />
+            </p>
+            <br/>
+            <p>                  
+            	<h:commandButton value="Login" action="#{loginBean.login}" />
+            	<h:commandButton value="Logout" action="#{loginBean.logout}" />
+            </p>
         </h:form>
+        
+        <hr/>
+        
+        <p>
+        	Protected resource: <h:outputLink value="servlet">servlet</h:outputLink>
+        </p>
  
     </h:body>
 </html>
