@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<jboss-web>
+    <security-domain>other</security-domain>
+    <valve>
+        <class-name>org.example.kickoff.patch.WebJASPIAuthenticator</class-name>
+    </valve>
+</jboss-web>

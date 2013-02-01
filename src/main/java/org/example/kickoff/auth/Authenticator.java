@@ -1,7 +1,8 @@
 package org.example.kickoff.auth;
 
+import static java.util.Arrays.asList;
+
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.enterprise.context.SessionScoped;
@@ -10,17 +11,21 @@ import javax.enterprise.context.SessionScoped;
 public class Authenticator implements Serializable {
 
 	private static final long serialVersionUID = 6233826583476075733L;
+	
+	private String userName;
+	private List<String> applicationRoles;
 
 	public void authenticate(String name, String password) {
-		// ...
+		userName = name;
+		applicationRoles = asList("architect");
 	}
 
 	public String getUserName() {
-		return "test";
+		return userName;
 	}
 
 	public List<String> getApplicationRoles() {
-		return Arrays.asList("architect");
+		return applicationRoles;
 	}
 
 }

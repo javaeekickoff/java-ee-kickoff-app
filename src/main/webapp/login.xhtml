@@ -1,0 +1,34 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+>    
+    <h:body>
+ 
+ 	
+ 		<p>
+			Logged in name: #{request.userPrincipal.name}
+		</p>
+		
+		<hr/>
+ 
+        <h:form>      
+        	<p>
+            	User name: <h:inputText value="#{loginBean.loginUserName}" />
+            </p>
+            <p>
+            	Password: <h:inputText value="#{loginBean.loginPassword}" />
+            </p>
+            <br/>
+            <p>                  
+            	<h:commandButton value="Login" action="#{loginBean.login}" />
+            	<h:commandButton value="Logout" action="#{loginBean.logout}" />
+            </p>
+        </h:form>
+        
+        <hr/>
+        
+        <p>
+        	Protected resource: <h:outputLink value="servlet">servlet</h:outputLink>
+        </p>
+ 
+    </h:body>
+</html>
