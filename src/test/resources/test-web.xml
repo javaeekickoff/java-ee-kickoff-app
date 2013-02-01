@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee    http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
 	
 	<data-source>
-		<name>java:app/KickoffApp/kickoffDS</name>
+		<name>java:app/KickoffApp/kickoffUnitTestDS</name>
 		<class-name>org.h2.jdbcx.JdbcDataSource</class-name>
 		<url>jdbc:h2:mem:kickoff;DB_CLOSE_DELAY=-1</url>
 		<user>sa</user>

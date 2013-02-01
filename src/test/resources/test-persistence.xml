@@ -3,7 +3,7 @@
 
 	<persistence-unit name="kickoffApp">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
-		<jta-data-source>java:app/KickoffApp/kickoffDS</jta-data-source>
+		<jta-data-source>java:app/KickoffApp/kickoffUnitTestDS</jta-data-source>
 		
 		<mapping-file>META-INF/User.xml</mapping-file>
 

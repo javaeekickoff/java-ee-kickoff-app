@@ -2,9 +2,18 @@ package org.example.kickoff.business;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+
+import java.nio.charset.StandardCharsets;
 
 import javax.ejb.EJB;
 
+import org.apache.catalina.util.Base64;
+import org.dbunit.dataset.DataSetException;
+import org.dbunit.dataset.IDataSet;
+import org.dbunit.dataset.xml.FlatXmlDataSet;
+import org.dbunit.dataset.xml.FlatXmlProducer;
+import org.example.kickoff.arquillian.ArquillianDBUnitTestBase;
 import org.example.kickoff.model.BaseEntity;
 import org.example.kickoff.model.User;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -17,15 +26,18 @@ import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
 import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.xml.sax.InputSource;
 
 @RunWith(Arquillian.class)
-public class UserServiceTest {
+public class UserServiceTest extends ArquillianDBUnitTestBase {
 
 	@Deployment
 	public static Archive<?> createDeployment() {
 		MavenDependencyResolver resolver = DependencyResolvers.use(MavenDependencyResolver.class).loadMetadataFromPom("pom.xml");
 
 		WebArchive archive = ShrinkWrap.create(WebArchive.class);
+
+		archive.addClass(ArquillianDBUnitTestBase.class);
 
 		archive.addClasses(UserService.class);
 		archive.addClasses(InvalidCredentialsException.class);
@@ -38,6 +50,9 @@ public class UserServiceTest {
 		archive.addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
 
 		archive.addAsLibraries(resolver.artifact("com.h2database:h2").resolveAsFiles());
+		archive.addAsLibraries(resolver.artifact("org.dbunit:dbunit").resolveAsFiles());
+
+		archive.addAsResource("dbunit/user_service_test.xml");
 
 		return archive;
 	}
@@ -56,9 +71,37 @@ public class UserServiceTest {
 		assertNotNull(user.getCredentials());
 		assertNotNull(user.getId());
 
+		System.out.println(new String(Base64.encode(user.getCredentials().getPasswordHash()), StandardCharsets.UTF_8));
+		System.out.println(new String(Base64.encode(user.getCredentials().getSalt()), StandardCharsets.UTF_8));
 		User loggedInUser = userService.getUserByCredentials("name", "TeSt");
 
 		assertNotNull(loggedInUser);
 		assertEquals(user, loggedInUser);
 	}
+
+	@Test
+	public void testGetUserByCredentials() {
+		User user = userService.getUserByCredentials("Test1", "TeSt");
+		assertNotNull(user);
+		assertEquals("Test1", user.getUsername());
+
+		try {
+			userService.getUserByCredentials("Test1", "wrong_password");
+			fail();
+		}
+		catch (Exception e) {
+			// Exception should be thrown here
+		}
+	}
+
+	@Override
+	protected String getLookupName() {
+		return "java:app/KickoffApp/kickoffUnitTestDS";
+	}
+
+	@Override
+	protected IDataSet getTestDataSet() throws DataSetException {
+		return new FlatXmlDataSet(new FlatXmlProducer(new InputSource(this.getClass().getResourceAsStream("/dbunit/user_service_test.xml"))));
+	}
+
 }
