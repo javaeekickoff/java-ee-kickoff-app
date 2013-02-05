@@ -4,11 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
-import java.nio.charset.StandardCharsets;
-
 import javax.ejb.EJB;
 
-import org.apache.catalina.util.Base64;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
@@ -71,8 +68,6 @@ public class UserServiceTest extends ArquillianDBUnitTestBase {
 		assertNotNull(user.getCredentials());
 		assertNotNull(user.getId());
 
-		System.out.println(new String(Base64.encode(user.getCredentials().getPasswordHash()), StandardCharsets.UTF_8));
-		System.out.println(new String(Base64.encode(user.getCredentials().getSalt()), StandardCharsets.UTF_8));
 		User loggedInUser = userService.getUserByCredentials("name", "TeSt");
 
 		assertNotNull(loggedInUser);
@@ -92,6 +87,26 @@ public class UserServiceTest extends ArquillianDBUnitTestBase {
 		catch (Exception e) {
 			// Exception should be thrown here
 		}
+
+	}
+
+	@Test
+	public void testUpdatePassword() {
+		User user = userService.getUserByCredentials("Test1", "TeSt");
+
+		userService.updatePassword(user, "TeSt2");
+
+		try {
+			userService.getUserByCredentials("Test1", "TeSt");
+			fail();
+		}
+		catch (Exception e) {
+			// Exception should be thrown here
+		}
+
+		User loggedInUser = userService.getUserByCredentials("Test1", "TeSt2");
+		assertNotNull(loggedInUser);
+		assertEquals(user, loggedInUser);
 	}
 
 	@Override

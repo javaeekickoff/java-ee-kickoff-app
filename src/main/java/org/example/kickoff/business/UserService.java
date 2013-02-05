@@ -29,8 +29,6 @@ public class UserService {
 	}
 
 	public void updatePassword(User user, String password) {
-		entityManager.refresh(user);
-
 		setCredentials(user, password);
 
 		entityManager.merge(user);

@@ -28,7 +28,7 @@ public abstract class ArquillianDBUnitTestBase {
 		return NONE;
 	}
 
-	protected void setupDatabaseConfig(DatabaseConfig config) {
+	protected void setupDatabaseConfig(DatabaseConfig config) throws Exception {
 	}
 
 	@Before
@@ -41,18 +41,22 @@ public abstract class ArquillianDBUnitTestBase {
 		performDatabaseOperation(getTeardownOperation());
 	}
 
-	private void performDatabaseOperation(DatabaseOperation databaseOperation) throws Exception, DatabaseUnitException, SQLException {
-		if (!NONE.equals(getSetupOperation())) {
-			IDatabaseConnection connection = getConnection();
+	private void performDatabaseOperation(DatabaseOperation databaseOperation) throws DatabaseUnitException, SQLException, Exception {
+		IDataSet testDataSet = getTestDataSet();
 
+		if (NONE.equals(getSetupOperation()) || testDataSet == null) {
+			return;
+		}
+
+		IDatabaseConnection connection = getConnection();
+
+		try {
 			setupDatabaseConfig(connection.getConfig());
 
-			try {
-				databaseOperation.execute(connection, getTestDataSet());
-			}
-			finally {
-				connection.close();
-			}
+			databaseOperation.execute(connection, testDataSet);
+		}
+		finally {
+			connection.close();
 		}
 	}
 
