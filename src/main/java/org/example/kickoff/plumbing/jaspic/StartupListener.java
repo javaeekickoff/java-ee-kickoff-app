@@ -1,10 +1,15 @@
-package org.example.kickoff.auth;
+package org.example.kickoff.plumbing.jaspic;
 
 import javax.security.auth.message.config.AuthConfigFactory;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
+/**
+ * 
+ * @author arjan
+ *
+ */
 @WebListener
 public class StartupListener implements ServletContextListener {
 
