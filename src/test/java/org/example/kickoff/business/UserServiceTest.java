@@ -11,6 +11,7 @@ import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.dataset.xml.FlatXmlProducer;
 import org.example.kickoff.arquillian.ArquillianDBUnitTestBase;
+import org.example.kickoff.jpa.JPA;
 import org.example.kickoff.model.BaseEntity;
 import org.example.kickoff.model.User;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -37,7 +38,7 @@ public class UserServiceTest extends ArquillianDBUnitTestBase {
 		archive.addClass(ArquillianDBUnitTestBase.class);
 
 		archive.addClasses(UserService.class);
-		archive.addClasses(InvalidCredentialsException.class);
+		archive.addClasses(InvalidCredentialsException.class, JPA.class);
 		archive.addPackage(BaseEntity.class.getPackage());
 		archive.addAsWebInfResource("test-web.xml", "web.xml");
 
@@ -84,10 +85,17 @@ public class UserServiceTest extends ArquillianDBUnitTestBase {
 			userService.getUserByCredentials("Test1", "wrong_password");
 			fail();
 		}
-		catch (Exception e) {
+		catch (InvalidCredentialsException e) {
 			// Exception should be thrown here
 		}
 
+		try {
+			userService.getUserByCredentials("non_existant_username", "password");
+			fail();
+		}
+		catch (InvalidCredentialsException e) {
+			// Exception should be thrown here
+		}
 	}
 
 	@Test

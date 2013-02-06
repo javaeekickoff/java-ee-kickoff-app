@@ -1,6 +1,7 @@
 package org.example.kickoff.business;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.example.kickoff.jpa.JPA.getOptionalSingleResult;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -35,8 +36,8 @@ public class UserService {
 	}
 
 	public User getUserByCredentials(String username, String password) {
-		Credentials credentials = entityManager.createNamedQuery("Credentials.getByUsername", Credentials.class).setParameter("username", username)
-				.getSingleResult();
+		Credentials credentials = getOptionalSingleResult(entityManager.createNamedQuery("Credentials.getByUsername", Credentials.class)
+				.setParameter("username", username));
 
 		if (credentials == null) {
 			throw new InvalidCredentialsException("Invalid username");
