@@ -22,6 +22,11 @@ import javax.servlet.http.HttpServletResponse;
  * 
  */
 public abstract class HttpServerAuthModule implements ServerAuthModule {
+	
+	// Key in the MessageInfo Map that when present AND set to true indicated a protected resource is being accessed.
+	// When the resource is not protected, GlassFish omits the key altogether. WebSphere does insert the key and sets
+	// it to false.
+	private static final String IS_MANDATORY_KEY = "javax.security.auth.message.MessagePolicy.isMandatory";
 
 	private CallbackHandler handler;
 	private final Class<?>[] supportedMessageTypes = new Class[] { HttpServletRequest.class, HttpServletResponse.class };
@@ -48,8 +53,9 @@ public abstract class HttpServerAuthModule implements ServerAuthModule {
 		// types and casting should always work.
 		HttpServletRequest request = (HttpServletRequest) messageInfo.getRequestMessage();
 		HttpServletResponse response = (HttpServletResponse) messageInfo.getResponseMessage();
+		boolean isProtectedResource = Boolean.valueOf((String) messageInfo.getMap().get(IS_MANDATORY_KEY));
 		
-		AuthStatus status = validateHttpRequest(request, response, clientSubject, handler);
+		AuthStatus status = validateHttpRequest(request, response, clientSubject, handler, isProtectedResource);
 		if (status == AuthStatus.FAILURE) {
 			throw new IllegalStateException("Servlet Container Profile SAM should not return status FAILURE. This is for CLIENT SAMs only");
 		}
@@ -73,11 +79,11 @@ public abstract class HttpServerAuthModule implements ServerAuthModule {
 		}
 	}
 	
-	public AuthStatus validateHttpRequest(HttpServletRequest request, HttpServletResponse response, MessageInfo messageInfo, Subject clientSubject, Subject serviceSubject, CallbackHandler handler) {
-		return validateHttpRequest(request, response, clientSubject, handler);
+	public AuthStatus validateHttpRequest(HttpServletRequest request, HttpServletResponse response, MessageInfo messageInfo, Subject clientSubject, Subject serviceSubject, CallbackHandler handler, boolean isProtectedResource) {
+		return validateHttpRequest(request, response, clientSubject, handler, isProtectedResource);
 	}
 	
-	public AuthStatus validateHttpRequest(HttpServletRequest request, HttpServletResponse response, Subject clientSubject, CallbackHandler handler) {
+	public AuthStatus validateHttpRequest(HttpServletRequest request, HttpServletResponse response, Subject clientSubject, CallbackHandler handler, boolean isProtectedResource) {
 		throw new IllegalStateException("Not implemented");
 	}
 

@@ -33,7 +33,7 @@
 	<data-source>
 		<name>java:app/KickoffApp/kickoffDS</name>
 		<class-name>org.h2.jdbcx.JdbcDataSource</class-name>
-		<url>jdbc:h2:~/kickoff;DB_CLOSE_DELAY=-1</url>
+		<url>jdbc:h2:mem:test</url>
 		<user>sa</user>
 		<password>sa</password>
 		<transactional>true</transactional>

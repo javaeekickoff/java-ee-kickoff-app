@@ -1,6 +1,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
     xmlns:h="http://java.sun.com/jsf/html"
 >    
+
+	 <h:head>
+        <title>Welcome to the JSF EJB JPA example project</title>
+    </h:head>
+
     <h:body>
  
  	
@@ -19,15 +24,20 @@
             </p>
             <br/>
             <p>                  
-            	<h:commandButton value="Login" action="#{loginBean.login}" />
-            	<h:commandButton value="Logout" action="#{loginBean.logout}" />
+            	<h:commandButton value="Login" action="#{loginBean.login}" disabled="#{!empty request.userPrincipal}" />
+            	<h:commandButton value="Logout" action="#{loginBean.logout}" disabled="#{empty request.userPrincipal}" />
             </p>
         </h:form>
         
         <hr/>
         
+        <h:link outcome="login" >bla</h:link>
+        
         <p>
         	Protected resource: <h:outputLink value="servlet">servlet</h:outputLink>
+        </p>
+        <p>
+        	Public resource: <h:outputLink value="public">public</h:outputLink>
         </p>
  
     </h:body>

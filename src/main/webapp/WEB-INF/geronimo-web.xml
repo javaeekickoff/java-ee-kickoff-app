@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<web:web-app 
+    xmlns:dep="http://geronimo.apache.org/xml/ns/deployment-1.2" 
+    xmlns:sec="http://geronimo.apache.org/xml/ns/security-2.0" 
+    xmlns:web="http://geronimo.apache.org/xml/ns/j2ee/web-2.0.1"
+>
+    
+    <dep:environment>
+        <dep:moduleId>
+            <dep:groupId>default</dep:groupId>
+            <dep:artifactId>javaee6-auth-example</dep:artifactId>
+            <dep:version>1.0</dep:version>
+        </dep:moduleId>
+    </dep:environment>
+      
+    <web:security-realm-name>geronimo-admin</web:security-realm-name>
+    
+    <sec:security>
+        <sec:role-mappings>
+            <sec:role role-name="architect">
+                <sec:principal 
+                    class="org.apache.geronimo.security.realm.providers.GeronimoGroupPrincipal"
+                    name="architect" 
+                />
+            </sec:role>
+        </sec:role-mappings>
+    </sec:security>
+    
+</web:web-app>

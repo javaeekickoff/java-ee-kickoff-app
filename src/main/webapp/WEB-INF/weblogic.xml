@@ -1,0 +1,11 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<weblogic-web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.bea.com/ns/weblogic/weblogic-web-app.xsd"
+    xmlns="http://www.bea.com/ns/weblogic/weblogic-web-app">
+
+    <security-role-assignment>
+        <role-name>architect</role-name>
+        <principal-name>architect</principal-name>
+    </security-role-assignment>
+
+</weblogic-web-app>
