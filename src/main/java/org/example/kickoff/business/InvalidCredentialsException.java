@@ -1,5 +1,8 @@
 package org.example.kickoff.business;
 
+import javax.ejb.ApplicationException;
+
+@ApplicationException
 public class InvalidCredentialsException extends RuntimeException {
 
 	private static final long serialVersionUID = -5207093849770922249L;
