@@ -1,4 +1,4 @@
-package org.example.kickoff.cdi;
+package org.example.kickoff.plumbing.cdi;
 
 import java.lang.annotation.Annotation;
 

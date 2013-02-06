@@ -1,4 +1,4 @@
-package org.example.kickoff.auth;
+package org.example.kickoff.plumbing.jaspic;
 
 import java.util.Map;
 

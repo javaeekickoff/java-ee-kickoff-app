@@ -1,10 +1,11 @@
-package org.example.kickoff.cdi;
+package org.example.kickoff.plumbing.cdi;
 
 import java.lang.annotation.Annotation;
 
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.naming.InitialContext;
+import javax.naming.NamingException;
 
 public class Beans {
 	
@@ -32,11 +33,32 @@ public class Beans {
 		return beanManager.getContext(scope).get(bean, beanManager.createCreationalContext(bean));
 	}
 	
-	public static BeanManager getBeanManager() {
+	public static BeanManager tryGetBeanManager() {
 		try {
-			InitialContext context = new InitialContext();
+			return getBeanManager();
+		} catch (IllegalStateException e) {
+			return null;
+		} 
+	}
+	
+	public static BeanManager getBeanManager() {
+		InitialContext context = null;
+		try {
+			context = new InitialContext();
 			return (BeanManager) context.lookup("java:comp/BeanManager");
-		} catch (Exception e) {
+		} catch (NamingException e) {
+			throw new IllegalStateException(e);
+		} finally {
+			closeContext(context);
+		}
+	}
+	
+	private static void closeContext(InitialContext context) {
+		try {
+			if (context != null) {
+				context.close();
+			}
+		} catch (NamingException e) {
 			throw new RuntimeException(e);
 		}
 	}
