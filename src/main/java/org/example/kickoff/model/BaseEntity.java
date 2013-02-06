@@ -5,28 +5,19 @@ public abstract class BaseEntity<T extends Number> {
 	public abstract T getId();
 
 	public abstract void setId(T id);
-	
+
 	@Override
 	public int hashCode() {
-		return getId() == null ? 0 : getId().hashCode();
+		return (getId() != null)
+			? (getClass().hashCode() + getId().hashCode())
+			: super.hashCode();
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (obj == null) {
-			return false;
-		}
-
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-
-		BaseEntity<?> other = (BaseEntity<?>) obj;
-		if (getId() == null) {
-			return other.getId() == null ? this == other : false;
-		}
-
-		return getId().equals(other.getId());
+	public boolean equals(Object other) {
+        return (other != null && getClass() == other.getClass() && getId() != null)
+            ? getId().equals(((BaseEntity<?>) other).getId())
+            : (other == this);
 	}
 
 }
