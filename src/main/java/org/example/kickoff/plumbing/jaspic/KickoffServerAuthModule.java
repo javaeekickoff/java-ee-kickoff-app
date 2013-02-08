@@ -1,9 +1,9 @@
 package org.example.kickoff.plumbing.jaspic;
 
 import static java.util.Collections.unmodifiableList;
-import static javax.security.auth.message.AuthStatus.SEND_FAILURE;
+import static javax.security.auth.message.AuthStatus.SEND_CONTINUE;
 import static javax.security.auth.message.AuthStatus.SUCCESS;
-import static javax.servlet.http.HttpServletResponse.SC_FORBIDDEN;
+import static org.example.kickoff.plumbing.jaspic.request.RequestCopier.copy;
 import static org.omnifaces.util.Utils.coalesce;
 
 import java.io.IOException;
@@ -18,6 +18,13 @@ import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.auth.message.AuthStatus;
 import javax.security.auth.message.callback.CallerPrincipalCallback;
 import javax.security.auth.message.callback.GroupPrincipalCallback;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -32,14 +39,35 @@ import org.example.kickoff.plumbing.cdi.Beans;
  * The actual Server Authentication Module AKA SAM.
  *
  */
-public class KickoffServerAuthModule extends HttpServerAuthModule {
+@WebFilter(urlPatterns="/*")
+public class KickoffServerAuthModule extends HttpServerAuthModule implements Filter {
 	
 	private static final String AUTHENTICATOR_SESSION_NAME = "org.example.kickoff.jaspic.Authenticator";
+	private static final String ORIGINAL_REQUEST_DATA_SESSION_NAME = "org.example.kickoff.jaspic.original.request";
+	
+	@Override
+	public void destroy() {
+		
+	}
+	
+	@Override
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
+			ServletException {
+		
+		chain.doFilter(request, response);
+		
+		
+	}
+	
+	@Override
+	public void init(FilterConfig arg0) throws ServletException {
+		
+	}
 	
 	
 	@Override
 	public AuthStatus validateHttpRequest(HttpServletRequest request, HttpServletResponse response, Subject clientSubject, CallbackHandler handler, boolean isProtectedResource) {
-		
+				
 		// Check to see if we're already authenticated.
 		//
 		// With JASPIC, the container doesn't remember authentication data between requests and we have thus have to
@@ -57,8 +85,17 @@ public class KickoffServerAuthModule extends HttpServerAuthModule {
 		}
 		
 		if (isProtectedResource) {
-			response.setStatus(SC_FORBIDDEN); // Note: JASPIC doesn't cause this to be set automatically
-			return SEND_FAILURE; // For now, support redirect to login later
+			
+			request.getSession().setAttribute(ORIGINAL_REQUEST_DATA_SESSION_NAME, copy(request));
+			
+			try {
+				response.sendRedirect("login.xhtml"); // tmp
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+						
+			return SEND_CONTINUE; // For now, support redirect to login later
 		}
 
 		// Not already authenticated, no login request and no protected resource. Just continue.
