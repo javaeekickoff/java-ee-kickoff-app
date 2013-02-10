@@ -1,4 +1,4 @@
-package org.example.kickoff.plumbing.jaspic;
+package org.example.kickoff.plumbing.jaspic.factory;
 
 import java.util.Collections;
 
@@ -10,6 +10,8 @@ import javax.security.auth.message.MessageInfo;
 import javax.security.auth.message.ServerAuth;
 import javax.security.auth.message.config.ServerAuthContext;
 import javax.security.auth.message.module.ServerAuthModule;
+
+import org.example.kickoff.plumbing.jaspic.KickoffServerAuthModule;
 
 /**
  * The Server Authentication Context is an extra (required) indirection between the Application Server and the actual Server Authentication Module

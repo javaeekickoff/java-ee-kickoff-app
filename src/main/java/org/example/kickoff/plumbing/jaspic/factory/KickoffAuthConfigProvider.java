@@ -1,4 +1,4 @@
-package org.example.kickoff.plumbing.jaspic;
+package org.example.kickoff.plumbing.jaspic.factory;
 
 import java.util.Map;
 

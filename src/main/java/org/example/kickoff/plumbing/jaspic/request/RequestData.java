@@ -1,10 +1,13 @@
 package org.example.kickoff.plumbing.jaspic.request;
 
+import static org.omnifaces.util.Utils.isEmpty;
+
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 
 public class RequestData {
 
@@ -14,17 +17,9 @@ public class RequestData {
 	private Map<String, String[]> parameters;
 
 	private String method;
-	private String queryString;
-	private String requestURI;
-
-	private String scheme;
-	private int serverPort;
-	private String servletPath;
-	private String contextPath;
-	private String pathInfo;
-
 	private String requestURL;
-	private String serverName;
+	private String queryString;
+	
 
 	public Cookie[] getCookies() {
 		return cookies;
@@ -74,54 +69,6 @@ public class RequestData {
 		this.queryString = queryString;
 	}
 
-	public String getRequestURI() {
-		return requestURI;
-	}
-
-	public void setRequestURI(String requestURI) {
-		this.requestURI = requestURI;
-	}
-
-	public String getScheme() {
-		return scheme;
-	}
-
-	public void setScheme(String scheme) {
-		this.scheme = scheme;
-	}
-
-	public int getServerPort() {
-		return serverPort;
-	}
-
-	public void setServerPort(int serverPort) {
-		this.serverPort = serverPort;
-	}
-
-	public String getServletPath() {
-		return servletPath;
-	}
-
-	public void setServletPath(String servletPath) {
-		this.servletPath = servletPath;
-	}
-
-	public String getContextPath() {
-		return contextPath;
-	}
-
-	public void setContextPath(String contextPath) {
-		this.contextPath = contextPath;
-	}
-
-	public String getPathInfo() {
-		return pathInfo;
-	}
-
-	public void setPathInfo(String pathInfo) {
-		this.pathInfo = pathInfo;
-	}
-
 	public String getRequestURL() {
 		return requestURL;
 	}
@@ -129,13 +76,23 @@ public class RequestData {
 	public void setRequestURL(String requestURL) {
 		this.requestURL = requestURL;
 	}
-
-	public String getServerName() {
-		return serverName;
+	
+	public String getFullRequestURL() {
+		return buildFullRequestURL(requestURL, queryString);
 	}
-
-	public void setServerName(String serverName) {
-		this.serverName = serverName;
+	
+	public boolean matchesRequest(HttpServletRequest request) {
+		// (or use requestURI instead of requestURL?)
+		return getFullRequestURL().equals(buildFullRequestURL(request.getRequestURL().toString(), request.getQueryString()));
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("%s %s", method, getFullRequestURL());
+	}
+	
+	private String buildFullRequestURL(String requestURL, String queryString) {
+		return requestURL + (isEmpty(queryString) ? "" : "?" + queryString);
 	}
 
 }

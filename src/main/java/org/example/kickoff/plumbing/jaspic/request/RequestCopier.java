@@ -1,6 +1,7 @@
 package org.example.kickoff.plumbing.jaspic.request;
 
 import static java.util.Arrays.copyOf;
+import static java.util.Collections.emptyMap;
 import static java.util.Collections.list;
 import static org.omnifaces.util.Utils.isEmpty;
 
@@ -20,20 +21,12 @@ public class RequestCopier {
 		
 		requestData.setCookies(copyCookies(request.getCookies()));
 		requestData.setHeaders(copyHeaders(request));
-		
 		requestData.setParameters(copyParameters(request.getParameterMap()));
+		requestData.setLocales(list(request.getLocales()));
 		
-		requestData.setMethod(request.getMethod());
-		requestData.setQueryString(request.getQueryString());
-		requestData.setRequestURI(request.getRequestURI());
-		
-		requestData.setScheme(request.getScheme());
-		requestData.setServerPort(request.getServerPort());
-		requestData.setServletPath(request.getServletPath());
-		requestData.setContextPath(request.getContextPath());		
-		requestData.setPathInfo(request.getPathInfo());
-		requestData.setRequestURL(request.getRequestURL().toString());
-		requestData.setServerName(request.getServerName());
+		requestData.setMethod(request.getMethod()); // e.g. GET
+		requestData.setRequestURL(request.getRequestURL().toString()); // e.g. http://localhost:8080/java-ee-kickoff-app/login.xhtml
+		requestData.setQueryString(request.getQueryString()); // e.g. foo=bar&kaz=zak
 	
 		return requestData;
 	}
@@ -66,7 +59,7 @@ public class RequestCopier {
 	private static Map<String, String[]> copyParameters(Map<String, String[]> parameters) {
 		
 		if (isEmptyMap(parameters)) {
-			return parameters;
+			return emptyMap();
 		}
 		
 		Map<String, String[]> copiedParameters = new HashMap<>();

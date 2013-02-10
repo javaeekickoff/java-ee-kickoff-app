@@ -1,13 +1,10 @@
 package org.example.kickoff.plumbing.jaspic;
 
-import static java.util.Collections.unmodifiableList;
 import static javax.security.auth.message.AuthStatus.SEND_CONTINUE;
 import static javax.security.auth.message.AuthStatus.SUCCESS;
 import static org.example.kickoff.plumbing.jaspic.request.RequestCopier.copy;
-import static org.omnifaces.util.Utils.coalesce;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.enterprise.inject.spi.BeanManager;
@@ -18,13 +15,10 @@ import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.auth.message.AuthStatus;
 import javax.security.auth.message.callback.CallerPrincipalCallback;
 import javax.security.auth.message.callback.GroupPrincipalCallback;
-import javax.servlet.Filter;
 import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -32,37 +26,20 @@ import javax.servlet.http.HttpSession;
 import org.example.kickoff.auth.Authenticator;
 import org.example.kickoff.auth.LoginBean;
 import org.example.kickoff.plumbing.cdi.Beans;
+import org.example.kickoff.plumbing.jaspic.dto.AuthenticationData;
+import org.example.kickoff.plumbing.jaspic.dto.Delegators;
+import org.example.kickoff.plumbing.jaspic.request.HttpServletRequestDelegator;
+import org.example.kickoff.plumbing.jaspic.request.RequestData;
 
-// import org.example.kickoff.cdi.Beans;
 
 /**
  * The actual Server Authentication Module AKA SAM.
  *
  */
-@WebFilter(urlPatterns="/*")
-public class KickoffServerAuthModule extends HttpServerAuthModule implements Filter {
+public class KickoffServerAuthModule extends HttpServerAuthModule {
 	
 	private static final String AUTHENTICATOR_SESSION_NAME = "org.example.kickoff.jaspic.Authenticator";
 	private static final String ORIGINAL_REQUEST_DATA_SESSION_NAME = "org.example.kickoff.jaspic.original.request";
-	
-	@Override
-	public void destroy() {
-		
-	}
-	
-	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-			ServletException {
-		
-		chain.doFilter(request, response);
-		
-		
-	}
-	
-	@Override
-	public void init(FilterConfig arg0) throws ServletException {
-		
-	}
 	
 	
 	@Override
@@ -81,29 +58,71 @@ public class KickoffServerAuthModule extends HttpServerAuthModule implements Fil
 		// In the case of this SAM, it means a managed bean has called request#authenticate and the login bean
 		// contains a non-null user name and password.
 		if (isLoginRequest(request, clientSubject, handler)) {
-			return SUCCESS;
+			
+			// Check if there's a previously saved request. This is the case if a protected request was
+			// accessed and the user was subsequently redirected to the login page.
+			RequestData requestData = getSavedRequestData(request);
+			if (requestData == null) {
+				// There was no saved request, this most likely means the user initiated
+				// a login directly by going to the login page.
+				return SUCCESS;
+			} else {
+				redirect(response, requestData.getFullRequestURL());
+				
+				return SEND_CONTINUE; // End request processing for this request
+			}
 		}
 		
+		// Check to see if this request is to a protected resource
+		//
+		// We'll save the current request here, so we can redirect to the original URL after
+		// authentication succeeds and when we start processing that URL wrap the request
+		// with one containing the original headers, cookies, etc.
 		if (isProtectedResource) {
 			
-			request.getSession().setAttribute(ORIGINAL_REQUEST_DATA_SESSION_NAME, copy(request));
-			
-			try {
-				response.sendRedirect("login.xhtml"); // tmp
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			saveRequest(request);
+			redirect(response, getBaseURL(request) + "/login.xhtml");
 						
-			return SEND_CONTINUE; // For now, support redirect to login later
+			return SEND_CONTINUE; // End request processing for this request
 		}
 
 		// Not already authenticated, no login request and no protected resource. Just continue.
 		return SUCCESS;
 	}
 	
-	private boolean notNull(Object... objects) {
-		return coalesce(objects) != null;
+	@Override
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+		
+		HttpServletRequest servletRequest = (HttpServletRequest) request;
+		
+		// See if there was a saved request that matches the current request and restore
+		// that request by wrapping the current request.
+		//
+		// Note that it doesn't seem possible to do this in a portable way in validateHttpRequest
+		RequestData requestData = getSavedRequestData(servletRequest);
+		if (requestData != null && requestData.matchesRequest(servletRequest)) {
+			servletRequest = new HttpServletRequestDelegator(servletRequest, requestData);
+			removeSavedRequest(servletRequest);
+		}
+		
+		chain.doFilter(servletRequest, response);
+	}
+	
+	public void saveRequest(HttpServletRequest request) {
+		request.getSession().setAttribute(ORIGINAL_REQUEST_DATA_SESSION_NAME, copy(request));
+	}
+	
+	public RequestData getSavedRequestData(HttpServletRequest request) {
+		HttpSession session = request.getSession(false);
+		if (session == null) {
+			return null;
+		}
+		
+		return (RequestData) session.getAttribute(ORIGINAL_REQUEST_DATA_SESSION_NAME);
+	}
+	
+	public void removeSavedRequest(HttpServletRequest request) {
+		request.getSession().removeAttribute(ORIGINAL_REQUEST_DATA_SESSION_NAME);
 	}
 	
 	private boolean canReAuthenticate(HttpServletRequest request, Subject clientSubject, CallbackHandler handler) {
@@ -154,7 +173,6 @@ public class KickoffServerAuthModule extends HttpServerAuthModule implements Fil
 		return false;
 	}
 	
-	
 	private Delegators tryGetDelegators() {
 
 		try {
@@ -198,45 +216,6 @@ public class KickoffServerAuthModule extends HttpServerAuthModule implements Fil
 			// Should not happen
 			throw new IllegalStateException(e);
 		}
-	}
-	
-	private static class Delegators {
-
-		private final Authenticator authenticator;
-		private final LoginBean loginBean;
-
-		public Delegators(Authenticator authenticator, LoginBean loginBean) {
-			this.authenticator = authenticator;
-			this.loginBean = loginBean;
-		}
-
-		public Authenticator getAuthenticator() {
-			return authenticator;
-		}
-
-		public LoginBean getLoginBean() {
-			return loginBean;
-		}
-	}
-	
-	private static class AuthenticationData {
-
-		private final String userName;
-		private final List<String> applicationRoles;
-
-		public AuthenticationData(String userName, List<String> applicationRoles) {
-			this.userName = userName;
-			this.applicationRoles = unmodifiableList(new ArrayList<>(applicationRoles));
-		}
-
-		public String getUserName() {
-			return userName;
-		}
-
-		public List<String> getApplicationRoles() {
-			return applicationRoles;
-		}
-
 	}
 
 	
