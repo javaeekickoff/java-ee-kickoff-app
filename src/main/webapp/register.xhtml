@@ -1,0 +1,27 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html">
+	<h:head>
+		<title>Register user</title>
+	</h:head>
+	
+	<h:body>
+	
+		<h:form>
+			<p>
+				User name: <h:inputText value="#{registerBacking.user.username}" />
+			</p>
+			<p>
+				Email address: <h:inputText value="#{registerBacking.user.email}" />
+			</p>
+			<p>
+				Password: <h:inputSecret value="#{registerBacking.password}" required="true" />
+			</p>
+			<br />
+			<p>
+				<h:commandButton value="Register" action="#{registerBacking.register}" disabled="#{!empty request.userPrincipal}" />
+			</p>
+		</h:form>
+	
+	</h:body>
+</html>
