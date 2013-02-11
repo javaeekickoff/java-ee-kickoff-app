@@ -19,7 +19,9 @@ public class LoginBean {
 		// Doesn't seem to be supported in JASPIC
 		// Faces.login(loginUserName, loginPassword);
 
-		Faces.getRequest().authenticate(Faces.getResponse());
+		boolean check = Faces.getRequest().authenticate(Faces.getResponse());
+		int a;
+		a = 4;
 	}
 
 	public void logout() throws ServletException {

@@ -4,4 +4,7 @@
     <valve>
         <class-name>org.example.kickoff.patch.WebJASPIAuthenticator</class-name>
     </valve>
+     <valve>
+        <class-name>org.jboss.as.web.security.jaspi.WebJASPIOptionalAuthenticator</class-name>
+    </valve>
 </jboss-web>

@@ -1,7 +1,11 @@
 package org.example.kickoff.plumbing.jaspic;
 
 import static javax.security.auth.message.AuthStatus.SEND_CONTINUE;
+import static javax.security.auth.message.AuthStatus.SEND_FAILURE;
 import static javax.security.auth.message.AuthStatus.SUCCESS;
+import static org.example.kickoff.plumbing.jaspic.dto.LoginResult.LOGIN_FAILURE;
+import static org.example.kickoff.plumbing.jaspic.dto.LoginResult.LOGIN_SUCCESS;
+import static org.example.kickoff.plumbing.jaspic.dto.LoginResult.NO_LOGIN;
 import static org.example.kickoff.plumbing.jaspic.request.RequestCopier.copy;
 
 import java.io.IOException;
@@ -28,6 +32,7 @@ import org.example.kickoff.auth.LoginBean;
 import org.example.kickoff.plumbing.cdi.Beans;
 import org.example.kickoff.plumbing.jaspic.dto.AuthenticationData;
 import org.example.kickoff.plumbing.jaspic.dto.Delegators;
+import org.example.kickoff.plumbing.jaspic.dto.LoginResult;
 import org.example.kickoff.plumbing.jaspic.request.HttpServletRequestDelegator;
 import org.example.kickoff.plumbing.jaspic.request.RequestData;
 
@@ -53,25 +58,34 @@ public class KickoffServerAuthModule extends HttpServerAuthModule {
 			return SUCCESS;
 		}
 		
+		
 		// Check to see if this is a request from user code to login
 		//
 		// In the case of this SAM, it means a managed bean has called request#authenticate and the login bean
 		// contains a non-null user name and password.
-		if (isLoginRequest(request, clientSubject, handler)) {
-			
-			// Check if there's a previously saved request. This is the case if a protected request was
-			// accessed and the user was subsequently redirected to the login page.
-			RequestData requestData = getSavedRequestData(request);
-			if (requestData == null) {
-				// There was no saved request, this most likely means the user initiated
-				// a login directly by going to the login page.
-				return SUCCESS;
-			} else {
-				redirect(response, requestData.getFullRequestURL());
+		switch (isLoginRequest(request, clientSubject, handler)) {
+		
+			case LOGIN_SUCCESS:
+		
+				// Check if there's a previously saved request. This is the case if a protected request was
+				// accessed and the user was subsequently redirected to the login page.
+				RequestData requestData = getSavedRequestData(request);
+				if (requestData != null) {
+					redirect(response, requestData.getFullRequestURL());
+				} 
 				
-				return SEND_CONTINUE; // End request processing for this request
-			}
+				return SUCCESS;
+				
+			case LOGIN_FAILURE:
+				
+				// End request processing and don't try to process the handler
+				//
+				// Note: Most JASPIC implementations don't distinguish between return codes and only check if return is SUCCESS or not
+				// Note: In the case of this SAM, login is called following a request#authenticate only, so in that case a non-SUCCESS
+				//       return only means no to process the handler.
+				return SEND_FAILURE; 
 		}
+		
 		
 		// Check to see if this request is to a protected resource
 		//
@@ -83,7 +97,7 @@ public class KickoffServerAuthModule extends HttpServerAuthModule {
 			saveRequest(request);
 			redirect(response, getBaseURL(request) + "/login.xhtml");
 						
-			return SEND_CONTINUE; // End request processing for this request
+			return SEND_CONTINUE; // End request processing for this request and don't try to process the handler
 		}
 
 		// Not already authenticated, no login request and no protected resource. Just continue.
@@ -139,7 +153,7 @@ public class KickoffServerAuthModule extends HttpServerAuthModule {
 		return false;
 	}
 	
-	private boolean isLoginRequest(HttpServletRequest request, Subject clientSubject, CallbackHandler handler) {
+	private LoginResult isLoginRequest(HttpServletRequest request, Subject clientSubject, CallbackHandler handler) {
 		Delegators delegators = tryGetDelegators();
 		
 		// This SAM is supposed to work following a call to HttpServletRequest#authenticate. Such call is in-context of the component executing it,
@@ -154,23 +168,26 @@ public class KickoffServerAuthModule extends HttpServerAuthModule {
 			
 			if (notNull(loginBean.getLoginUserName(), loginBean.getLoginPassword())) {
 				
-				authenticator.authenticate(loginBean.getLoginUserName(), loginBean.getLoginPassword());
+				if (authenticator.authenticate(loginBean.getLoginUserName(), loginBean.getLoginPassword())) {
 				
-				notifyContainerAboutLogin(request, clientSubject, handler, authenticator.getUserName(), authenticator.getApplicationRoles());
-				
-				// Since CDI is not universally available when this SAM is called at the beginning of a request, we
-				// explicitly store our authenticator bean in the HTTP session, so we can later on (the next requests) retrieve it
-				// to re-authenticate.
-				request.getSession().setAttribute(
-					AUTHENTICATOR_SESSION_NAME, 
-					new AuthenticationData(authenticator.getUserName(), authenticator.getApplicationRoles())
-				);
-				
-				return true;
+					notifyContainerAboutLogin(request, clientSubject, handler, authenticator.getUserName(), authenticator.getApplicationRoles());
+					
+					// Since CDI is not universally available when this SAM is called at the beginning of a request, we
+					// explicitly store our authenticator bean in the HTTP session, so we can later on (the next requests) retrieve it
+					// to re-authenticate.
+					request.getSession().setAttribute(
+						AUTHENTICATOR_SESSION_NAME, 
+						new AuthenticationData(authenticator.getUserName(), authenticator.getApplicationRoles())
+					);
+					
+					return LOGIN_SUCCESS;
+				} else {
+					return LOGIN_FAILURE;
+				}
 			}
 		}
 		
-		return false;
+		return NO_LOGIN;
 	}
 	
 	private Delegators tryGetDelegators() {
