@@ -61,15 +61,14 @@ public class UserServiceTest extends ArquillianDBUnitTestBase {
 	@Test
 	public void testRegisterUser() {
 		User user = new User();
-		user.setUsername("name");
-		user.setEmail("test@test.test");
+		user.setEmail("test2@test.test");
 
 		userService.registerUser(user, "TeSt");
 
 		assertNotNull(user.getCredentials());
 		assertNotNull(user.getId());
 
-		User loggedInUser = userService.getUserByCredentials("name", "TeSt");
+		User loggedInUser = userService.getUserByCredentials("test2@test.test", "TeSt");
 
 		assertNotNull(loggedInUser);
 		assertEquals(user, loggedInUser);
@@ -77,9 +76,9 @@ public class UserServiceTest extends ArquillianDBUnitTestBase {
 
 	@Test
 	public void testGetUserByCredentials() {
-		User user = userService.getUserByCredentials("Test1", "TeSt");
+		User user = userService.getUserByCredentials("test@test.test", "TeSt");
 		assertNotNull(user);
-		assertEquals("Test1", user.getUsername());
+		assertEquals("test@test.test", user.getEmail());
 
 		try {
 			userService.getUserByCredentials("Test1", "wrong_password");
@@ -100,19 +99,19 @@ public class UserServiceTest extends ArquillianDBUnitTestBase {
 
 	@Test
 	public void testUpdatePassword() {
-		User user = userService.getUserByCredentials("Test1", "TeSt");
+		User user = userService.getUserByCredentials("test@test.test", "TeSt");
 
 		userService.updatePassword(user, "TeSt2");
 
 		try {
-			userService.getUserByCredentials("Test1", "TeSt");
+			userService.getUserByCredentials("test@test.test", "TeSt");
 			fail();
 		}
 		catch (Exception e) {
 			// Exception should be thrown here
 		}
 
-		User loggedInUser = userService.getUserByCredentials("Test1", "TeSt2");
+		User loggedInUser = userService.getUserByCredentials("test@test.test", "TeSt2");
 		assertNotNull(loggedInUser);
 		assertEquals(user, loggedInUser);
 	}

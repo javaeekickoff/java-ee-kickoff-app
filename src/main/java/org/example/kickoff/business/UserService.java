@@ -35,9 +35,9 @@ public class UserService {
 		entityManager.merge(user);
 	}
 
-	public User getUserByCredentials(String username, String password) {
-		Credentials credentials = getOptionalSingleResult(entityManager.createNamedQuery("Credentials.getByUsername", Credentials.class)
-				.setParameter("username", username));
+	public User getUserByCredentials(String email, String password) {
+		Credentials credentials = getOptionalSingleResult(entityManager.createNamedQuery("Credentials.getByEmail", Credentials.class)
+				.setParameter("email", email));
 
 		if (credentials == null) {
 			throw new InvalidCredentialsException("Invalid username");

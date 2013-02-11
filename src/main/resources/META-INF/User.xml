@@ -2,7 +2,7 @@
 <entity-mappings version="2.0" xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_2_0.xsd">
 	
-	<named-query name="Credentials.getByUsername">
+	<named-query name="Credentials.getByEmail">
 		<query>
 			SELECT
 				c
@@ -11,7 +11,7 @@
 					JOIN
 				u.credentials c
 			WHERE
-				u.username = :username
+				u.email = :email
 		</query>
 	</named-query>
 </entity-mappings>

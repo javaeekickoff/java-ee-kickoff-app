@@ -23,10 +23,6 @@ public class User extends BaseEntity<Long> {
 	private String email;
 
 	@NotNull
-	@Column(nullable = false)
-	private String username;
-
-	@NotNull
 	@OneToOne(mappedBy = "user", fetch = LAZY, cascade = ALL)
 	private Credentials credentials;
 
@@ -46,14 +42,6 @@ public class User extends BaseEntity<Long> {
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
 	}
 
 	public Credentials getCredentials() {
