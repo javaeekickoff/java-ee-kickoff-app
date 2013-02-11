@@ -6,7 +6,9 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 import javax.servlet.ServletException;
 
+import org.example.kickoff.business.InvalidCredentialsException;
 import org.omnifaces.util.Faces;
+import org.omnifaces.util.Messages;
 
 @Named
 @RequestScoped
@@ -18,8 +20,12 @@ public class LoginBean {
 	public void login() throws IOException, ServletException {
 		// Doesn't seem to be supported in JASPIC
 		// Faces.login(loginUserName, loginPassword);
-
-		Faces.getRequest().authenticate(Faces.getResponse());
+		try {
+			Faces.getRequest().authenticate(Faces.getResponse());
+		}
+		catch (InvalidCredentialsException e) {
+			Messages.addGlobalError("Invalid username and/or password");
+		}
 	}
 
 	public void logout() throws ServletException {

@@ -5,23 +5,30 @@ import static java.util.Arrays.asList;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
+
+import org.example.kickoff.business.UserService;
+import org.example.kickoff.model.User;
 
 @SessionScoped
 public class Authenticator implements Serializable {
 
 	private static final long serialVersionUID = 6233826583476075733L;
-	
-	private String userName;
+
+	@EJB
+	private UserService userService;
+
+	private User user;
 	private List<String> applicationRoles;
 
 	public void authenticate(String name, String password) {
-		userName = name;
+		user = userService.getUserByCredentials(name, password);
 		applicationRoles = asList("architect");
 	}
 
 	public String getUserName() {
-		return userName;
+		return user == null ? null : user.getEmail();
 	}
 
 	public List<String> getApplicationRoles() {

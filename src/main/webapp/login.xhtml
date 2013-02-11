@@ -16,11 +16,12 @@
 		<hr/>
  
         <h:form>      
+    	    <h:messages />
         	<p>
-            	User name: <h:inputText value="#{loginBean.loginUserName}" /> (demo, can be anything)
+            	User name: <h:inputText value="#{loginBean.loginUserName}" /> 
             </p>
             <p>
-            	Password: <h:inputText value="#{loginBean.loginPassword}" /> (demo, can be anything)
+            	Password: <h:inputSecret value="#{loginBean.loginPassword}" />
             </p>
             <br/>
             <p>                  
