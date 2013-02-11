@@ -16,6 +16,11 @@ public class Authenticator implements Serializable {
 	private List<String> applicationRoles;
 
 	public boolean authenticate(String name, String password) {
+		
+		if ("xxx".equals(password)) {
+			return false; // test
+		}
+		
 		userName = name;
 		applicationRoles = asList("architect");
 		
