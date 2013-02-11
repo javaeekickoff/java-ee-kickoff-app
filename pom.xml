@@ -114,14 +114,12 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- 
 		<dependency>
 			<groupId>org.jacoco</groupId>
 			<artifactId>org.jacoco.core</artifactId>
 			<version>${jacoco.version}</version>
 			<scope>test</scope>
 		</dependency>
-		 -->
 	</dependencies>
 
 	<profiles>
@@ -180,7 +178,6 @@
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 				</configuration>
 			</plugin>
-			<!-- 
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
@@ -200,7 +197,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			 -->
 		</plugins>
 	</build>
 
