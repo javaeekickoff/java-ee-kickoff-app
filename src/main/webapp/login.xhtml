@@ -3,11 +3,12 @@
 >    
 
 	 <h:head>
-        <title>Welcome to the JSF EJB JPA example project</title>
+        <title>Java EE kickoff app login page</title>
     </h:head>
 
     <h:body>
  
+ 		<h:messages />
  	
  		<p>
 			Logged in name: #{request.userPrincipal.name}
@@ -15,8 +16,7 @@
 		
 		<hr/>
  
-        <h:form>      
-    	    <h:messages />
+        <h:form>
         	<p>
             	User name: <h:inputText value="#{loginBean.loginUserName}" /> 
             </p>

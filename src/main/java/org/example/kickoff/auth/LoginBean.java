@@ -18,14 +18,15 @@ public class LoginBean {
 	private String loginPassword;
 
 	public void login() throws IOException, ServletException {
-		// Doesn't seem to be supported in JASPIC
+		
+		// Not supported in JASPIC: (only WebSphere calls the SAM, but with WebSphere specific entries in MessageInfo Map)
 		// Faces.login(loginUserName, loginPassword);
-		try {
-			Faces.getRequest().authenticate(Faces.getResponse());
-		}
-		catch (InvalidCredentialsException e) {
-			Messages.addGlobalError("Invalid username and/or password");
-		}
+
+		boolean authenticated = Faces.getRequest().authenticate(Faces.getResponse());
+
+		if (!authenticated) {
+			Messages.addGlobalError("Login failied");
+		}	
 	}
 
 	public void logout() throws ServletException {

@@ -22,9 +22,16 @@ public class Authenticator implements Serializable {
 	private User user;
 	private List<String> applicationRoles;
 
-	public void authenticate(String name, String password) {
+	public boolean authenticate(String name, String password) {
+		
+		if ("xxx".equals(password)) {
+			return false; // test
+		}
+		
 		user = userService.getUserByCredentials(name, password);
 		applicationRoles = asList("architect");
+		
+		return true;
 	}
 
 	public String getUserName() {
