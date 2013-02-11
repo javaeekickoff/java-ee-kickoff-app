@@ -6,7 +6,6 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 import javax.servlet.ServletException;
 
-import org.example.kickoff.business.InvalidCredentialsException;
 import org.omnifaces.util.Faces;
 import org.omnifaces.util.Messages;
 
@@ -18,15 +17,15 @@ public class LoginBean {
 	private String loginPassword;
 
 	public void login() throws IOException, ServletException {
-		
+
 		// Not supported in JASPIC: (only WebSphere calls the SAM, but with WebSphere specific entries in MessageInfo Map)
 		// Faces.login(loginUserName, loginPassword);
 
 		boolean authenticated = Faces.getRequest().authenticate(Faces.getResponse());
 
 		if (!authenticated) {
-			Messages.addGlobalError("Login failied");
-		}	
+			Messages.addGlobalError("Login failed");
+		}
 	}
 
 	public void logout() throws ServletException {

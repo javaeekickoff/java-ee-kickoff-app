@@ -8,6 +8,7 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 
+import org.example.kickoff.business.InvalidCredentialsException;
 import org.example.kickoff.business.UserService;
 import org.example.kickoff.model.User;
 
@@ -23,14 +24,14 @@ public class Authenticator implements Serializable {
 	private List<String> applicationRoles;
 
 	public boolean authenticate(String name, String password) {
-		
-		if ("xxx".equals(password)) {
-			return false; // test
+		try {
+			user = userService.getUserByCredentials(name, password);
 		}
-		
-		user = userService.getUserByCredentials(name, password);
+		catch (InvalidCredentialsException e) {
+			return false;
+		}
 		applicationRoles = asList("architect");
-		
+
 		return true;
 	}
 
