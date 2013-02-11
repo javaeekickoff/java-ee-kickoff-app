@@ -6,12 +6,13 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 import javax.servlet.ServletException;
 
+import org.example.kickoff.plumbing.jaspic.user.UsernamePasswordProvider;
 import org.omnifaces.util.Faces;
 import org.omnifaces.util.Messages;
 
 @Named
 @RequestScoped
-public class LoginBean {
+public class LoginBean implements UsernamePasswordProvider {
 
 	private String loginUserName;
 	private String loginPassword;

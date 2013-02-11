@@ -1,23 +1,23 @@
 package org.example.kickoff.plumbing.jaspic.dto;
 
-import org.example.kickoff.auth.Authenticator;
-import org.example.kickoff.auth.LoginBean;
+import org.example.kickoff.plumbing.jaspic.user.UsernamePasswordAuthenticator;
+import org.example.kickoff.plumbing.jaspic.user.UsernamePasswordProvider;
 
 public class Delegators {
 
-	private final Authenticator authenticator;
-	private final LoginBean loginBean;
+	private final UsernamePasswordAuthenticator authenticator;
+	private final UsernamePasswordProvider provider;
 
-	public Delegators(Authenticator authenticator, LoginBean loginBean) {
+	public Delegators(UsernamePasswordAuthenticator authenticator, UsernamePasswordProvider loginBean) {
 		this.authenticator = authenticator;
-		this.loginBean = loginBean;
+		this.provider = loginBean;
 	}
 
-	public Authenticator getAuthenticator() {
+	public UsernamePasswordAuthenticator getAuthenticator() {
 		return authenticator;
 	}
 
-	public LoginBean getLoginBean() {
-		return loginBean;
+	public UsernamePasswordProvider getProvider() {
+		return provider;
 	}
 }

@@ -2,7 +2,6 @@ package org.example.kickoff.auth;
 
 import static java.util.Arrays.asList;
 
-import java.io.Serializable;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -11,9 +10,10 @@ import javax.enterprise.context.SessionScoped;
 import org.example.kickoff.business.InvalidCredentialsException;
 import org.example.kickoff.business.UserService;
 import org.example.kickoff.model.User;
+import org.example.kickoff.plumbing.jaspic.user.UsernamePasswordAuthenticator;
 
 @SessionScoped
-public class Authenticator implements Serializable {
+public class Authenticator implements UsernamePasswordAuthenticator {
 
 	private static final long serialVersionUID = 6233826583476075733L;
 

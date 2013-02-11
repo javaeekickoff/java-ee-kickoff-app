@@ -35,6 +35,8 @@ import org.example.kickoff.plumbing.jaspic.dto.Delegators;
 import org.example.kickoff.plumbing.jaspic.dto.LoginResult;
 import org.example.kickoff.plumbing.jaspic.request.HttpServletRequestDelegator;
 import org.example.kickoff.plumbing.jaspic.request.RequestData;
+import org.example.kickoff.plumbing.jaspic.user.UsernamePasswordAuthenticator;
+import org.example.kickoff.plumbing.jaspic.user.UsernamePasswordProvider;
 
 
 /**
@@ -163,12 +165,12 @@ public class KickoffServerAuthModule extends HttpServerAuthModule {
 		// contexts are typically not (fully) available.
 		if (delegators != null) {
 			
-			Authenticator authenticator = delegators.getAuthenticator();
-			LoginBean loginBean = delegators.getLoginBean();
+			UsernamePasswordAuthenticator authenticator = delegators.getAuthenticator();
+			UsernamePasswordProvider provider = delegators.getProvider();
 			
-			if (notNull(loginBean.getLoginUserName(), loginBean.getLoginPassword())) {
+			if (notNull(provider.getLoginUserName(), provider.getLoginPassword())) {
 				
-				if (authenticator.authenticate(loginBean.getLoginUserName(), loginBean.getLoginPassword())) {
+				if (authenticator.authenticate(provider.getLoginUserName(), provider.getLoginPassword())) {
 				
 					notifyContainerAboutLogin(request, clientSubject, handler, authenticator.getUserName(), authenticator.getApplicationRoles());
 					
@@ -198,7 +200,7 @@ public class KickoffServerAuthModule extends HttpServerAuthModule {
 			Authenticator authenticator = Beans.getReference(Authenticator.class, beanManager);
 			LoginBean loginBean = Beans.getReference(LoginBean.class, beanManager);
 
-			// Some containers might give us the bean, but then don't allow us the reference it if called
+			// Some containers might give us the bean, but then don't allow us to reference it if called
 			// in the "wrong" context.
 			loginBean.getLoginPassword();
 

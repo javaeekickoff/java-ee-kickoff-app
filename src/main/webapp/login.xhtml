@@ -18,10 +18,10 @@
  
         <h:form>
         	<p>
-            	User name: <h:inputText value="#{loginBean.loginUserName}" /> 
+            	User name: <h:inputText value="#{loginBean.loginUserName}" /> (test user: foo@bar.com)
             </p>
             <p>
-            	Password: <h:inputSecret value="#{loginBean.loginPassword}" />
+            	Password: <h:inputSecret value="#{loginBean.loginPassword}" /> (test password: foo)
             </p>
             <br/>
             <p>                  
@@ -32,7 +32,7 @@
         
         <hr/>
         
-        <h:link outcome="login" >bla</h:link>
+        <h:link outcome="register" >Register</h:link>
         
         <p>
         	Protected resource: <h:outputLink value="servlet">servlet</h:outputLink>
