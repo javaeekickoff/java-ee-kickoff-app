@@ -1,40 +1,37 @@
 package org.example.kickoff.plumbing.jaspic;
 
+import static java.util.Collections.unmodifiableList;
 import static javax.security.auth.message.AuthStatus.SEND_CONTINUE;
 import static javax.security.auth.message.AuthStatus.SEND_FAILURE;
 import static javax.security.auth.message.AuthStatus.SUCCESS;
-import static org.example.kickoff.plumbing.jaspic.dto.LoginResult.LOGIN_FAILURE;
-import static org.example.kickoff.plumbing.jaspic.dto.LoginResult.LOGIN_SUCCESS;
-import static org.example.kickoff.plumbing.jaspic.dto.LoginResult.NO_LOGIN;
-import static org.example.kickoff.plumbing.jaspic.request.RequestCopier.copy;
+import static org.example.kickoff.plumbing.jaspic.KickoffServerAuthModule.LoginResult.LOGIN_FAILURE;
+import static org.example.kickoff.plumbing.jaspic.KickoffServerAuthModule.LoginResult.LOGIN_SUCCESS;
+import static org.example.kickoff.plumbing.jaspic.KickoffServerAuthModule.LoginResult.NO_LOGIN;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.enterprise.inject.spi.BeanManager;
 import javax.security.auth.Subject;
-import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
-import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.auth.message.AuthStatus;
-import javax.security.auth.message.callback.CallerPrincipalCallback;
-import javax.security.auth.message.callback.GroupPrincipalCallback;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.example.kickoff.auth.Authenticator;
-import org.example.kickoff.auth.LoginBean;
 import org.example.kickoff.plumbing.cdi.Beans;
-import org.example.kickoff.plumbing.jaspic.dto.AuthenticationData;
-import org.example.kickoff.plumbing.jaspic.dto.Delegators;
-import org.example.kickoff.plumbing.jaspic.dto.LoginResult;
+import org.example.kickoff.plumbing.jaspic.request.CookieDAO;
 import org.example.kickoff.plumbing.jaspic.request.HttpServletRequestDelegator;
+import org.example.kickoff.plumbing.jaspic.request.RequestDAO;
 import org.example.kickoff.plumbing.jaspic.request.RequestData;
+import org.example.kickoff.plumbing.jaspic.user.Authenticator;
+import org.example.kickoff.plumbing.jaspic.user.TokenAuthenticator;
 import org.example.kickoff.plumbing.jaspic.user.UsernamePasswordAuthenticator;
 import org.example.kickoff.plumbing.jaspic.user.UsernamePasswordProvider;
 
@@ -46,8 +43,15 @@ import org.example.kickoff.plumbing.jaspic.user.UsernamePasswordProvider;
 public class KickoffServerAuthModule extends HttpServerAuthModule {
 	
 	private static final String AUTHENTICATOR_SESSION_NAME = "org.example.kickoff.jaspic.Authenticator";
-	private static final String ORIGINAL_REQUEST_DATA_SESSION_NAME = "org.example.kickoff.jaspic.original.request";
 	
+	private final RequestDAO requestDAO = new RequestDAO();
+	private final CookieDAO cookieDAO = new CookieDAO();
+	
+	static enum LoginResult {
+		LOGIN_SUCCESS,
+		LOGIN_FAILURE,
+		NO_LOGIN		
+	}
 	
 	@Override
 	public AuthStatus validateHttpRequest(HttpServletRequest request, HttpServletResponse response, Subject clientSubject, CallbackHandler handler, boolean isProtectedResource) {
@@ -65,13 +69,13 @@ public class KickoffServerAuthModule extends HttpServerAuthModule {
 		//
 		// In the case of this SAM, it means a managed bean has called request#authenticate and the login bean
 		// contains a non-null user name and password.
-		switch (isLoginRequest(request, clientSubject, handler)) {
+		switch (isLoginRequest(request, response, clientSubject, handler)) {
 		
 			case LOGIN_SUCCESS:
 		
 				// Check if there's a previously saved request. This is the case if a protected request was
 				// accessed and the user was subsequently redirected to the login page.
-				RequestData requestData = getSavedRequestData(request);
+				RequestData requestData = requestDAO.get(request);
 				if (requestData != null) {
 					redirect(response, requestData.getFullRequestURL());
 				} 
@@ -96,7 +100,7 @@ public class KickoffServerAuthModule extends HttpServerAuthModule {
 		// with one containing the original headers, cookies, etc.
 		if (isProtectedResource) {
 			
-			saveRequest(request);
+			requestDAO.save(request);
 			redirect(response, getBaseURL(request) + "/login.xhtml");
 						
 			return SEND_CONTINUE; // End request processing for this request and don't try to process the handler
@@ -115,33 +119,27 @@ public class KickoffServerAuthModule extends HttpServerAuthModule {
 		// that request by wrapping the current request.
 		//
 		// Note that it doesn't seem possible to do this in a portable way in validateHttpRequest
-		RequestData requestData = getSavedRequestData(servletRequest);
-		if (requestData != null && requestData.matchesRequest(servletRequest)) {
-			servletRequest = new HttpServletRequestDelegator(servletRequest, requestData);
-			removeSavedRequest(servletRequest);
+		RequestData requestData = requestDAO.get(servletRequest);
+		Cookie cookie = cookieDAO.get(servletRequest);
+		
+		if (requestData != null) {
+			
+			if (requestData.matchesRequest(servletRequest)) {
+				servletRequest = new HttpServletRequestDelegator(servletRequest, requestData);
+				requestDAO.remove(servletRequest);
+			} else if (cookie != null && servletRequest.getRequestURL().toString().equals(getBaseURL(servletRequest) + "/login.xhtml")) {
+				// There is requestData available and a cookie, as well as a request to the login page.
+				// We use this login page as a cue to do login via the cookie.
+				servletRequest.authenticate((HttpServletResponse) response);
+				return;
+			}
 		}
 		
 		chain.doFilter(servletRequest, response);
 	}
 	
-	public void saveRequest(HttpServletRequest request) {
-		request.getSession().setAttribute(ORIGINAL_REQUEST_DATA_SESSION_NAME, copy(request));
-	}
-	
-	public RequestData getSavedRequestData(HttpServletRequest request) {
-		HttpSession session = request.getSession(false);
-		if (session == null) {
-			return null;
-		}
-		
-		return (RequestData) session.getAttribute(ORIGINAL_REQUEST_DATA_SESSION_NAME);
-	}
-	
-	public void removeSavedRequest(HttpServletRequest request) {
-		request.getSession().removeAttribute(ORIGINAL_REQUEST_DATA_SESSION_NAME);
-	}
-	
 	private boolean canReAuthenticate(HttpServletRequest request, Subject clientSubject, CallbackHandler handler) {
+		
 		HttpSession session = request.getSession(false);
 		if (session != null) {
 			AuthenticationData authenticationData = (AuthenticationData) session.getAttribute(AUTHENTICATOR_SESSION_NAME);
@@ -155,7 +153,7 @@ public class KickoffServerAuthModule extends HttpServerAuthModule {
 		return false;
 	}
 	
-	private LoginResult isLoginRequest(HttpServletRequest request, Subject clientSubject, CallbackHandler handler) {
+	private LoginResult isLoginRequest(HttpServletRequest request, HttpServletResponse response, Subject clientSubject, CallbackHandler handler) {
 		Delegators delegators = tryGetDelegators();
 		
 		// This SAM is supposed to work following a call to HttpServletRequest#authenticate. Such call is in-context of the component executing it,
@@ -165,28 +163,45 @@ public class KickoffServerAuthModule extends HttpServerAuthModule {
 		// contexts are typically not (fully) available.
 		if (delegators != null) {
 			
-			UsernamePasswordAuthenticator authenticator = delegators.getAuthenticator();
-			UsernamePasswordProvider provider = delegators.getProvider();
+			UsernamePasswordAuthenticator usernamePasswordAuthenticator = delegators.getAuthenticator();
+			TokenAuthenticator tokenAuthenticator =	delegators.getTokenAuthenticator();
 			
+			UsernamePasswordProvider provider = delegators.getProvider();
+			Cookie cookie = cookieDAO.get(request);
+			
+			Authenticator authenticator = null;
+			boolean authenticated = false;
 			if (notNull(provider.getLoginUserName(), provider.getLoginPassword())) {
-				
-				if (authenticator.authenticate(provider.getLoginUserName(), provider.getLoginPassword())) {
-				
-					notifyContainerAboutLogin(request, clientSubject, handler, authenticator.getUserName(), authenticator.getApplicationRoles());
-					
-					// Since CDI is not universally available when this SAM is called at the beginning of a request, we
-					// explicitly store our authenticator bean in the HTTP session, so we can later on (the next requests) retrieve it
-					// to re-authenticate.
-					request.getSession().setAttribute(
-						AUTHENTICATOR_SESSION_NAME, 
-						new AuthenticationData(authenticator.getUserName(), authenticator.getApplicationRoles())
-					);
-					
-					return LOGIN_SUCCESS;
-				} else {
-					return LOGIN_FAILURE;
-				}
+				authenticated = usernamePasswordAuthenticator.authenticate(provider.getLoginUserName(), provider.getLoginPassword());
+				authenticator = usernamePasswordAuthenticator;
+			} else if (cookie != null && tokenAuthenticator != null) {
+				authenticated = tokenAuthenticator.authenticate(cookie.getValue());
+				authenticator = tokenAuthenticator;
+			} else {
+				return NO_LOGIN;
 			}
+			
+			if (authenticated) {
+				
+				notifyContainerAboutLogin(request, clientSubject, handler, authenticator.getUserName(), authenticator.getApplicationRoles());
+				
+				// Since CDI is not universally available when this SAM is called at the beginning of a request, we
+				// explicitly store our authenticator bean in the HTTP session, so we can later on (the next requests) retrieve it
+				// to re-authenticate.
+				request.getSession().setAttribute(
+					AUTHENTICATOR_SESSION_NAME, 
+					new AuthenticationData(authenticator.getUserName(), authenticator.getApplicationRoles())
+				);
+				
+				if (tokenAuthenticator != null) {
+					cookieDAO.save(request, response, tokenAuthenticator.generateLoginToken());
+				}
+				
+				return LOGIN_SUCCESS;
+			} else {
+				return LOGIN_FAILURE;
+			}
+			
 		}
 		
 		return NO_LOGIN;
@@ -197,43 +212,62 @@ public class KickoffServerAuthModule extends HttpServerAuthModule {
 		try {
 			BeanManager beanManager = Beans.getBeanManager();
 
-			Authenticator authenticator = Beans.getReference(Authenticator.class, beanManager);
-			LoginBean loginBean = Beans.getReference(LoginBean.class, beanManager);
+			UsernamePasswordAuthenticator usernamePasswordAuthenticator = Beans.getReference(UsernamePasswordAuthenticator.class, beanManager);
+			UsernamePasswordProvider provider = Beans.getReference(UsernamePasswordProvider.class, beanManager);
+			
+			TokenAuthenticator tokenAuthenticator = Beans.getReference(TokenAuthenticator.class, beanManager);
 
 			// Some containers might give us the bean, but then don't allow us to reference it if called
 			// in the "wrong" context.
-			loginBean.getLoginPassword();
+			provider.getLoginPassword();
 
-			return new Delegators(authenticator, loginBean);
+			return new Delegators(usernamePasswordAuthenticator, tokenAuthenticator, provider);
 		} catch (Exception e) {
 			return null;
 		}
 	}
 	
-	private void notifyContainerAboutLogin(HttpServletRequest request, Subject clientSubject, CallbackHandler handler, String userName, List<String> roles) {
-		
-		// Create a handler (kind of directive) to add the caller principal (AKA user principal =basically user name, or user id) that
-		// the authenticator provides.
-		//
-		// This will be the name of the principal returned by e.g. HttpServletRequest#getUserPrincipal
-		CallerPrincipalCallback callerPrincipalCallback = new CallerPrincipalCallback(clientSubject, userName);
-		
-		// Create a handler to add the groups (AKA roles) that the authenticator provides. 
-		//
-		// This is what e.g. HttpServletRequest#isUserInRole and @RolesAllowed for
-		GroupPrincipalCallback groupPrincipalCallback = new GroupPrincipalCallback(clientSubject, roles.toArray(new String[roles.size()]));
+	private static class Delegators {
 
-		
-		try {
-			// Execute the handlers we created above. 
-			//
-			// This will typically add the provided principal and roles in an application server specific way to the JAAS Subject.
-			// (it could become entries in a hash table inside the subject, or individual principles, or nested group principles etc.
-			handler.handle(new Callback[] { callerPrincipalCallback, groupPrincipalCallback });
-			
-		} catch (IOException | UnsupportedCallbackException e) {
-			// Should not happen
-			throw new IllegalStateException(e);
+		private final UsernamePasswordAuthenticator authenticator;
+		private final TokenAuthenticator tokenAuthenticator;
+		private final UsernamePasswordProvider provider;
+
+		public Delegators(UsernamePasswordAuthenticator authenticator, TokenAuthenticator tokenAuthenticator, UsernamePasswordProvider provider) {
+			this.authenticator = authenticator;
+			this.tokenAuthenticator = tokenAuthenticator;
+			this.provider = provider;
+		}
+
+		public UsernamePasswordAuthenticator getAuthenticator() {
+			return authenticator;
+		}
+
+		public UsernamePasswordProvider getProvider() {
+			return provider;
+		}
+
+		public TokenAuthenticator getTokenAuthenticator() {
+			return tokenAuthenticator;
+		}
+	}
+	
+	private class AuthenticationData {
+
+		private final String userName;
+		private final List<String> applicationRoles;
+
+		public AuthenticationData(String userName, List<String> applicationRoles) {
+			this.userName = userName;
+			this.applicationRoles = unmodifiableList(new ArrayList<>(applicationRoles));
+		}
+
+		public String getUserName() {
+			return userName;
+		}
+
+		public List<String> getApplicationRoles() {
+			return applicationRoles;
 		}
 	}
 

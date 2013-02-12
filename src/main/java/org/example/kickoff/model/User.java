@@ -25,6 +25,8 @@ public class User extends BaseEntity<Long> {
 	@NotNull
 	@OneToOne(mappedBy = "user", fetch = LAZY, cascade = ALL)
 	private Credentials credentials;
+	
+	private String loginToken; // TODO: make collection later
 
 	@Override
 	public Long getId() {
@@ -50,6 +52,14 @@ public class User extends BaseEntity<Long> {
 
 	public void setCredentials(Credentials credentials) {
 		this.credentials = credentials;
+	}
+
+	public String getLoginToken() {
+		return loginToken;
+	}
+
+	public void setLoginToken(String loginToken) {
+		this.loginToken = loginToken;
 	}
 
 }

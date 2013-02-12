@@ -10,10 +10,11 @@ import javax.enterprise.context.SessionScoped;
 import org.example.kickoff.business.InvalidCredentialsException;
 import org.example.kickoff.business.UserService;
 import org.example.kickoff.model.User;
+import org.example.kickoff.plumbing.jaspic.user.TokenAuthenticator;
 import org.example.kickoff.plumbing.jaspic.user.UsernamePasswordAuthenticator;
 
 @SessionScoped
-public class Authenticator implements UsernamePasswordAuthenticator {
+public class KickoffAuthenticator implements UsernamePasswordAuthenticator, TokenAuthenticator {
 
 	private static final long serialVersionUID = 6233826583476075733L;
 
@@ -34,6 +35,25 @@ public class Authenticator implements UsernamePasswordAuthenticator {
 
 		return true;
 	}
+	
+	@Override
+	public boolean authenticate(String loginToken) {
+		try {
+			user = userService.getUserByLoginToken(loginToken);
+		}
+		catch (InvalidCredentialsException e) {
+			return false;
+		}
+		applicationRoles = asList("architect");
+
+		return true;
+	}
+	
+	@Override
+	public String generateLoginToken() {
+		return userService.generateLoginToken(user.getEmail());
+	}
+	
 
 	public String getUserName() {
 		return user == null ? null : user.getEmail();
