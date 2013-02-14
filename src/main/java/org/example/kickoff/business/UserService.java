@@ -2,6 +2,7 @@ package org.example.kickoff.business;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.example.kickoff.jpa.JPA.getOptionalSingleResult;
+import static org.example.kickoff.model.Group.USERS;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -26,6 +27,10 @@ public class UserService {
 
 	public void registerUser(User user, String password) {
 		setCredentials(user, password);
+
+		if(!user.getGroups().contains(USERS)) {
+			user.getGroups().add(USERS);
+		}
 
 		entityManager.persist(user);
 	}
@@ -52,28 +57,28 @@ public class UserService {
 
 		return credentials.getUser();
 	}
-	
+
 	public User getUserByLoginToken(String loginToken) {
 		User user = getOptionalSingleResult(entityManager.createNamedQuery("User.getByLoginToken", User.class).setParameter("loginToken", loginToken));
-		
+
 		if (user == null) {
 			throw new InvalidCredentialsException("Invalid token");
 		}
-		
+
 		return user;
 	}
-	
+
 	public String generateLoginToken(String email) {
-		
+
 		String loginToken = UUID.randomUUID().toString();
-		
+
 		getOptionalSingleResult(
 			entityManager.createNamedQuery("Credentials.getByEmail", Credentials.class).setParameter("email", email)
 		).getUser().setLoginToken(loginToken);
-		
+
 		return loginToken;
 	}
-	
+
 
 	private void setCredentials(User user, String password) {
 		byte[] salt = generateSalt(DEFAULT_SALT_LENGTH);

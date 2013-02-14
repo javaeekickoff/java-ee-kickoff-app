@@ -1,11 +1,21 @@
 package org.example.kickoff.model;
 
 import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.EnumType.STRING;
+import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
@@ -19,14 +29,20 @@ public class User extends BaseEntity<Long> {
 	private Long id;
 
 	@NotNull
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String email;
 
 	@NotNull
 	@OneToOne(mappedBy = "user", fetch = LAZY, cascade = ALL)
 	private Credentials credentials;
-	
+
 	private String loginToken; // TODO: make collection later
+
+	@ElementCollection(targetClass = Group.class, fetch = EAGER)
+	@Enumerated(STRING)
+	@CollectionTable(name = "user_group")
+	@Column(name = "group_name")
+	private List<Group> groups = new ArrayList<>();
 
 	@Override
 	public Long getId() {
@@ -60,6 +76,26 @@ public class User extends BaseEntity<Long> {
 
 	public void setLoginToken(String loginToken) {
 		this.loginToken = loginToken;
+	}
+
+	public List<Group> getGroups() {
+		return groups;
+	}
+
+	public void setGroups(List<Group> groups) {
+		this.groups = groups;
+	}
+
+	public List<String> getRoles() {
+		Set<String> roles = new HashSet<>();
+
+		for (Group group : getGroups()) {
+			for (Role role : group.getRoles()) {
+				roles.add(role.name());
+			}
+		}
+
+		return new ArrayList<>(roles);
 	}
 
 }
