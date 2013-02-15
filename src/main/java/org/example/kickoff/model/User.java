@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.mail.internet.InternetAddress;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -21,6 +22,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
+import org.example.kickoff.validator.Email;
+
 @Entity
 public class User extends BaseEntity<Long> {
 
@@ -29,10 +32,10 @@ public class User extends BaseEntity<Long> {
 	private Long id;
 
 	@NotNull
+	@Email
 	@Column(nullable = false, unique = true)
 	private String email;
 
-	@NotNull
 	@OneToOne(mappedBy = "user", fetch = LAZY, cascade = ALL)
 	private Credentials credentials;
 

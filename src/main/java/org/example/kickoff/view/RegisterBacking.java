@@ -3,6 +3,7 @@ package org.example.kickoff.view;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.validation.constraints.Size;
 
 import org.example.kickoff.business.UserService;
 import org.example.kickoff.model.User;
@@ -15,8 +16,9 @@ public class RegisterBacking {
 	private UserService userService;
 
 	private User user = new User();
-	private String password;
 
+	@Size(min = 8)
+	private String password;
 
 	public User getUser() {
 		return user;
@@ -33,7 +35,6 @@ public class RegisterBacking {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
 
 	public void register() {
 		userService.registerUser(user, password);
