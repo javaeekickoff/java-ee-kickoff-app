@@ -16,6 +16,9 @@
 			<p>
 				Password: <h:inputSecret value="#{registerBacking.password}" required="true" />
 			</p>
+			<p>
+				Confirm password: <h:inputSecret value="#{registerBacking.passwordConfirmation}" required="true" />
+			</p>
 			<br />
 			<p>
 				<h:commandButton value="Register" action="#{registerBacking.register}" disabled="#{!empty request.userPrincipal}" />

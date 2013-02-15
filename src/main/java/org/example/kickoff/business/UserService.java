@@ -26,6 +26,10 @@ public class UserService {
 	private EntityManager entityManager;
 
 	public void registerUser(User user, String password) {
+		if(getByEmail(user.getEmail()) != null) {
+			throw new ValidationException("Email address is already registered");
+		}
+
 		setCredentials(user, password);
 
 		if(!user.getGroups().contains(USERS)) {
@@ -39,6 +43,10 @@ public class UserService {
 		setCredentials(user, password);
 
 		entityManager.merge(user);
+	}
+
+	public User getByEmail(String email) {
+		return getOptionalSingleResult(entityManager.createNamedQuery("User.getByEmail", User.class).setParameter("email", email));
 	}
 
 	public User getUserByCredentials(String email, String password) {
