@@ -58,6 +58,7 @@ public class KickoffServerAuthConfig implements ServerAuthConfig {
 
 	@Override
 	public void refresh() {
+		// doesn't seem to be called by any server, ever.
 	}
 
 	@Override

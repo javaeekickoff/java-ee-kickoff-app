@@ -1,13 +1,16 @@
 package org.example.kickoff.auth;
 
+import static org.omnifaces.util.Faces.getRequest;
+import static org.omnifaces.util.Faces.getResponse;
+
 import java.io.IOException;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 import javax.servlet.ServletException;
 
+import org.example.kickoff.plumbing.jaspic.Jaspic;
 import org.example.kickoff.plumbing.jaspic.user.UsernamePasswordProvider;
-import org.omnifaces.util.Faces;
 import org.omnifaces.util.Messages;
 
 @Named
@@ -22,7 +25,7 @@ public class LoginBean implements UsernamePasswordProvider {
 		// Not supported in JASPIC: (only WebSphere calls the SAM, but with WebSphere specific entries in MessageInfo Map)
 		// Faces.login(loginUserName, loginPassword);
 
-		boolean authenticated = Faces.getRequest().authenticate(Faces.getResponse());
+		boolean authenticated = Jaspic.authenticate(getRequest(), getResponse());
 
 		if (!authenticated) {
 			Messages.addGlobalError("Login failed");
@@ -30,8 +33,7 @@ public class LoginBean implements UsernamePasswordProvider {
 	}
 
 	public void logout() throws ServletException {
-		Faces.logout();
-		Faces.invalidateSession();
+		Jaspic.logout(getRequest(), getResponse());
 	}
 
 	public String getLoginUserName() {

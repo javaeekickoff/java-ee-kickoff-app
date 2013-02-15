@@ -54,6 +54,10 @@ public class KickoffAuthenticator implements UsernamePasswordAuthenticator, Toke
 		return userService.generateLoginToken(user.getEmail());
 	}
 	
+	@Override
+	public void removeLoginToken() {
+		userService.removeLoginToken(user.getEmail());
+	}	
 
 	public String getUserName() {
 		return user == null ? null : user.getEmail();

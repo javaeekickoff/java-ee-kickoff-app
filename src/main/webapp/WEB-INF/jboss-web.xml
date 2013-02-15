@@ -4,7 +4,11 @@
     <valve>
         <class-name>org.example.kickoff.patch.WebJASPIAuthenticator</class-name>
     </valve>
+    
+    <!-- Extra valve so SAM gets also invoked for non-protected resources, but this valve is not fully implemented -->
+    <!-- 
      <valve>
         <class-name>org.jboss.as.web.security.jaspi.WebJASPIOptionalAuthenticator</class-name>
     </valve>
+     -->
 </jboss-web>

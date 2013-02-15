@@ -74,6 +74,12 @@ public class UserService {
 		return loginToken;
 	}
 	
+	public void removeLoginToken(String email) {
+		getOptionalSingleResult(
+			entityManager.createNamedQuery("Credentials.getByEmail", Credentials.class).setParameter("email", email)
+		).getUser().setLoginToken(null);
+	}
+	
 
 	private void setCredentials(User user, String password) {
 		byte[] salt = generateSalt(DEFAULT_SALT_LENGTH);

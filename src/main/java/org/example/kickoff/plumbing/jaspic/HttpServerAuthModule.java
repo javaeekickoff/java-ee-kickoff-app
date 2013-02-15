@@ -2,6 +2,7 @@ package org.example.kickoff.plumbing.jaspic;
 
 import static javax.security.auth.message.AuthStatus.FAILURE;
 import static javax.security.auth.message.AuthStatus.SEND_SUCCESS;
+import static javax.security.auth.message.AuthStatus.SUCCESS;
 import static org.omnifaces.util.Utils.coalesce;
 
 import java.io.IOException;
@@ -33,6 +34,9 @@ import javax.servlet.http.HttpServletResponse;
  * 
  */
 public abstract class HttpServerAuthModule implements ServerAuthModule, Filter {
+	
+	public static final String IS_LOGOUT_KEY = "org.example.message.request.isLogout";
+	public static final String IS_AUTHENTICATION_KEY = "org.example.message.request.isAuthentication";
 	
 	// Key in the MessageInfo Map that when present AND set to true indicated a protected resource is being accessed.
 	// When the resource is not protected, GlassFish omits the key altogether. WebSphere does insert the key and sets
@@ -71,7 +75,13 @@ public abstract class HttpServerAuthModule implements ServerAuthModule, Filter {
 		HttpServletResponse response = (HttpServletResponse) messageInfo.getResponseMessage();
 		boolean isProtectedResource = Boolean.valueOf((String) messageInfo.getMap().get(IS_MANDATORY_KEY));
 		
-		AuthStatus status = validateHttpRequest(request, response, clientSubject, handler, isProtectedResource);
+		AuthStatus status = null;
+		if (request.getAttribute(IS_LOGOUT_KEY) != null) {
+			status = logout(request, response, clientSubject);
+		} else {
+			status = validateHttpRequest(request, response, clientSubject, handler, isProtectedResource);
+		}
+		
 		if (status == FAILURE) {
 			throw new IllegalStateException("Servlet Container Profile SAM should not return status FAILURE. This is for CLIENT SAMs only");
 		}
@@ -80,7 +90,7 @@ public abstract class HttpServerAuthModule implements ServerAuthModule, Filter {
 	}
 	
 	/**
-	 * WebLogic 12c calls this before Servlet is called, Geronimo v3 after, JBoss EAP 6 and GlassFish 3.1.2.2 don't call this at all. WebLogic
+	 * WebLogic 12c and JBoss EAP 6 (optionally) calls this before Servlet is called, Geronimo v3 and GlassFish 3.1.2.2 after. WebLogic
 	 * (seemingly) only continues if SEND_SUCCESS is returned, Geronimo completely ignores return value.
 	 */
 	@Override
@@ -88,6 +98,9 @@ public abstract class HttpServerAuthModule implements ServerAuthModule, Filter {
 		return SEND_SUCCESS;
 	}
 
+	/**
+	 * Doesn't seem to be called by any server, ever.
+	 */
 	@Override
 	public void cleanSubject(MessageInfo messageInfo, Subject subject) throws AuthException {
 		if (subject != null) {
@@ -103,9 +116,17 @@ public abstract class HttpServerAuthModule implements ServerAuthModule, Filter {
 		throw new IllegalStateException("Not implemented");
 	}
 	
+	public AuthStatus logout(HttpServletRequest request, HttpServletResponse response, Subject clientSubject) {
+		return SUCCESS;
+	}
+	
 	@Override
 	public void destroy() {
 		
+	}
+	
+	public boolean isAuthenticationRequest(HttpServletRequest request) {
+		return Boolean.valueOf((String) request.getAttribute(IS_AUTHENTICATION_KEY));
 	}
 	
 	public void notifyContainerAboutLogin(HttpServletRequest request, Subject clientSubject, CallbackHandler handler, String userName, List<String> roles) {

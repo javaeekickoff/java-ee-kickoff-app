@@ -130,12 +130,29 @@ public class KickoffServerAuthModule extends HttpServerAuthModule {
 			} else if (cookie != null && servletRequest.getRequestURL().toString().equals(getBaseURL(servletRequest) + "/login.xhtml")) {
 				// There is requestData available and a cookie, as well as a request to the login page.
 				// We use this login page as a cue to do login via the cookie.
-				servletRequest.authenticate((HttpServletResponse) response);
-				return;
+				if (servletRequest.authenticate((HttpServletResponse) response)) {
+					// If authentication succeeded, don't process the request to the login page.
+					return;
+				}
 			}
 		}
 		
 		chain.doFilter(servletRequest, response);
+	}
+	
+	@Override
+	public AuthStatus logout(HttpServletRequest request, HttpServletResponse response, Subject clientSubject) {
+		
+		// If there's a "remember me" cookie present, remove it.
+		if (cookieDAO.get(request) != null) {
+			cookieDAO.remove(request, response);
+			Delegators delegators = tryGetDelegators();
+			if (delegators != null && delegators.getTokenAuthenticator() != null) {
+				delegators.getTokenAuthenticator().removeLoginToken();			
+			}				
+		}
+		
+		return SEND_CONTINUE;
 	}
 	
 	private boolean canReAuthenticate(HttpServletRequest request, Subject clientSubject, CallbackHandler handler) {
@@ -176,7 +193,17 @@ public class KickoffServerAuthModule extends HttpServerAuthModule {
 				authenticator = usernamePasswordAuthenticator;
 			} else if (cookie != null && tokenAuthenticator != null) {
 				authenticated = tokenAuthenticator.authenticate(cookie.getValue());
-				authenticator = tokenAuthenticator;
+				
+				if (!authenticated) {
+					// Invalid cookie, remove it
+					cookieDAO.remove(request, response);
+					
+					// Authentication via cookie is an implicit login, so if it fails we just ignore it
+					// so the flow falls-through to the normal login.
+					return NO_LOGIN;
+				} else {
+					authenticator = tokenAuthenticator;
+				}
 			} else {
 				return NO_LOGIN;
 			}

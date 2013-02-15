@@ -1,14 +1,10 @@
 package org.example.kickoff.plumbing.jaspic.factory;
 
-import javax.ejb.EJB;
 import javax.security.auth.message.config.AuthConfigFactory;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
-import org.example.kickoff.business.InvalidCredentialsException;
-import org.example.kickoff.business.UserService;
-import org.example.kickoff.model.User;
 import org.example.kickoff.plumbing.jaspic.KickoffServerAuthModule;
 
 /**
@@ -18,10 +14,6 @@ import org.example.kickoff.plumbing.jaspic.KickoffServerAuthModule;
  */
 @WebListener
 public class StartupListener implements ServletContextListener {
-
-	@EJB
-	private UserService userService;
-	
 	
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
@@ -37,15 +29,6 @@ public class StartupListener implements ServletContextListener {
 			KickoffServerAuthModule.class.getName(), 
 			KickoffServerAuthModule.class
 		).addMappingForUrlPatterns(null, false, "/*");
-		
-		try {
-			userService.getUserByCredentials("foo@bar.com", "foo");
-		} catch (InvalidCredentialsException e) {
-			User user = new User();
-			user.setEmail("foo@bar.com");
-			
-			userService.registerUser(user, "foo");
-		}
 	}
 
 	@Override

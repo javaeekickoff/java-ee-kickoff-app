@@ -11,6 +11,14 @@
 			<!-- Hibernate properties -->
 			<property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
 			<property name="hibernate.hbm2ddl.auto" value="update" />
+			
+			 <!-- EclipseLink  -->
+            <property name="eclipselink.ddl-generation" value="create-tables" />
+            <property name="eclipselink.ddl-generation.output-mode" value="database" />
+            <property name="eclipselink.deploy-on-startup" value="true" />
+            
+            <!-- OpenJPA -->
+            <property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)"/>
 
 		</properties>
 	</persistence-unit>
