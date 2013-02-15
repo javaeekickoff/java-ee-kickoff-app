@@ -1,6 +1,11 @@
 package org.example.kickoff.servlet;
 
+import static org.example.kickoff.model.Group.ADMINISTRATORS;
+import static org.example.kickoff.model.Group.USERS;
+
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
@@ -11,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.example.kickoff.business.InvalidCredentialsException;
 import org.example.kickoff.business.UserService;
+import org.example.kickoff.model.Group;
 import org.example.kickoff.model.User;
 
 @WebServlet(urlPatterns = "/public", loadOnStartup = 1)
@@ -29,6 +35,12 @@ public class PublicServlet extends HttpServlet {
 			User user = new User();
 			user.setEmail("foo@bar.com");
 			
+			List<Group> group = new ArrayList<>();
+			group.add(ADMINISTRATORS);
+			group.add(USERS);
+
+			user.setGroups(group);
+			
 			userService.registerUser(user, "foo");
 		}
     	
@@ -37,6 +49,12 @@ public class PublicServlet extends HttpServlet {
 		} catch (InvalidCredentialsException e) {
 			User user = new User();
 			user.setEmail("foo1@bar.com");
+			
+			List<Group> group = new ArrayList<>();
+			group.add(ADMINISTRATORS);
+			group.add(USERS);
+
+			user.setGroups(group);
 			
 			userService.registerUser(user, "foo");
 		}

@@ -8,12 +8,12 @@
 			<url-pattern>/servlet</url-pattern>
 		</web-resource-collection>
 		<auth-constraint>
-			<role-name>architect</role-name>
+			<role-name>TEST_SERVLET_ACCESS</role-name>
 		</auth-constraint>
 	</security-constraint>
 
 	<security-role>
-		<role-name>architect</role-name>
+		<role-name>TEST_SERVLET_ACCESS</role-name>
 	</security-role>
 
 	<context-param>

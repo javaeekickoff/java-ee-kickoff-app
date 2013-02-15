@@ -25,6 +25,16 @@
 				_user.loginToken = :loginToken
 		</query>
 	</named-query>
-	
+
+	<named-query name="User.getByEmail">
+		<query>
+			SELECT
+				_user
+			FROM
+				User _user					
+			WHERE
+				_user.email = :email
+		</query>
+	</named-query>
 	
 </entity-mappings>

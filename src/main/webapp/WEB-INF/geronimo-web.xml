@@ -17,10 +17,10 @@
     
     <sec:security>
         <sec:role-mappings>
-            <sec:role role-name="architect">
+            <sec:role role-name="TEST_SERVLET_ACCESS">
                 <sec:principal 
                     class="org.apache.geronimo.security.realm.providers.GeronimoGroupPrincipal"
-                    name="architect" 
+                    name="TEST_SERVLET_ACCESS" 
                 />
             </sec:role>
         </sec:role-mappings>

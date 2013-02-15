@@ -7,12 +7,17 @@
 	
 	<h:body>
 	
+		<h:messages />
+	
 		<h:form>
 			<p>
-				Email address: <h:inputText value="#{registerBacking.user.email}" />
+				Email address: <h:inputText value="#{registerBacking.user.email}" id="email"/>
 			</p>
 			<p>
 				Password: <h:inputSecret value="#{registerBacking.password}" required="true" />
+			</p>
+			<p>
+				Confirm password: <h:inputSecret value="#{registerBacking.passwordConfirmation}" required="true" />
 			</p>
 			<br />
 			<p>

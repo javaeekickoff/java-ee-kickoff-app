@@ -1,7 +1,5 @@
 package org.example.kickoff.auth;
 
-import static java.util.Arrays.asList;
-
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -24,6 +22,7 @@ public class KickoffAuthenticator implements UsernamePasswordAuthenticator, Toke
 	private User user;
 	private List<String> applicationRoles;
 
+	@Override
 	public boolean authenticate(String name, String password) {
 		try {
 			user = userService.getUserByCredentials(name, password);
@@ -31,11 +30,11 @@ public class KickoffAuthenticator implements UsernamePasswordAuthenticator, Toke
 		catch (InvalidCredentialsException e) {
 			return false;
 		}
-		applicationRoles = asList("architect");
+		applicationRoles = user.getRoles();
 
 		return true;
 	}
-	
+
 	@Override
 	public boolean authenticate(String loginToken) {
 		try {
@@ -44,11 +43,11 @@ public class KickoffAuthenticator implements UsernamePasswordAuthenticator, Toke
 		catch (InvalidCredentialsException e) {
 			return false;
 		}
-		applicationRoles = asList("architect");
+		applicationRoles = user.getRoles();
 
 		return true;
 	}
-	
+
 	@Override
 	public String generateLoginToken() {
 		return userService.generateLoginToken(user.getEmail());
@@ -59,10 +58,12 @@ public class KickoffAuthenticator implements UsernamePasswordAuthenticator, Toke
 		userService.removeLoginToken(user.getEmail());
 	}	
 
+	@Override
 	public String getUserName() {
 		return user == null ? null : user.getEmail();
 	}
 
+	@Override
 	public List<String> getApplicationRoles() {
 		return applicationRoles;
 	}
