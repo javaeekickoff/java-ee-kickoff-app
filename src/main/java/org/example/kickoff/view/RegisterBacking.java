@@ -22,9 +22,6 @@ public class RegisterBacking {
 	@Size(min = 8)
 	private String password;
 
-	@Size(min = 8)
-	private String passwordConfirmation;
-
 	public User getUser() {
 		return user;
 	}
@@ -41,20 +38,7 @@ public class RegisterBacking {
 		this.password = password;
 	}
 
-	public String getPasswordConfirmation() {
-		return passwordConfirmation;
-	}
-
-	public void setPasswordConfirmation(String passwordConfirmation) {
-		this.passwordConfirmation = passwordConfirmation;
-	}
-
 	public void register() {
-		if (!password.trim().equals(passwordConfirmation.trim())) {
-			Messages.addGlobalError("passwords must match");
-			return;
-		}
-
 		try {
 			userService.registerUser(user, password);
 		}
