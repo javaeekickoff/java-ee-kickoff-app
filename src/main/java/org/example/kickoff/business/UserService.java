@@ -7,6 +7,7 @@ import static org.example.kickoff.model.Group.USERS;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -45,6 +46,7 @@ public class UserService {
 		entityManager.merge(user);
 	}
 
+
 	public User getByEmail(String email) {
 		return getOptionalSingleResult(entityManager.createNamedQuery("User.getByEmail", User.class).setParameter("email", email));
 	}
@@ -74,6 +76,10 @@ public class UserService {
 		}
 
 		return user;
+	}
+
+	public List<User> getUsers() {
+		return entityManager.createQuery("From User", User.class).getResultList();
 	}
 
 	public String generateLoginToken(String email) {

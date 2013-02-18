@@ -4,7 +4,7 @@
 
 	<security-constraint>
 		<web-resource-collection>
-			<web-resource-name>Admin</web-resource-name>
+			<web-resource-name>Servlet</web-resource-name>
 			<url-pattern>/servlet</url-pattern>
 		</web-resource-collection>
 		<auth-constraint>
@@ -12,8 +12,23 @@
 		</auth-constraint>
 	</security-constraint>
 
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>Admin</web-resource-name>
+			<url-pattern>/admin/users.xhtml</url-pattern>
+			<url-pattern>/admin/users</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>USER_MANAGEMENT</role-name>
+		</auth-constraint>
+	</security-constraint>
+
 	<security-role>
 		<role-name>TEST_SERVLET_ACCESS</role-name>
+	</security-role>
+	
+	<security-role>
+		<role-name>USER_MANAGEMENT</role-name>
 	</security-role>
 
 	<context-param>
