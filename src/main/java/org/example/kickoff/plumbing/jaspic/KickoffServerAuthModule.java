@@ -1,9 +1,11 @@
 package org.example.kickoff.plumbing.jaspic;
 
+import static java.lang.Boolean.TRUE;
 import static java.util.Collections.unmodifiableList;
 import static javax.security.auth.message.AuthStatus.SEND_CONTINUE;
 import static javax.security.auth.message.AuthStatus.SEND_FAILURE;
 import static javax.security.auth.message.AuthStatus.SUCCESS;
+import static org.example.kickoff.plumbing.cdi.Beans.getReference;
 import static org.example.kickoff.plumbing.jaspic.KickoffServerAuthModule.LoginResult.LOGIN_FAILURE;
 import static org.example.kickoff.plumbing.jaspic.KickoffServerAuthModule.LoginResult.LOGIN_SUCCESS;
 import static org.example.kickoff.plumbing.jaspic.KickoffServerAuthModule.LoginResult.NO_LOGIN;
@@ -33,7 +35,6 @@ import org.example.kickoff.plumbing.jaspic.request.RequestData;
 import org.example.kickoff.plumbing.jaspic.user.Authenticator;
 import org.example.kickoff.plumbing.jaspic.user.TokenAuthenticator;
 import org.example.kickoff.plumbing.jaspic.user.UsernamePasswordAuthenticator;
-import org.example.kickoff.plumbing.jaspic.user.UsernamePasswordProvider;
 
 
 /**
@@ -59,24 +60,29 @@ public class KickoffServerAuthModule extends HttpServerAuthModule {
 		// Check to see if we're already authenticated.
 		//
 		// With JASPIC, the container doesn't remember authentication data between requests and we have thus have to
-		// re-authenticate before every request.
-		if (canReAuthenticate(request, clientSubject, handler)) {
+		// re-authenticate before every request. It's important to skip this step if authentication is explicitly requested, otherwise
+		// we risk re-authenticating instead of processing a new login request.
+		if (!isAuthenticationRequest(request) && canReAuthenticate(request, clientSubject, handler)) {
 			return SUCCESS;
 		}
 		
 		
+			
 		// Check to see if this is a request from user code to login
 		//
-		// In the case of this SAM, it means a managed bean has called request#authenticate and the login bean
-		// contains a non-null user name and password.
+		// In the case of this SAM, it means a managed bean or the filter method of this class has called request#authenticate (via Jaspic#authenticate)
 		switch (isLoginRequest(request, response, clientSubject, handler)) {
 		
 			case LOGIN_SUCCESS:
 		
 				// Check if there's a previously saved request. This is the case if a protected request was
-				// accessed and the user was subsequently redirected to the login page.
+				// accessed earlier and the user was subsequently redirected to the login page.
 				RequestData requestData = requestDAO.get(request);
 				if (requestData != null) {
+					
+					// We redirect the user to the original URL that was requested. The doFilter method below will
+					// hit when this new URL is requested and uses RequestData to restore the headers, cookies etc
+					// from the original request.
 					redirect(response, requestData.getFullRequestURL());
 				} 
 				
@@ -88,9 +94,10 @@ public class KickoffServerAuthModule extends HttpServerAuthModule {
 				//
 				// Note: Most JASPIC implementations don't distinguish between return codes and only check if return is SUCCESS or not
 				// Note: In the case of this SAM, login is called following a request#authenticate only, so in that case a non-SUCCESS
-				//       return only means no to process the handler.
+				//       return only means not to process the handler.
 				return SEND_FAILURE; 
 		}
+		
 		
 		
 		// Check to see if this request is to a protected resource
@@ -110,6 +117,16 @@ public class KickoffServerAuthModule extends HttpServerAuthModule {
 		return SUCCESS;
 	}
 	
+	/**
+	 * When access to the request resource is granted, this method will be invoked after validateHttpRequest.
+	 * <p>
+	 * The reason for this extra method is that in this method CDI and EJB are available, while in validateHttpRequest this is
+	 * for most servers not the case.
+	 * <p>
+	 * Additionally, in this method we can wrap the request if needed. This should be possible in validateHttpRequest as well, but
+	 * in practice no known JASPIC implementation actually supports this.
+	 * 
+	 */
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		
@@ -130,7 +147,7 @@ public class KickoffServerAuthModule extends HttpServerAuthModule {
 			} else if (cookie != null && servletRequest.getRequestURL().toString().equals(getBaseURL(servletRequest) + "/login.xhtml")) {
 				// There is requestData available and a cookie, as well as a request to the login page.
 				// We use this login page as a cue to do login via the cookie.
-				if (servletRequest.authenticate((HttpServletResponse) response)) {
+				if (Jaspic.authenticate(servletRequest, (HttpServletResponse) response)) {
 					// If authentication succeeded, don't process the request to the login page.
 					return;
 				}
@@ -183,13 +200,16 @@ public class KickoffServerAuthModule extends HttpServerAuthModule {
 			UsernamePasswordAuthenticator usernamePasswordAuthenticator = delegators.getAuthenticator();
 			TokenAuthenticator tokenAuthenticator =	delegators.getTokenAuthenticator();
 			
-			UsernamePasswordProvider provider = delegators.getProvider();
 			Cookie cookie = cookieDAO.get(request);
 			
 			Authenticator authenticator = null;
 			boolean authenticated = false;
-			if (notNull(provider.getLoginUserName(), provider.getLoginPassword())) {
-				authenticated = usernamePasswordAuthenticator.authenticate(provider.getLoginUserName(), provider.getLoginPassword());
+			if (notNull(request.getAttribute(USERNAME_KEY), request.getAttribute(PASSWORD_KEY))) {
+				authenticated = usernamePasswordAuthenticator.authenticate(
+					(String) request.getAttribute(USERNAME_KEY),
+					(String) request.getAttribute(PASSWORD_KEY)
+				);
+				
 				authenticator = usernamePasswordAuthenticator;
 			} else if (cookie != null && tokenAuthenticator != null) {
 				authenticated = tokenAuthenticator.authenticate(cookie.getValue());
@@ -220,8 +240,12 @@ public class KickoffServerAuthModule extends HttpServerAuthModule {
 					new AuthenticationData(authenticator.getUserName(), authenticator.getApplicationRoles())
 				);
 				
-				if (tokenAuthenticator != null) {
+				if (tokenAuthenticator != null && TRUE.equals(request.getAttribute(REMEMBERME_KEY))) {
 					cookieDAO.save(request, response, tokenAuthenticator.generateLoginToken());
+				} else if (cookie != null) {
+					// New login, but user doesn't want "remember me" anymore. Remove existing cookie if it happens
+					// to be still present. 
+					cookieDAO.remove(request, response);
 				}
 				
 				return LOGIN_SUCCESS;
@@ -235,20 +259,13 @@ public class KickoffServerAuthModule extends HttpServerAuthModule {
 	}
 	
 	private Delegators tryGetDelegators() {
-
 		try {
 			BeanManager beanManager = Beans.getBeanManager();
 
-			UsernamePasswordAuthenticator usernamePasswordAuthenticator = Beans.getReference(UsernamePasswordAuthenticator.class, beanManager);
-			UsernamePasswordProvider provider = Beans.getReference(UsernamePasswordProvider.class, beanManager);
-			
-			TokenAuthenticator tokenAuthenticator = Beans.getReference(TokenAuthenticator.class, beanManager);
-
-			// Some containers might give us the bean, but then don't allow us to reference it if called
-			// in the "wrong" context.
-			provider.getLoginPassword();
-
-			return new Delegators(usernamePasswordAuthenticator, tokenAuthenticator, provider);
+			return new Delegators(
+				getReference(UsernamePasswordAuthenticator.class, beanManager),
+				getReference(TokenAuthenticator.class, beanManager)
+			);
 		} catch (Exception e) {
 			return null;
 		}
@@ -258,20 +275,14 @@ public class KickoffServerAuthModule extends HttpServerAuthModule {
 
 		private final UsernamePasswordAuthenticator authenticator;
 		private final TokenAuthenticator tokenAuthenticator;
-		private final UsernamePasswordProvider provider;
 
-		public Delegators(UsernamePasswordAuthenticator authenticator, TokenAuthenticator tokenAuthenticator, UsernamePasswordProvider provider) {
+		public Delegators(UsernamePasswordAuthenticator authenticator, TokenAuthenticator tokenAuthenticator) {
 			this.authenticator = authenticator;
 			this.tokenAuthenticator = tokenAuthenticator;
-			this.provider = provider;
 		}
 
 		public UsernamePasswordAuthenticator getAuthenticator() {
 			return authenticator;
-		}
-
-		public UsernamePasswordProvider getProvider() {
-			return provider;
 		}
 
 		public TokenAuthenticator getTokenAuthenticator() {

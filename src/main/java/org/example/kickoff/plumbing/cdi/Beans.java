@@ -38,7 +38,7 @@ public class Beans {
 			return getBeanManager();
 		} catch (IllegalStateException e) {
 			return null;
-		} 
+		}
 	}
 	
 	public static BeanManager getBeanManager() {

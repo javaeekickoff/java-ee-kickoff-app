@@ -1,5 +1,6 @@
 package org.example.kickoff.plumbing.jaspic;
 
+import static java.lang.Boolean.TRUE;
 import static javax.security.auth.message.AuthStatus.FAILURE;
 import static javax.security.auth.message.AuthStatus.SEND_SUCCESS;
 import static javax.security.auth.message.AuthStatus.SUCCESS;
@@ -37,6 +38,9 @@ public abstract class HttpServerAuthModule implements ServerAuthModule, Filter {
 	
 	public static final String IS_LOGOUT_KEY = "org.example.message.request.isLogout";
 	public static final String IS_AUTHENTICATION_KEY = "org.example.message.request.isAuthentication";
+	public static final String USERNAME_KEY = "org.example.message.request.username";
+	public static final String PASSWORD_KEY = "org.example.message.request.password";
+	public static final String REMEMBERME_KEY = "org.example.message.request.rememberme";
 	
 	// Key in the MessageInfo Map that when present AND set to true indicated a protected resource is being accessed.
 	// When the resource is not protected, GlassFish omits the key altogether. WebSphere does insert the key and sets
@@ -126,7 +130,7 @@ public abstract class HttpServerAuthModule implements ServerAuthModule, Filter {
 	}
 	
 	public boolean isAuthenticationRequest(HttpServletRequest request) {
-		return Boolean.valueOf((String) request.getAttribute(IS_AUTHENTICATION_KEY));
+		return TRUE.equals(request.getAttribute(IS_AUTHENTICATION_KEY));
 	}
 	
 	public void notifyContainerAboutLogin(HttpServletRequest request, Subject clientSubject, CallbackHandler handler, String userName, List<String> roles) {
