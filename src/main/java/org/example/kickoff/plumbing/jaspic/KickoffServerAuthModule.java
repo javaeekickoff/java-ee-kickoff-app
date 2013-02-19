@@ -20,8 +20,6 @@ import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.message.AuthStatus;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -51,7 +49,7 @@ public class KickoffServerAuthModule extends HttpServerAuthModule {
 	static enum LoginResult {
 		LOGIN_SUCCESS,
 		LOGIN_FAILURE,
-		NO_LOGIN		
+		NO_LOGIN
 	}
 	
 	@Override
@@ -128,33 +126,32 @@ public class KickoffServerAuthModule extends HttpServerAuthModule {
 	 * 
 	 */
 	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		
-		HttpServletRequest servletRequest = (HttpServletRequest) request;
-		
+	public void doFilterHttp(final HttpServletRequest request, final HttpServletResponse response, final FilterChain chain) throws IOException, ServletException {
+				
 		// See if there was a saved request that matches the current request and restore
 		// that request by wrapping the current request.
 		//
 		// Note that it doesn't seem possible to do this in a portable way in validateHttpRequest
-		RequestData requestData = requestDAO.get(servletRequest);
-		Cookie cookie = cookieDAO.get(servletRequest);
+		RequestData requestData = requestDAO.get(request);
+		Cookie cookie = cookieDAO.get(request);
+		HttpServletRequest newRequest = request;
 		
 		if (requestData != null) {
 			
-			if (requestData.matchesRequest(servletRequest)) {
-				servletRequest = new HttpServletRequestDelegator(servletRequest, requestData);
-				requestDAO.remove(servletRequest);
-			} else if (cookie != null && servletRequest.getRequestURL().toString().equals(getBaseURL(servletRequest) + "/login.xhtml")) {
+			if (requestData.matchesRequest(request)) {
+				newRequest = new HttpServletRequestDelegator(request, requestData);
+				requestDAO.remove(request);
+			} else if (cookie != null && request.getRequestURL().toString().equals(getBaseURL(request) + "/login.xhtml")) {
 				// There is requestData available and a cookie, as well as a request to the login page.
 				// We use this login page as a cue to do login via the cookie.
-				if (Jaspic.authenticate(servletRequest, (HttpServletResponse) response)) {
+				if (Jaspic.authenticate(request, response)) {
 					// If authentication succeeded, don't process the request to the login page.
 					return;
 				}
 			}
 		}
 		
-		chain.doFilter(servletRequest, response);
+		chain.doFilter(newRequest, response);
 	}
 	
 	@Override

@@ -23,8 +23,11 @@ import javax.security.auth.message.callback.GroupPrincipalCallback;
 import javax.security.auth.message.config.ServerAuthContext;
 import javax.security.auth.message.module.ServerAuthModule;
 import javax.servlet.Filter;
+import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -91,6 +94,15 @@ public abstract class HttpServerAuthModule implements ServerAuthModule, Filter {
 		}
 		
 		return status;
+	}
+	
+	@Override
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+		doFilterHttp((HttpServletRequest) request, (HttpServletResponse) response, chain);
+	}
+	
+	public void doFilterHttp(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+		
 	}
 	
 	/**

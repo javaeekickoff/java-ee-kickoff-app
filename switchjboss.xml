@@ -13,9 +13,9 @@
 				<include name="**/*.java" />
 			</fileset>
 		</move>
-		
+
 		<eclipse.refreshLocal resource="java-ee-kickoff-app" depth="infinite" />
-		
+
 	</target>
 
 </project>
