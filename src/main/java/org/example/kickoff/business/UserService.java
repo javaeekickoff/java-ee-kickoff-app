@@ -40,6 +40,15 @@ public class UserService {
 		entityManager.persist(user);
 	}
 
+	public void update(User user) {
+		User otherUser = getByEmail(user.getEmail());
+		if(otherUser != null && !user.equals(otherUser)) {
+			throw new ValidationException("Email address is already registered");
+		}
+
+		entityManager.merge(user);
+	}
+
 	public void updatePassword(User user, String password) {
 		setCredentials(user, password);
 
@@ -93,7 +102,7 @@ public class UserService {
 		return loginToken;
 	}
 
-	
+
 	public void removeLoginToken(String email) {
 		getOptionalSingleResult(
 			entityManager.createNamedQuery("Credentials.getByEmail", Credentials.class).setParameter("email", email)

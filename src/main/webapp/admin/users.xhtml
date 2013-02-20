@@ -1,36 +1,52 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:f="http://java.sun.com/jsf/core"
->    
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
 
-	 <h:head>
-        <title>Users</title>
-    </h:head>
+	<h:head>
+		<title>Users</title>
+	</h:head>
 
-    <h:body>
- 
- 		<h:messages />
- 	
- 		<h:dataTable value="#{usersBacking.users}" var="user">
- 			<h:column>
- 				<f:facet name="header">User ID</f:facet>
- 				#{user.id}
- 			</h:column>
- 			<h:column>
- 				<f:facet name="header">Email address</f:facet>
- 				#{user.email}
- 			</h:column>
- 			<h:column>
- 				<f:facet name="header">Groups</f:facet>
- 				<h:dataTable value="#{user.groups}" var="group">
- 					<h:column>
- 						#{group}
- 					</h:column>
- 				</h:dataTable>
- 			</h:column>
- 			<h:column>
- 				<f:facet name="header">Password</f:facet>
- 			</h:column>
- 		</h:dataTable>
-    </h:body>
+	<h:body>
+	
+		<h:form id="form">
+			<h:messages id="messages"/>
+	
+			<p:dataTable value="#{usersBacking.users}" var="user" paginator="true" rows="25" editable="true">
+	
+				<p:ajax event="rowEdit" listener="#{usersBacking.onEdit}" update=":form:messages"/>
+	
+				<p:column>
+					<f:facet name="header">User ID</f:facet>
+	 				#{user.id}
+	 			</p:column>
+	
+				<p:column headerText="Email address">
+					<p:cellEditor>
+						<f:facet name="output">#{user.email}</f:facet>
+						<f:facet name="input">
+							<p:inputText value="#{user.email}" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+	
+				<p:column>
+					<f:facet name="header">Groups</f:facet>
+					<ui:repeat var="group" value="#{user.groups}">
+						#{group}<br />
+					</ui:repeat>
+				</p:column>
+	
+				<p:column>
+					<f:facet name="header">Password</f:facet>
+				</p:column>
+	
+				<p:column>
+					<p:rowEditor />
+				</p:column>
+	
+			</p:dataTable>
+		</h:form>
+	</h:body>
 </html>

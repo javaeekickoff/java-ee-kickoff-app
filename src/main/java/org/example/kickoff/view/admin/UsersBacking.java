@@ -9,6 +9,7 @@ import javax.faces.bean.ViewScoped;
 
 import org.example.kickoff.business.UserService;
 import org.example.kickoff.model.User;
+import org.primefaces.event.RowEditEvent;
 
 
 @ManagedBean
@@ -28,5 +29,11 @@ public class UsersBacking {
 	public List<User> getUsers() {
 		return users;
 	}
+
+    public void onEdit(RowEditEvent event) {
+    	User user = (User) event.getObject();
+
+        userService.update(user);
+    }
 
 }
