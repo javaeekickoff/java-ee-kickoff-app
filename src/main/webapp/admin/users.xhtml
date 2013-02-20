@@ -30,12 +30,24 @@
 						</f:facet>
 					</p:cellEditor>
 				</p:column>
-	
-				<p:column>
-					<f:facet name="header">Groups</f:facet>
-					<ui:repeat var="group" value="#{user.groups}">
-						#{group}<br />
-					</ui:repeat>
+
+				<p:column headerText="Groups">
+ 					<p:cellEditor>
+						<f:facet name="output">
+							<ui:repeat var="group" value="#{user.groups}">
+								#{group}<br />
+							</ui:repeat>
+						</f:facet>
+
+						<f:facet name="input">
+							<p:selectManyCheckbox value="#{user.groups}" collectionType="java.util.ArrayList" layout="pageDirection">
+								<f:converter converterId="omnifaces.GenericEnumConverter"/>
+								<f:selectItems value="#{usersBacking.groups}" var="group" itemValue="#{group}">
+						        	#{group}
+								</f:selectItems>
+							</p:selectManyCheckbox>
+						</f:facet>
+					</p:cellEditor>
 				</p:column>
 	
 				<p:column>
@@ -43,6 +55,7 @@
 				</p:column>
 	
 				<p:column>
+					<f:facet name="header">Edit</f:facet>
 					<p:rowEditor />
 				</p:column>
 	
