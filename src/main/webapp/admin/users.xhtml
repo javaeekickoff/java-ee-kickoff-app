@@ -13,16 +13,16 @@
 		<h:form id="form">
 			<h:messages id="messages"/>
 	
-			<p:dataTable value="#{usersBacking.users}" var="user" paginator="true" rows="25" editable="true">
+			<p:dataTable value="#{usersBacking.users}" var="user" paginator="true" rows="25" editable="true" filteredValue="#{usersBacking.filteredUsers}">
 	
 				<p:ajax event="rowEdit" listener="#{usersBacking.onEdit}" update=":form:messages"/>
 	
-				<p:column>
+				<p:column sortBy="#{user.id}" filterBy="#{user.id}" >
 					<f:facet name="header">User ID</f:facet>
 	 				#{user.id}
 	 			</p:column>
 	
-				<p:column headerText="Email address">
+				<p:column headerText="Email address" sortBy="#{user.email}" filterBy="#{user.email}" filterMatchMode="contains">
 					<p:cellEditor>
 						<f:facet name="output">#{user.email}</f:facet>
 						<f:facet name="input">
@@ -31,7 +31,7 @@
 					</p:cellEditor>
 				</p:column>
 
-				<p:column headerText="Groups">
+				<p:column headerText="Groups" filterBy="#{user.groups}" filterOptions="#{usersBacking.groupsFilter}" filterMatchMode="contains">
  					<p:cellEditor>
 						<f:facet name="output">
 							<ui:repeat var="group" value="#{user.groups}">
