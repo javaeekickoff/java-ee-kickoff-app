@@ -6,17 +6,17 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.faces.model.SelectItem;
+import javax.inject.Named;
 
 import org.example.kickoff.business.UserService;
 import org.example.kickoff.model.Group;
 import org.example.kickoff.model.User;
 import org.primefaces.event.RowEditEvent;
 
-@ManagedBean
-@ViewScoped
+@Named
+@RequestScoped
 public class UsersBacking {
 
 	@EJB
