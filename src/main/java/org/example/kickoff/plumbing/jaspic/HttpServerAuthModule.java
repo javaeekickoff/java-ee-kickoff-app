@@ -1,5 +1,6 @@
 package org.example.kickoff.plumbing.jaspic;
 
+import static java.lang.Boolean.TRUE;
 import static javax.security.auth.message.AuthStatus.FAILURE;
 import static javax.security.auth.message.AuthStatus.SEND_SUCCESS;
 import static javax.security.auth.message.AuthStatus.SUCCESS;
@@ -22,8 +23,11 @@ import javax.security.auth.message.callback.GroupPrincipalCallback;
 import javax.security.auth.message.config.ServerAuthContext;
 import javax.security.auth.message.module.ServerAuthModule;
 import javax.servlet.Filter;
+import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -37,6 +41,9 @@ public abstract class HttpServerAuthModule implements ServerAuthModule, Filter {
 	
 	public static final String IS_LOGOUT_KEY = "org.example.message.request.isLogout";
 	public static final String IS_AUTHENTICATION_KEY = "org.example.message.request.isAuthentication";
+	public static final String USERNAME_KEY = "org.example.message.request.username";
+	public static final String PASSWORD_KEY = "org.example.message.request.password";
+	public static final String REMEMBERME_KEY = "org.example.message.request.rememberme";
 	
 	// Key in the MessageInfo Map that when present AND set to true indicated a protected resource is being accessed.
 	// When the resource is not protected, GlassFish omits the key altogether. WebSphere does insert the key and sets
@@ -89,6 +96,15 @@ public abstract class HttpServerAuthModule implements ServerAuthModule, Filter {
 		return status;
 	}
 	
+	@Override
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+		doFilterHttp((HttpServletRequest) request, (HttpServletResponse) response, chain);
+	}
+	
+	public void doFilterHttp(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+		
+	}
+	
 	/**
 	 * WebLogic 12c and JBoss EAP 6 (optionally) calls this before Servlet is called, Geronimo v3 and GlassFish 3.1.2.2 after. WebLogic
 	 * (seemingly) only continues if SEND_SUCCESS is returned, Geronimo completely ignores return value.
@@ -126,7 +142,7 @@ public abstract class HttpServerAuthModule implements ServerAuthModule, Filter {
 	}
 	
 	public boolean isAuthenticationRequest(HttpServletRequest request) {
-		return Boolean.valueOf((String) request.getAttribute(IS_AUTHENTICATION_KEY));
+		return TRUE.equals(request.getAttribute(IS_AUTHENTICATION_KEY));
 	}
 	
 	public void notifyContainerAboutLogin(HttpServletRequest request, Subject clientSubject, CallbackHandler handler, String userName, List<String> roles) {

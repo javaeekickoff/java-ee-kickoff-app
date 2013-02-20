@@ -18,10 +18,13 @@
  
         <h:form>
         	<p>
-            	User name: <h:inputText value="#{loginBean.loginUserName}" /> (test user: foo@bar.com)
+            	User name: <h:inputText value="#{loginBean.loginUserName}" /> (test users: foo@bar.com, foo1@bar.com)
             </p>
             <p>
             	Password: <h:inputSecret value="#{loginBean.loginPassword}" /> (test password: foo)
+            </p>
+             <p>
+            	Remember me	<h:selectBooleanCheckbox value="#{loginBean.rememberMe}" />
             </p>
             <br/>
             <p>                  
