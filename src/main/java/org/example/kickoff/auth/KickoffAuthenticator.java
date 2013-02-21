@@ -8,8 +8,9 @@ import javax.enterprise.context.SessionScoped;
 import org.example.kickoff.business.InvalidCredentialsException;
 import org.example.kickoff.business.UserService;
 import org.example.kickoff.model.User;
-import org.example.kickoff.plumbing.jaspic.user.TokenAuthenticator;
-import org.example.kickoff.plumbing.jaspic.user.UsernamePasswordAuthenticator;
+import org.omnifaces.security.jaspic.user.TokenAuthenticator;
+import org.omnifaces.security.jaspic.user.UsernamePasswordAuthenticator;
+
 
 @SessionScoped
 public class KickoffAuthenticator implements UsernamePasswordAuthenticator, TokenAuthenticator {

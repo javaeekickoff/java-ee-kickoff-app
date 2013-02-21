@@ -80,6 +80,12 @@
 			<artifactId>omnifaces</artifactId>
 			<version>1.4-SNAPSHOT</version>
 		</dependency>
+		
+		<dependency>
+  			<groupId>org.omnifaces</groupId>
+  			<artifactId>omnifaces-security</artifactId>
+  			<version>0.1-SNAPSHOT</version>
+		</dependency>
 
 		<dependency>
 			<groupId>com.h2database</groupId>
