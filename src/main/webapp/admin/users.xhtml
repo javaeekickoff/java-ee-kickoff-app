@@ -2,7 +2,10 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+>
 
 	<h:head>
 		<title>Users</title>
@@ -51,15 +54,53 @@
 				</p:column>
 	
 				<p:column>
-					<f:facet name="header">Password</f:facet>
-				</p:column>
-	
-				<p:column>
 					<f:facet name="header">Edit</f:facet>
 					<p:rowEditor />
 				</p:column>
 	
+				<p:column>
+					<f:facet name="header">Password</f:facet>
+					<p:commandButton id="selectButton" update=":passwordForm:changePassword" oncomplete="passwordDialog.show()" value="Change password">  
+						<f:setPropertyActionListener value="#{user}" target="#{changePasswordBacking.user}" />  
+					</p:commandButton>
+				</p:column>
+	
 			</p:dataTable>
 		</h:form>
+		
+		<p:dialog header="Change password" widgetVar="passwordDialog" resizable="false"
+			id="passwordDlg" modal="true" closable="true">
+			<h:form id="passwordForm">
+				<o:validateEqual components="password confirmPassword"/>
+	
+				<h:messages id="messages" />
+				<h:panelGrid id="changePassword" columns="2">
+					<f:facet name="header">
+						Change password for user #{changePasswordBacking.user.email}
+					</f:facet>
+	
+					<p>
+						Password: <h:inputSecret id="password" value="#{changePasswordBacking.newPassword}" required="true" />
+					</p>
+					<p>
+						Confirm password: <h:inputSecret id="confirmPassword" required="true" />
+					</p>
+					<br />
+					<p>
+						<p:commandButton value="Change password" actionListener="#{changePasswordBacking.changePassword}" update=":passwordForm" oncomplete="handlePasswordChangeRequest(xhr, status, args)" />
+					</p>
+				</h:panelGrid>
+
+			</h:form>
+	
+		</p:dialog>
 	</h:body>
+	
+	<script type="text/javascript">  
+	    function handlePasswordChangeRequest(xhr, status, args) {  
+	        if(!args.validationFailed) {  
+	        	passwordDialog.hide();
+	        }  
+	    }  
+	</script>  
 </html>
