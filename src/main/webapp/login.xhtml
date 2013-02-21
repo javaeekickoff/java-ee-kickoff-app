@@ -1,15 +1,12 @@
-<html xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:h="http://java.sun.com/jsf/html"
->    
-
-	 <h:head>
-        <title>Java EE kickoff app login page</title>
-    </h:head>
-
-    <h:body>
- 
- 		<h:messages />
- 	
+<ui:composition template="/WEB-INF/templates/layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+	<ui:define name="title">Java EE kickoff app login page</ui:define>
+	
+	<ui:define name="content">
  		<p>
 			Logged in name: #{request.userPrincipal.name}
 		</p>
@@ -32,17 +29,5 @@
             	<h:commandButton value="Logout" action="#{loginBean.logout}" disabled="#{empty request.userPrincipal}" />
             </p>
         </h:form>
-        
-        <hr/>
-        
-        <h:link outcome="register" >Register</h:link>
-        
-        <p>
-        	Protected resource: <h:outputLink value="servlet">servlet</h:outputLink>
-        </p>
-        <p>
-        	Public resource: <h:outputLink value="public">public</h:outputLink>
-        </p>
- 
-    </h:body>
-</html>
+	</ui:define>
+</ui:composition>

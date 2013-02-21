@@ -1,16 +1,13 @@
-<html xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition template="/WEB-INF/templates/layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:o="http://omnifaces.org/ui"
 >
-	<h:head>
-		<title>Register user</title>
-	</h:head>
-	
-	<h:body>
-	
-		<h:messages />
-	
+	<ui:define name="title">Register user</ui:define>
+
+	<ui:define name="content">
 		<h:form>
 			<o:validateEqual components="password confirmPassword"/>
 
@@ -28,6 +25,5 @@
 				<h:commandButton value="Register" action="#{registerBacking.register}" disabled="#{!empty request.userPrincipal}" />
 			</p>
 		</h:form>
-	
-	</h:body>
-</html>
+	</ui:define>
+</ui:composition>
