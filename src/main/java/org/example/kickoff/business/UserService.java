@@ -7,6 +7,7 @@ import static org.example.kickoff.model.Group.USERS;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -39,11 +40,21 @@ public class UserService {
 		entityManager.persist(user);
 	}
 
+	public void update(User user) {
+		User otherUser = getByEmail(user.getEmail());
+		if(otherUser != null && !user.equals(otherUser)) {
+			throw new ValidationException("Email address is already registered");
+		}
+
+		entityManager.merge(user);
+	}
+
 	public void updatePassword(User user, String password) {
 		setCredentials(user, password);
 
 		entityManager.merge(user);
 	}
+
 
 	public User getByEmail(String email) {
 		return getOptionalSingleResult(entityManager.createNamedQuery("User.getByEmail", User.class).setParameter("email", email));
@@ -76,6 +87,10 @@ public class UserService {
 		return user;
 	}
 
+	public List<User> getUsers() {
+		return entityManager.createQuery("From User", User.class).getResultList();
+	}
+
 	public String generateLoginToken(String email) {
 
 		String loginToken = UUID.randomUUID().toString();
@@ -87,7 +102,7 @@ public class UserService {
 		return loginToken;
 	}
 
-	
+
 	public void removeLoginToken(String email) {
 		getOptionalSingleResult(
 			entityManager.createNamedQuery("Credentials.getByEmail", Credentials.class).setParameter("email", email)

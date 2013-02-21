@@ -1,39 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" version="3.0">
-  <security-constraint>
-    <web-resource-collection>
-      <web-resource-name>Admin</web-resource-name>
-      <url-pattern>/servlet</url-pattern>
-    </web-resource-collection>
-    <auth-constraint>
-      <role-name>TEST_SERVLET_ACCESS</role-name>
-    </auth-constraint>
-  </security-constraint>
-  <security-role>
-    <role-name>TEST_SERVLET_ACCESS</role-name>
-  </security-role>
-  <context-param>
-    <param-name>org.omnifaces.FACES_VIEWS_SCANNED_VIEWS_ALWAYS_EXTENSIONLESS</param-name>
-    <param-value>true</param-value>
-  </context-param>
-  <context-param>
-    <param-name>org.omnifaces.FACES_VIEWS_SCAN_PATHS</param-name>
-    <param-value>/*.xhtml</param-value>
-  </context-param>
-  <welcome-file-list>
-    <welcome-file>login.xhtml</welcome-file>
-  </welcome-file-list>
-  <data-source>
-    <name>java:app/KickoffApp/kickoffDS</name>
-    <class-name>org.h2.jdbcx.JdbcDataSource</class-name>
-    <url>jdbc:h2:mem:test</url>
-    <user>sa</user>
-    <password>sa</password>
-    <transactional>true</transactional>
-    <isolation-level>TRANSACTION_READ_COMMITTED</isolation-level>
-    <initial-pool-size>2</initial-pool-size>
-    <max-pool-size>10</max-pool-size>
-    <min-pool-size>5</min-pool-size>
-    <max-statements>0</max-statements>
-  </data-source>
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>Servlet</web-resource-name>
+			<url-pattern>/servlet</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>TEST_SERVLET_ACCESS</role-name>
+		</auth-constraint>
+	</security-constraint>
+
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>Admin</web-resource-name>
+			<url-pattern>/admin/users.xhtml</url-pattern>
+			<url-pattern>/admin/users</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>USER_MANAGEMENT</role-name>
+		</auth-constraint>
+	</security-constraint>
+
+	<security-role>
+		<role-name>TEST_SERVLET_ACCESS</role-name>
+	</security-role>
+	
+	<security-role>
+		<role-name>USER_MANAGEMENT</role-name>
+	</security-role>
+
+	<context-param>
+		<param-name>org.omnifaces.FACES_VIEWS_SCANNED_VIEWS_ALWAYS_EXTENSIONLESS</param-name>
+		<param-value>true</param-value>
+	</context-param>
+	<context-param>
+		<param-name>org.omnifaces.FACES_VIEWS_SCAN_PATHS</param-name>
+		<param-value>/*.xhtml</param-value>
+	</context-param>
+	
+	
+	<welcome-file-list>
+		<welcome-file>login.xhtml</welcome-file>
+	</welcome-file-list>
+
+	<data-source>
+		<name>java:app/KickoffApp/kickoffDS</name>
+		<class-name>org.h2.jdbcx.JdbcDataSource</class-name>
+		<url>jdbc:h2:mem:test</url>
+		<user>sa</user>
+		<password>sa</password>
+		<transactional>true</transactional>
+		<isolation-level>TRANSACTION_READ_COMMITTED</isolation-level>
+		<initial-pool-size>2</initial-pool-size>
+		<max-pool-size>10</max-pool-size>
+		<min-pool-size>5</min-pool-size>
+		<max-statements>0</max-statements>
+	</data-source>
 </web-app>

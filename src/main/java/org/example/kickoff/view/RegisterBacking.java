@@ -1,8 +1,8 @@
 package org.example.kickoff.view;
 
 import javax.ejb.EJB;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Named;
 import javax.validation.constraints.Size;
 
 import org.example.kickoff.business.UserService;
@@ -10,8 +10,8 @@ import org.example.kickoff.business.ValidationException;
 import org.example.kickoff.model.User;
 import org.omnifaces.util.Messages;
 
-@ManagedBean
-@ViewScoped
+@Named
+@RequestScoped
 public class RegisterBacking {
 
 	@EJB

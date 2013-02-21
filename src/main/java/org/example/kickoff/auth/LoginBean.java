@@ -6,7 +6,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 import javax.servlet.ServletException;
 
-import org.example.kickoff.plumbing.jaspic.Jaspic;
+import org.omnifaces.security.jaspic.Jaspic;
 import org.omnifaces.util.Messages;
 
 @Named

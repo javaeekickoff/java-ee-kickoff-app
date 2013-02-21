@@ -7,5 +7,10 @@
 		<role-name>TEST_SERVLET_ACCESS</role-name>
 		<group-name>TEST_SERVLET_ACCESS</group-name>
 	</security-role-mapping>
-	
+
+	<security-role-mapping>
+		<role-name>USER_MANAGEMENT</role-name>
+		<group-name>USER_MANAGEMENT</group-name>
+	</security-role-mapping>
+
 </sun-web-app> 

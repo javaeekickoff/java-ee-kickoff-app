@@ -23,6 +23,12 @@
                     name="TEST_SERVLET_ACCESS" 
                 />
             </sec:role>
+            <sec:role role-name="USER_MANAGEMENT">
+                <sec:principal 
+                    class="org.apache.geronimo.security.realm.providers.GeronimoGroupPrincipal"
+                    name="USER_MANAGEMENT" 
+                />
+            </sec:role>
         </sec:role-mappings>
     </sec:security>
     
