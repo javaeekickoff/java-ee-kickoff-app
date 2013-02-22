@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
+import javax.enterprise.inject.Produces;
+import javax.inject.Named;
 
 import org.example.kickoff.business.InvalidCredentialsException;
 import org.example.kickoff.business.UserService;
@@ -35,7 +37,7 @@ public class KickoffAuthenticator implements UsernamePasswordAuthenticator, Toke
 
 		return true;
 	}
-
+	
 	@Override
 	public boolean authenticate(String loginToken) {
 		try {
@@ -67,6 +69,11 @@ public class KickoffAuthenticator implements UsernamePasswordAuthenticator, Toke
 	@Override
 	public List<String> getApplicationRoles() {
 		return applicationRoles;
+	}
+
+	@Produces @Named("activeUser")
+	public User getUser() {
+		return user;
 	}
 
 }

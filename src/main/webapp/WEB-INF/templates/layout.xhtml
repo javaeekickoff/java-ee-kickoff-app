@@ -17,15 +17,39 @@
 		<div id="header">
 			<h1><ui:insert name="header">Kickoff App</ui:insert></h1>
 		</div>
+		
+		<div style="float:right; background: white;">
+			<h:link outcome="/login" rendered="#{empty request.userPrincipal}" >Login</h:link>
+			<h:panelGrid columns="2">  
+				#{request.userPrincipal.name}
+				<h:form>
+					<h:commandButton value="Logout" action="#{loginBean.logout}" rendered="#{!empty request.userPrincipal}" />
+				</h:form>
+			</h:panelGrid>
+		</div>
 
 		<div id="menu">
 			<ui:insert name="menu">
 				<ul>
-					<li><h:link outcome="register">Register</h:link></li>
-					<li><h:link outcome="login">Login</h:link></li>
-					<li>Protected resource: <h:outputLink value="servlet">servlet</h:outputLink></li>
-					<li>Public resource: <h:outputLink value="public">public</h:outputLink></li>
+					<li><h:link outcome="/register">Register</h:link></li>
+					<li><h:link outcome="/login">Login</h:link></li>
+					<h:panelGroup rendered="#{request.isUserInRole('USER_MANAGEMENT')}">
+						<li>
+							Admin
+							<ul>
+								<li><h:link outcome="/admin/users">Users</h:link></li>
+							</ul>
+						</li>
+					</h:panelGroup>
 				</ul>
+				
+				<hr/>
+				Test only:
+				<ul>
+					<li>Protected resource: <h:outputLink value="/java-ee-kickoff-app/servlet">servlet</h:outputLink></li>
+					<li>Public resource: <h:outputLink value="/java-ee-kickoff-app/public">public</h:outputLink></li>
+				</ul>
+				
 			</ui:insert>
 		</div>
 
@@ -37,7 +61,7 @@
 
 		<div id="footer">
 			<ui:insert name="footer">
-				<p>©#{of:formatDate(now, 'yyyy')} Kizitos</p>
+				<p>©#{of:formatDate(now, 'yyyy')} The Java EE kickoff team</p>
 			</ui:insert>
 		</div>
 	</h:body>
