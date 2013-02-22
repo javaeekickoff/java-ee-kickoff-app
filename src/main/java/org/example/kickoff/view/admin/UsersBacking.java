@@ -22,8 +22,6 @@ public class UsersBacking {
 	@EJB
 	private UserService userService;
 
-	private User selectedUser;
-
 	private List<User> users;
 
 	private List<User> filteredUsers;
@@ -46,14 +44,6 @@ public class UsersBacking {
 		}
 
 		groupFilterOptions = list.toArray(new SelectItem[list.size()]);
-	}
-
-	public User getSelectedUser() {
-		return selectedUser;
-	}
-
-	public void setSelectedUser(User selectedUser) {
-		this.selectedUser = selectedUser;
 	}
 
 	public List<User> getUsers() {
@@ -82,7 +72,4 @@ public class UsersBacking {
 		userService.update(user);
 	}
 
-	public void delete() {
-
-	}
 }

@@ -56,7 +56,7 @@
 				</p:column>
 				
 				<p:column headerText="Delete">
-					<p:commandButton id="deleteButton" value="Delete" action="#{usersBacking.delete}" update=":confirmDeleteForm" oncomplete="confirmDeleteDialog.show()">
+					<p:commandButton id="deleteButton" value="Delete" update=":confirmDeleteForm" oncomplete="confirmDeleteDialog.show()">
 						<f:setPropertyActionListener value="#{user}" target="#{deleteUserBacking.user}" />
 					</p:commandButton>
 				</p:column>
@@ -113,7 +113,7 @@
 					<f:facet name="header">
 						Are you sure you want to delete user #{deleteUserBacking.user.email}?
 					</f:facet>
-					<p:commandButton value="Delete user" actionListener="#{deleteUserBacking.deleteUser()}" update=":confirmDeleteForm" oncomplete="confirmDeleteDialog.hide()" />
+					<p:commandButton value="Delete user" action="#{deleteUserBacking.deleteUser}" ajax="false"/>
 					<p:commandButton value="Cancel"	update=":confirmDeleteForm, :form" oncomplete="confirmDeleteDialog.hide()" />
 				</h:panelGrid>
 

@@ -6,6 +6,7 @@ import javax.faces.bean.ViewScoped;
 
 import org.example.kickoff.business.UserService;
 import org.example.kickoff.model.User;
+import org.omnifaces.util.Messages;
 
 @ManagedBean
 @ViewScoped
@@ -26,5 +27,7 @@ public class DeleteUserBacking {
 
 	public void deleteUser() {
 		userService.delete(user);
+
+		Messages.addGlobalInfo("User {0} deleted successfully", user.getEmail());
 	}
 }
