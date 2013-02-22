@@ -49,6 +49,14 @@ public class UserService {
 		entityManager.merge(user);
 	}
 
+	public void delete(User user) {
+		if(!entityManager.contains(user)) {
+			user = entityManager.merge(user);
+		}
+
+		entityManager.remove(user);
+	}
+
 	public void updatePassword(User user, String password) {
 		setCredentials(user, password);
 

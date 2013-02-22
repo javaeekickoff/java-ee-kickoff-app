@@ -19,8 +19,7 @@
 	
 				<p:ajax event="rowEdit" listener="#{usersBacking.onEdit}" update=":form:messages"/>
 	
-				<p:column sortBy="#{user.id}" filterBy="#{user.id}" >
-					<f:facet name="header">User ID</f:facet>
+				<p:column headerText="User ID" sortBy="#{user.id}" filterBy="#{user.id}" >
 	 				#{user.id}
 	 			</p:column>
 	
@@ -52,13 +51,17 @@
 					</p:cellEditor>
 				</p:column>
 	
-				<p:column>
-					<f:facet name="header">Edit</f:facet>
+				<p:column headerText="Edit">
 					<p:rowEditor />
 				</p:column>
-	
-				<p:column>
-					<f:facet name="header">Password</f:facet>
+				
+				<p:column headerText="Delete">
+					<p:commandButton id="deleteButton" value="Delete" action="#{usersBacking.delete}" update=":confirmDeleteForm" oncomplete="confirmDeleteDialog.show()">
+						<f:setPropertyActionListener value="#{user}" target="#{deleteUserBacking.user}" />
+					</p:commandButton>
+				</p:column>
+
+				<p:column headerText="Password">
 					<p:commandButton id="selectButton" update=":passwordForm:changePassword" oncomplete="passwordDialog.show()" value="Change password">  
 						<f:setPropertyActionListener value="#{user}" target="#{changePasswordBacking.user}" />  
 					</p:commandButton>
@@ -93,6 +96,7 @@
 			</h:form>
 	
 		</p:dialog>
+
 		<script type="text/javascript">  
 		    function handlePasswordChangeRequest(xhr, status, args) {  
 		        if(!args.validationFailed) {  
@@ -100,6 +104,22 @@
 		        }  
 		    }  
 		</script>  
+		
+		<p:dialog header="Delete user" widgetVar="confirmDeleteDialog" resizable="false"
+			id="confirmDeleteDlg" modal="true" closable="true">
+			<h:form id="confirmDeleteForm">
+			
+				<h:panelGrid id="deleteUser" columns="2">
+					<f:facet name="header">
+						Are you sure you want to delete user #{deleteUserBacking.user.email}?
+					</f:facet>
+					<p:commandButton value="Delete user" actionListener="#{deleteUserBacking.deleteUser()}" update=":confirmDeleteForm" oncomplete="confirmDeleteDialog.hide()" />
+					<p:commandButton value="Cancel"	update=":confirmDeleteForm, :form" oncomplete="confirmDeleteDialog.hide()" />
+				</h:panelGrid>
+
+			</h:form>
+	
+		</p:dialog>
 
 	</ui:define>	
 </ui:composition>
