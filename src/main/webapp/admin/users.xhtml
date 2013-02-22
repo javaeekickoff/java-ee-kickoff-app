@@ -1,4 +1,5 @@
-<html xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition template="/WEB-INF/templates/layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
@@ -7,11 +8,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 >
 
-	<h:head>
-		<title>Users</title>
-	</h:head>
+	<ui:define name="title">Users</ui:define>
 
-	<h:body>
+	<ui:define name="content">
 	
 		<h:form id="form">
 			<h:messages id="messages"/>
@@ -94,13 +93,13 @@
 			</h:form>
 	
 		</p:dialog>
-	</h:body>
-	
-	<script type="text/javascript">  
-	    function handlePasswordChangeRequest(xhr, status, args) {  
-	        if(!args.validationFailed) {  
-	        	passwordDialog.hide();
-	        }  
-	    }  
-	</script>  
-</html>
+		<script type="text/javascript">  
+		    function handlePasswordChangeRequest(xhr, status, args) {  
+		        if(!args.validationFailed) {  
+		        	passwordDialog.hide();
+		        }  
+		    }  
+		</script>  
+
+	</ui:define>	
+</ui:composition>
