@@ -5,6 +5,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:of="http://omnifaces.org/functions"
+	xmlns:o="http://omnifaces.org/ui"
 >
 	<ui:insert name="metadata"></ui:insert>
 
@@ -14,12 +15,9 @@
 	</h:head>
 
 	<h:body>
-		<div id="header">
-			<h1><ui:insert name="header">Kickoff App</ui:insert></h1>
-		</div>
-		
+	
 		<div style="float:right; background: white;">
-			<h:link outcome="/login" rendered="#{empty request.userPrincipal}" >Login</h:link>
+			<h:link outcome="/login" rendered="#{empty request.userPrincipal and !view.viewId == '/index.xhtml'}" >Login</h:link>
 			<h:panelGrid columns="2">  
 				#{request.userPrincipal.name}
 				<h:form>
@@ -27,40 +25,48 @@
 				</h:form>
 			</h:panelGrid>
 		</div>
-
-		<div id="menu">
-			<ui:insert name="menu">
-				<ul>
-					<li><h:link outcome="/register">Register</h:link></li>
-					<li><h:link outcome="/login">Login</h:link></li>
-					<h:panelGroup rendered="#{request.isUserInRole('USER_MANAGEMENT')}">
-						<li>
-							Admin
-							<ul>
-								<li><h:link outcome="/admin/users">Users</h:link></li>
-							</ul>
-						</li>
-					</h:panelGroup>
-				</ul>
-				
-				<hr/>
-				Test only:
-				<ul>
-					<li>Protected resource: <h:outputLink value="/java-ee-kickoff-app/servlet">servlet</h:outputLink></li>
-					<li>Public resource: <h:outputLink value="/java-ee-kickoff-app/public">public</h:outputLink></li>
-				</ul>
-				
-			</ui:insert>
+	
+		<div id="header">
+			<h1><ui:insert name="header">Kickoff App</ui:insert></h1>
 		</div>
 
+		<h:panelGroup rendered="#{!empty request.userPrincipal}">
+			<div id="menu">
+				<ui:insert name="menu">
+					<ul>
+						<li>
+							<h:link outcome="/index">Index</h:link>
+						</li>
+ 						<h:panelGroup rendered="#{request.isUserInRole('USER_MANAGEMENT')}">
+							<li>
+								Admin
+								<ul>
+									<li><h:link outcome="/admin/users">Users</h:link></li>
+								</ul>
+							</li>
+						</h:panelGroup>
+					</ul>
+				</ui:insert>
+			</div>
+		</h:panelGroup>
+
 		<div id="content">
-			<h2><ui:insert name="contentTitle">#{view.viewId}</ui:insert></h2>
+			<o:highlight styleClass="error"  />
+			<h:panelGroup rendered="#{!view.viewId == '/index.xhtml'}">
+				<h2><ui:insert name="contentTitle">#{view.viewId}</ui:insert></h2>
+			</h:panelGroup>
 	 		<h:messages id="messages" infoClass="info" warnClass="warn" errorClass="error" fatalClass="fatal" />
 			<ui:insert name="content">Content</ui:insert>
 		</div>
 
 		<div id="footer">
 			<ui:insert name="footer">
+				<small>
+					<h:panelGrid columns="2">
+						<h:outputLink value="/java-ee-kickoff-app/servlet">Protected</h:outputLink>
+						<h:outputLink value="/java-ee-kickoff-app/public">Public</h:outputLink>
+					</h:panelGrid>
+				</small>
 				<p>©#{of:formatDate(now, 'yyyy')} The Java EE kickoff team</p>
 			</ui:insert>
 		</div>

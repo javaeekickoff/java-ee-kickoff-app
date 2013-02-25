@@ -1,0 +1,67 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:o="http://omnifaces.org/ui"
+>
+
+	<p>
+		A minimal Java EE skeleton application that can be used to kickoff the development of a
+		web application.
+	</p>
+		
+	<br/>
+
+	<h3>Login</h3>
+        <h:form>
+        	<h:panelGrid columns="2">
+        	        		
+        		<h:inputText id="username" value="#{loginBean.loginUserName}" placeholder="Email address" label="Email address" />
+        		<small>(test users: foo@bar.com, foo1@bar.com)</small>
+        		
+        		<h:inputSecret id="password" value="#{loginBean.loginPassword}" placeholder="Password" label="Password"/>
+        		<small>(test password: foo)</small>
+				
+				<h:panelGroup>        		
+	        		<small>
+			       		<h:selectBooleanCheckbox id="rememberme" value="#{loginBean.rememberMe}" />
+			       		<o:outputLabel for="rememberme" value="Remember me" />
+	       			</small>
+       			</h:panelGroup>
+       			
+        	</h:panelGrid>
+        	
+        	<br/>
+        	
+        	<h:commandButton value="Login" action="#{loginBean.login}" disabled="#{!empty request.userPrincipal}" />
+        	
+        </h:form>
+        
+        <hr/>
+        
+        <h3>Or sign up</h3>
+        <h:form>
+			<o:validateEqual components="password confirmPassword"/>
+			
+			<h:panelGrid>
+				<h:inputText id="email" value="#{registerBacking.user.email}" placeholder="Email address" label="Email address" autocomplete="off" />
+				<h:inputSecret id="password" value="#{registerBacking.password}" placeholder="Password" label="Password" autocomplete="off" required="true" />
+				<h:inputSecret id="confirmPassword" placeholder="Confirm password" label="Confirm password" autocomplete="off" required="true"/>
+				
+				<h:panelGroup>        		
+	        		<small>
+			       		<h:selectBooleanCheckbox id="rememberme" value="#{registerBacking.rememberMe}" />
+			       		<o:outputLabel for="rememberme" value="Remember me" />
+	       			</small>
+       			</h:panelGroup>
+			</h:panelGrid>
+			
+			<br/>
+			
+			<h:commandButton value="Sign up" action="#{registerBacking.register}" disabled="#{!empty request.userPrincipal}" />
+		</h:form>
+		
+		<br/>
+	
+</ui:composition>

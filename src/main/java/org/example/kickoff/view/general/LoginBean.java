@@ -1,4 +1,4 @@
-package org.example.kickoff.auth;
+package org.example.kickoff.view.general;
 
 import java.io.IOException;
 

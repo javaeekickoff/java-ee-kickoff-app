@@ -3,31 +3,37 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:o="http://omnifaces.org/ui"
 >
-	<ui:define name="title">Java EE kickoff app login page</ui:define>
+	<ui:define name="title">Login to continue</ui:define>
 	
 	<ui:define name="content">
- 		<p>
-			Logged in name: #{request.userPrincipal.name}
-		</p>
+		
+		<ui:param name="requestDataKey" value="org.omnifaces.security.jaspic.original.request"/>
+		<ui:param name="requestData" value="#{sessionScope[requestDataKey]}"/>
+ 	
+ 		<h:panelGroup rendered="#{!empty requestData}">
+ 			Login to continue to: #{requestData.requestURL}
+ 		</h:panelGroup>
 		
 		<hr/>
  
-        <h:form>
-        	<p>
-            	User name: <h:inputText value="#{loginBean.loginUserName}" /> (test users: foo@bar.com, foo1@bar.com)
-            </p>
-            <p>
-            	Password: <h:inputSecret value="#{loginBean.loginPassword}" /> (test password: foo)
-            </p>
-             <p>
-            	Remember me	<h:selectBooleanCheckbox value="#{loginBean.rememberMe}" />
-            </p>
-            <br/>
-            <p>                  
-            	<h:commandButton value="Login" action="#{loginBean.login}" disabled="#{!empty request.userPrincipal}" />
-            	<h:commandButton value="Logout" action="#{loginBean.logout}" disabled="#{empty request.userPrincipal}" />
-            </p>
+          <h:form>
+        	<h:panelGrid columns="3">
+        	
+        		<o:outputLabel for="username" value="User name" />
+        		<h:inputText id="username" value="#{loginBean.loginUserName}" />
+        		(test users: foo@bar.com, foo1@bar.com)
+        		
+        		<o:outputLabel for="password" value="Password" />
+        		<h:inputSecret id="password" value="#{loginBean.loginPassword}" />
+        		(test password: foo)
+        		
+        		<o:outputLabel for="rememberme" value="Remember me" />
+        		<h:selectBooleanCheckbox id="rememberme" value="#{loginBean.rememberMe}" />
+        	</h:panelGrid>
+        	<h:commandButton value="Login" action="#{loginBean.login}" disabled="#{!empty request.userPrincipal}" />
         </h:form>
+        
 	</ui:define>
 </ui:composition>

@@ -75,3 +75,11 @@ ul {
 #messages .fatal {
 	background: purple;
 }
+
+label.error {
+    color: #c66;
+}
+
+input.error, select.error, textarea.error {
+    background-color: #fee;
+}
