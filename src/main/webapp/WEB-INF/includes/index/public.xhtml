@@ -17,7 +17,7 @@
         <h:form>
         	<h:panelGrid columns="2">
         	        		
-        		<h:inputText id="username" value="#{loginBean.loginUserName}" placeholder="Email address" label="Email address" />
+        		<h:inputText id="username" value="#{loginBean.loginUserName}" type="email" placeholder="Email address" label="Email address" />
         		<small>(test users: foo@bar.com, foo1@bar.com)</small>
         		
         		<h:inputSecret id="password" value="#{loginBean.loginPassword}" placeholder="Password" label="Password"/>
@@ -45,13 +45,13 @@
 			<o:validateEqual components="password confirmPassword"/>
 			
 			<h:panelGrid>
-				<h:inputText id="email" value="#{registerBacking.user.email}" placeholder="Email address" label="Email address" autocomplete="off" />
-				<h:inputSecret id="password" value="#{registerBacking.password}" placeholder="Password" label="Password" autocomplete="off" required="true" />
+				<h:inputText id="email" value="#{registerBean.user.email}" type="email" placeholder="Email address" label="Email address" autocomplete="off" />
+				<h:inputSecret id="password" value="#{registerBean.password}" placeholder="Password" label="Password" autocomplete="off" required="true" />
 				<h:inputSecret id="confirmPassword" placeholder="Confirm password" label="Confirm password" autocomplete="off" required="true"/>
 				
 				<h:panelGroup>        		
 	        		<small>
-			       		<h:selectBooleanCheckbox id="rememberme" value="#{registerBacking.rememberMe}" />
+			       		<h:selectBooleanCheckbox id="rememberme" value="#{registerBean.rememberMe}" />
 			       		<o:outputLabel for="rememberme" value="Remember me" />
 	       			</small>
        			</h:panelGroup>
@@ -59,7 +59,7 @@
 			
 			<br/>
 			
-			<h:commandButton value="Sign up" action="#{registerBacking.register}" disabled="#{!empty request.userPrincipal}" />
+			<h:commandButton value="Sign up" action="#{registerBean.register}" disabled="#{!empty request.userPrincipal}" />
 		</h:form>
 		
 		<br/>
