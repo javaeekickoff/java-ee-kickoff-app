@@ -27,13 +27,13 @@ public class UserService {
 	private EntityManager entityManager;
 
 	public void registerUser(User user, String password) {
-		if(getByEmail(user.getEmail()) != null) {
+		if (getByEmail(user.getEmail()) != null) {
 			throw new ValidationException("Email address is already registered");
 		}
 
 		setCredentials(user, password);
 
-		if(!user.getGroups().contains(USERS)) {
+		if (!user.getGroups().contains(USERS)) {
 			user.getGroups().add(USERS);
 		}
 
@@ -42,7 +42,7 @@ public class UserService {
 
 	public void update(User user) {
 		User otherUser = getByEmail(user.getEmail());
-		if(otherUser != null && !user.equals(otherUser)) {
+		if (otherUser != null && !user.equals(otherUser)) {
 			throw new ValidationException("Email address is already registered");
 		}
 
@@ -50,7 +50,7 @@ public class UserService {
 	}
 
 	public void delete(User user) {
-		if(!entityManager.contains(user)) {
+		if (!entityManager.contains(user)) {
 			user = entityManager.merge(user);
 		}
 
