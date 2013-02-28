@@ -8,13 +8,13 @@ import javax.validation.ConstraintValidatorContext;
 public class EmailValidator implements ConstraintValidator<Email, String> {
 
 	@Override
-	public void initialize(Email arg0) {
+	public void initialize(Email constraintAnnotation) {
 	}
 
 	@Override
-	public boolean isValid(String arg0, ConstraintValidatorContext arg1) {
+	public boolean isValid(String email, ConstraintValidatorContext context) {
 		try {
-			new InternetAddress(arg0).validate();
+			new InternetAddress(email).validate();
 		}
 		catch (AddressException e) {
 			return false;
