@@ -1,5 +1,7 @@
 package org.example.kickoff.view.general;
 
+import static org.omnifaces.util.Messages.addGlobalError;
+
 import java.io.IOException;
 
 import javax.enterprise.context.RequestScoped;
@@ -7,7 +9,6 @@ import javax.inject.Named;
 import javax.servlet.ServletException;
 
 import org.omnifaces.security.jaspic.Jaspic;
-import org.omnifaces.util.Messages;
 
 @Named
 @RequestScoped
@@ -19,13 +20,10 @@ public class LoginBean {
 
 	public void login() throws IOException, ServletException {
 
-		// Not supported in JASPIC: (only WebSphere calls the SAM, but with WebSphere specific entries in MessageInfo Map)
-		// Faces.login(loginUserName, loginPassword);
-
 		boolean authenticated = Jaspic.authenticate(loginUserName, loginPassword, rememberMe);
 
 		if (!authenticated) {
-			Messages.addGlobalError("Login failed");
+			addGlobalError("Login failed");
 		}
 	}
 

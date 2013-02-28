@@ -19,6 +19,10 @@ public class ChangePasswordBacking {
 
 	@Size(min=8)
 	private String newPassword;
+	
+	public void changePassword() {
+		userService.updatePassword(user, newPassword);
+	}
 
 	public User getUser() {
 		return user;
@@ -34,10 +38,6 @@ public class ChangePasswordBacking {
 
 	public void setNewPassword(String newPassword) {
 		this.newPassword = newPassword;
-	}
-
-	public void changePassword() {
-		userService.updatePassword(user, newPassword);
 	}
 
 }

@@ -23,11 +23,8 @@ public class UsersBacking {
 	private UserService userService;
 
 	private List<User> users;
-
 	private List<User> filteredUsers;
-
 	private List<Group> groups;
-
 	private SelectItem[] groupFilterOptions;
 
 	@PostConstruct
@@ -44,6 +41,12 @@ public class UsersBacking {
 		}
 
 		groupFilterOptions = list.toArray(new SelectItem[list.size()]);
+	}
+	
+	public void onEdit(RowEditEvent event) {
+		User user = (User) event.getObject();
+
+		userService.update(user);
 	}
 
 	public List<User> getUsers() {
@@ -64,12 +67,6 @@ public class UsersBacking {
 
 	public SelectItem[] getGroupsFilter() {
 		return groupFilterOptions;
-	}
-
-	public void onEdit(RowEditEvent event) {
-		User user = (User) event.getObject();
-
-		userService.update(user);
 	}
 
 }

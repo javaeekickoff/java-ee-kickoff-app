@@ -1,5 +1,8 @@
 package org.example.kickoff.view.general;
 
+import static org.omnifaces.util.Messages.addGlobalError;
+import static org.omnifaces.util.Messages.addGlobalInfo;
+
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
@@ -9,7 +12,6 @@ import org.example.kickoff.business.UserService;
 import org.example.kickoff.business.ValidationException;
 import org.example.kickoff.model.User;
 import org.omnifaces.security.jaspic.Jaspic;
-import org.omnifaces.util.Messages;
 
 @Named
 @RequestScoped
@@ -30,15 +32,15 @@ public class RegisterBean {
 			userService.registerUser(user, password);
 		}
 		catch (ValidationException e) {
-			Messages.addGlobalError(e.getMessage());
+			addGlobalError(e.getMessage());
 		}
 		
 		boolean authenticated = Jaspic.authenticate(user.getEmail(), password, rememberMe);
 
 		if (!authenticated) {
-			Messages.addGlobalError("Login failed");
+			addGlobalError("Login failed");
 		} else {
-			Messages.addGlobalInfo("User {0} successfully registered" , user.getEmail());
+			addGlobalInfo("User {0} successfully registered" , user.getEmail());
 		}
 	}
 
