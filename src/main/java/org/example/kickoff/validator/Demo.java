@@ -3,7 +3,6 @@ package org.example.kickoff.validator;
 import static org.omnifaces.util.Messages.addGlobalError;
 
 import org.example.kickoff.model.User;
-import org.omnifaces.util.Messages;
 
 public class Demo {
 

@@ -7,6 +7,9 @@
 	xmlns:of="http://omnifaces.org/functions"
 	xmlns:o="http://omnifaces.org/ui"
 >
+
+	<o:importFunctions type="org.omnifaces.util.Faces" />
+
 	<ui:insert name="metadata"></ui:insert>
 
 	<h:head>
@@ -63,11 +66,11 @@
 			<ui:insert name="footer">
 				<small>
 					<h:panelGrid columns="2">
-						<h:outputLink value="/java-ee-kickoff-app/servlet">Protected</h:outputLink>
-						<h:outputLink value="/java-ee-kickoff-app/public">Public</h:outputLink>
+						<h:outputLink value="#{Faces:getRequestBaseURL()}servlet">Protected</h:outputLink>
+						<h:outputLink value="#{Faces:getRequestBaseURL()}public">Public</h:outputLink>
 					</h:panelGrid>
 				</small>
-				<p>©#{of:formatDate(now, 'yyyy')} The Java EE kickoff team</p>
+				<p>©#{of:formatDate(now, 'yyyy')} <a href="https://github.com/javaeekickoff?tab=members">The Java EE kickoff team</a></p>
 			</ui:insert>
 		</div>
 	</h:body>
