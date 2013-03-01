@@ -13,11 +13,10 @@
 	<ui:define name="content">
 	
 		<h:form id="form">
-			<h:messages id="messages"/>
 	
 			<p:dataTable value="#{usersBacking.users}" var="user" paginator="true" rows="25" editable="true" filteredValue="#{usersBacking.filteredUsers}">
 	
-				<p:ajax event="rowEdit" listener="#{usersBacking.onEdit}" update=":form:messages"/>
+				<p:ajax event="rowEdit" listener="#{usersBacking.onEdit}" update=":messages"/>
 	
 				<p:column headerText="User ID" sortBy="#{user.id}" filterBy="#{user.id}" >
 	 				#{user.id}

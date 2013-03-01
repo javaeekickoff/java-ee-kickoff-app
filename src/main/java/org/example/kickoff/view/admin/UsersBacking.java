@@ -1,5 +1,7 @@
 package org.example.kickoff.view.admin;
 
+import static org.example.kickoff.validator.Demo.canUpdate;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -45,8 +47,11 @@ public class UsersBacking {
 	
 	public void onEdit(RowEditEvent event) {
 		User user = (User) event.getObject();
-
-		userService.update(user);
+		if (canUpdate(user)) {
+			userService.update(user);
+		} else {
+			users = userService.getUsers();
+		}
 	}
 
 	public List<User> getUsers() {

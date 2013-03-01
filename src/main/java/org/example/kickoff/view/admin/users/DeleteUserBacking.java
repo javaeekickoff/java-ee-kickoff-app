@@ -1,5 +1,6 @@
 package org.example.kickoff.view.admin.users;
 
+import static org.example.kickoff.validator.Demo.canUpdate;
 import static org.omnifaces.util.Messages.addGlobalInfo;
 
 import javax.ejb.EJB;
@@ -19,9 +20,10 @@ public class DeleteUserBacking {
 	private UserService userService;
 
 	public void deleteUser() {
-		userService.delete(user);
-
-		addGlobalInfo("User {0} deleted successfully", user.getEmail());
+		if (canUpdate(user)) {
+			userService.delete(user);
+			addGlobalInfo("User {0} deleted successfully", user.getEmail());
+		}
 	}
 	
 	public User getUser() {

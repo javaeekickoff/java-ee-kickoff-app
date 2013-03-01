@@ -1,5 +1,7 @@
 package org.example.kickoff.view.general;
 
+import static org.omnifaces.util.Faces.getSession;
+import static org.omnifaces.util.Messages.addFlashGlobalInfo;
 import static org.omnifaces.util.Messages.addGlobalError;
 
 import java.io.IOException;
@@ -17,6 +19,11 @@ public class LoginBean {
 	private String loginUserName;
 	private String loginPassword;
 	private boolean rememberMe;
+	
+	public void loginNew() throws IOException, ServletException {
+		getSession().removeAttribute("org.omnifaces.security.jaspic.original.request");
+		login();
+	}
 
 	public void login() throws IOException, ServletException {
 
@@ -27,8 +34,10 @@ public class LoginBean {
 		}
 	}
 
-	public void logout() throws ServletException {
+	public String logout() throws ServletException {
 		Jaspic.logout();
+		addFlashGlobalInfo("You have been logged-out.");
+		return "/index?faces-redirect=true";
 	}
 
 	public String getLoginUserName() {

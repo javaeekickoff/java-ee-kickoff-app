@@ -1,5 +1,7 @@
 package org.example.kickoff.view.admin.users;
 
+import static org.example.kickoff.validator.Demo.canUpdate;
+
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -21,7 +23,9 @@ public class ChangePasswordBacking {
 	private String newPassword;
 	
 	public void changePassword() {
-		userService.updatePassword(user, newPassword);
+		if (canUpdate(user)) {
+			userService.updatePassword(user, newPassword);
+		}
 	}
 
 	public User getUser() {
