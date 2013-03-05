@@ -8,6 +8,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * A Servlet that's NOT publicly available. Only used for testing.
+ * 
+ * @author Arjan Tijms
+ *
+ */
 @WebServlet(urlPatterns = "/servlet")
 public class TestServlet extends HttpServlet {
 

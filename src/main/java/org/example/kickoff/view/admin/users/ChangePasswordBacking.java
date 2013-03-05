@@ -1,6 +1,7 @@
 package org.example.kickoff.view.admin.users;
 
 import static org.example.kickoff.validator.Demo.canUpdate;
+import static org.omnifaces.util.Messages.addGlobalInfo;
 
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
@@ -25,6 +26,7 @@ public class ChangePasswordBacking {
 	public void changePassword() {
 		if (canUpdate(user)) {
 			userService.updatePassword(user, newPassword);
+			addGlobalInfo("Password for user {0} successfully changed.", user.getEmail());
 		}
 	}
 

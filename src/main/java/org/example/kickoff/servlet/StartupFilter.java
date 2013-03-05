@@ -1,5 +1,8 @@
 package org.example.kickoff.servlet;
 
+import static javax.servlet.DispatcherType.FORWARD;
+import static javax.servlet.DispatcherType.REQUEST;
+
 import java.io.IOException;
 
 import javax.inject.Inject;
@@ -23,7 +26,7 @@ import javax.servlet.annotation.WebFilter;
  * @author Arjan Tijms
  *
  */
-@WebFilter(urlPatterns="/*")
+@WebFilter(urlPatterns="/*", dispatcherTypes={REQUEST, FORWARD})
 public class StartupFilter implements Filter {
 	
 	@Inject

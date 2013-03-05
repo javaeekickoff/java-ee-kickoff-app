@@ -61,7 +61,7 @@
 				</p:column>
 
 				<p:column headerText="Password">
-					<p:commandButton id="selectButton" update=":passwordForm:changePassword" oncomplete="passwordDialog.show()" value="Change password">  
+					<p:commandButton id="selectButton" value="Change password" update=":passwordForm:changePassword" oncomplete="passwordDialog.show()">  
 						<f:setPropertyActionListener value="#{user}" target="#{changePasswordBacking.user}" />  
 					</p:commandButton>
 				</p:column>
@@ -82,7 +82,7 @@
 					<o:outputLabel for="password" value="Password" /><h:inputSecret id="password" value="#{changePasswordBacking.newPassword}" required="true" />
 					<o:outputLabel for="confirmPassword" value="Confirm password" /><h:inputSecret id="confirmPassword" required="true" />
 					<p>
-						<p:commandButton value="Change password" actionListener="#{changePasswordBacking.changePassword}" update=":passwordForm" oncomplete="handlePasswordChangeRequest(xhr, status, args)" />
+						<p:commandButton value="Change password" actionListener="#{changePasswordBacking.changePassword}" update=":messages :passwordForm" oncomplete="handlePasswordChangeRequest(xhr, status, args)" />
 					</p>
 				</h:panelGrid>
 

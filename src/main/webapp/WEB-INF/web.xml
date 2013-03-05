@@ -40,11 +40,17 @@
 		<param-value>/*.xhtml</param-value>
 	</context-param>
 	
+	<session-config>
+		<cookie-config>
+			<http-only>true</http-only>
+		</cookie-config>
+		<tracking-mode>COOKIE</tracking-mode>
+	</session-config>
 	
 	<welcome-file-list>
-		<welcome-file>index.xhtml</welcome-file>
+		<welcome-file>index</welcome-file>
 	</welcome-file-list>
-
+	
 	<data-source>
 		<name>java:app/KickoffApp/kickoffDS</name>
 		<class-name>org.h2.jdbcx.JdbcDataSource</class-name>
