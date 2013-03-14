@@ -38,7 +38,7 @@ public class UserServiceTest extends ArquillianDBUnitTestBase {
 		archive.addClass(ArquillianDBUnitTestBase.class);
 
 		archive.addClasses(UserService.class);
-		archive.addClasses(InvalidCredentialsException.class, JPA.class);
+		archive.addClasses(InvalidCredentialsException.class, JPA.class, ValidationException.class);
 		archive.addPackage(BaseEntity.class.getPackage());
 		archive.addAsWebInfResource("test-web.xml", "web.xml");
 
