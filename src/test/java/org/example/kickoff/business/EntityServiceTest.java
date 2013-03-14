@@ -29,7 +29,7 @@ import org.junit.runner.RunWith;
 import org.xml.sax.InputSource;
 
 @RunWith(Arquillian.class)
-public class BaseServiceTest extends ArquillianDBUnitTestBase {
+public class EntityServiceTest extends ArquillianDBUnitTestBase {
 
 	@Deployment
 	public static Archive<?> createDeployment() {
@@ -37,7 +37,7 @@ public class BaseServiceTest extends ArquillianDBUnitTestBase {
 
 		WebArchive archive = ShrinkWrap.create(WebArchive.class);
 
-		archive.addClasses(ArquillianDBUnitTestBase.class, BaseServiceTest.class, EntityService.class, NonDeletable.class,
+		archive.addClasses(ArquillianDBUnitTestBase.class, EntityServiceTest.class, EntityService.class, NonDeletable.class,
 				NonDeletableEntityException.class);
 
 		archive.addPackage(TestEntity.class.getPackage());
@@ -53,7 +53,7 @@ public class BaseServiceTest extends ArquillianDBUnitTestBase {
 		archive.addAsLibraries(resolver.artifact("com.h2database:h2").resolveAsFiles());
 		archive.addAsLibraries(resolver.artifact("org.dbunit:dbunit").resolveAsFiles());
 
-		archive.addAsResource("dbunit/base_service_test.xml");
+		archive.addAsResource("dbunit/entity_service_test.xml");
 
 		return archive;
 	}
@@ -71,7 +71,7 @@ public class BaseServiceTest extends ArquillianDBUnitTestBase {
 
 	@Override
 	protected IDataSet getTestDataSet() throws Exception {
-		return new FlatXmlDataSet(new FlatXmlProducer(new InputSource(this.getClass().getResourceAsStream("/dbunit/base_service_test.xml"))));
+		return new FlatXmlDataSet(new FlatXmlProducer(new InputSource(this.getClass().getResourceAsStream("/dbunit/entity_service_test.xml"))));
 	}
 
 	@Test
