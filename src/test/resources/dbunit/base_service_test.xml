@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+	<test_entity id="1001" name="first" />
+	<non_deletable_test_entity id="1" name="one" />
+</dataset>
