@@ -96,7 +96,7 @@ public class UserService {
 	}
 
 	public List<User> getUsers() {
-		return entityManager.createQuery("From User", User.class).getResultList();
+		return entityManager.createNamedQuery("User.getAll", User.class).getResultList();
 	}
 
 	public String generateLoginToken(String email) {
