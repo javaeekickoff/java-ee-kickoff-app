@@ -84,7 +84,7 @@
 		<dependency>
   			<groupId>org.omnifaces</groupId>
   			<artifactId>omnifaces-security</artifactId>
-  			<version>0.1-SNAPSHOT</version>
+  			<version>0.1</version>
 		</dependency>
 
 		<dependency>

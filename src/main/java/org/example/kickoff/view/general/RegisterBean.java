@@ -11,6 +11,7 @@ import javax.validation.constraints.Size;
 import org.example.kickoff.business.UserService;
 import org.example.kickoff.business.ValidationException;
 import org.example.kickoff.model.User;
+import org.omnifaces.security.jaspic.AuthParameters;
 import org.omnifaces.security.jaspic.Jaspic;
 
 @Named
@@ -35,7 +36,12 @@ public class RegisterBean {
 			addGlobalError(e.getMessage());
 		}
 		
-		boolean authenticated = Jaspic.authenticate(user.getEmail(), password, rememberMe);
+		boolean authenticated = Jaspic.authenticate(
+	        new AuthParameters()
+                .username(user.getEmail())
+                .password(password)
+                .rememberMe(rememberMe)
+        );
 
 		if (!authenticated) {
 			addGlobalError("Login failed");

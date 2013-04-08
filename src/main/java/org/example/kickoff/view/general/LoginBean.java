@@ -12,6 +12,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 import javax.servlet.ServletException;
 
+import org.omnifaces.security.jaspic.AuthParameters;
 import org.omnifaces.security.jaspic.Jaspic;
 
 @Named
@@ -30,7 +31,12 @@ public class LoginBean {
 
 	public void login() throws IOException, ServletException {
 
-		boolean authenticated = Jaspic.authenticate(loginUserName, loginPassword, rememberMe);
+	    boolean authenticated = Jaspic.authenticate(
+            new AuthParameters()
+                .username(loginUserName)
+                .password(loginPassword)
+                .rememberMe(rememberMe)
+        );
 
 		if (!authenticated) {
 			addGlobalError("Login failed");

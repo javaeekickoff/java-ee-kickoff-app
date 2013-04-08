@@ -36,11 +36,9 @@ import javax.security.auth.Subject;
 import javax.security.auth.message.callback.CallerPrincipalCallback;
 import javax.security.auth.message.callback.GroupPrincipalCallback;
 import javax.security.auth.message.callback.PasswordValidationCallback;
-import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.catalina.Realm;
 import org.apache.catalina.Session;
 import org.apache.catalina.authenticator.AuthenticatorBase;
 import org.apache.catalina.authenticator.Constants;
@@ -137,7 +135,7 @@ public class WebJASPIAuthenticator extends AuthenticatorBase {
 
         // the authentication process has been a success. We need to register the principal, username, password and roles
         // with the container
-        if (result) {
+        if (result && cbh.getCallerPrincipalCallback() != null) {
             PasswordValidationCallback pvc = cbh.getPasswordValidationCallback();
             CallerPrincipalCallback cpc = cbh.getCallerPrincipalCallback();
             GroupPrincipalCallback gpc = cbh.getGroupPrincipalCallback();
