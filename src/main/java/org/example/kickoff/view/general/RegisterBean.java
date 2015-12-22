@@ -11,8 +11,8 @@ import javax.validation.constraints.Size;
 import org.example.kickoff.business.UserService;
 import org.example.kickoff.business.ValidationException;
 import org.example.kickoff.model.User;
-import org.omnifaces.security.jaspic.AuthParameters;
-import org.omnifaces.security.jaspic.Jaspic;
+import org.omnifaces.security.jaspic.core.AuthParameters;
+import org.omnifaces.security.jaspic.core.Jaspic;
 
 @Named
 @RequestScoped
