@@ -1,7 +1,10 @@
 /.project
 /.classpath
-/.settings
-/target
+/.settings/
+/target/
+
+/.idea/
+/*.iml
 
 *.jsfdia
 
