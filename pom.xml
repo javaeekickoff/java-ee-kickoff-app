@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<prerequisites>
@@ -10,7 +11,7 @@
 	<artifactId>java-ee-kickoff-app</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>war</packaging>
-	<name>Java EE 6 Kickoff app</name>
+	<name>Java EE kickoff app</name>
 	<url>https://github.com/javaeekickoff/java-ee-kickoff-app</url>
 
 	<scm>
@@ -67,12 +68,12 @@
 			<version>2.2</version>
 		</dependency>
 
-		<!-- TODO: Update or replace by WIP JSR 375 proposal  -->		
+		<!-- TODO: Update or replace by WIP JSR 375 proposal  -->
 		<dependency>
-  			<groupId>org.omnifaces</groupId>
-  			<artifactId>omnifaces-security</artifactId>
-  			<version>0.6-ALPHA</version>
-  			<exclusions>
+			<groupId>org.omnifaces</groupId>
+			<artifactId>omnifaces-security</artifactId>
+			<version>0.6-ALPHA</version>
+			<exclusions>
 				<!-- Social auth used by this versionof omnisecurity transitively includes this  -->
 				<exclusion>
 					<groupId>javax.servlet</groupId>
@@ -203,6 +204,15 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-archetype-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<propertyFile>archetype.properties</propertyFile>
+					<archetypeFilteredExtensions>java,xml,xhtml</archetypeFilteredExtensions>
+				</configuration>
 			</plugin>
 		</plugins>
 		<pluginManagement>
