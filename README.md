@@ -1,4 +1,4 @@
-java-ee-kickoff-app
+java-ee-kickoff-app [![Build Status](https://travis-ci.org/javaeekickoff/java-ee-kickoff-app.svg?branch=master)](https://travis-ci.org/javaeekickoff/java-ee-kickoff-app)
 ===================
 
 javaee-kickoff-app
