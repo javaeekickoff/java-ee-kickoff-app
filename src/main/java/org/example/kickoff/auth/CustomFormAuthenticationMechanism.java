@@ -23,11 +23,10 @@ import javax.servlet.http.HttpServletResponse;
  */
 @AutoApplySession // For "is user already logged-in"
 @RememberMe(
-	cookieMaxAgeSeconds = 60 * 60 * 24 * 14, // 14 days
-	cookieName = "kickoff_login_token"
+	cookieMaxAgeSeconds = 60 * 60 * 24 * 14 // 14 days
 )
 @LoginToContinue(
-	loginPage="/login?new=false",
+	loginPage="/login?cnt=true",
 	errorPage="",
 	useForwardToLogin = false
 )

@@ -39,14 +39,14 @@
 			<url>http://repository.primefaces.org</url>
 			<layout>default</layout>
 		</repository>
-		<repository>
-        	<snapshots>
-            	<enabled>false</enabled>
-        	</snapshots>
-        	<id>bintray-javaee-security-maven</id>
-        	<name>bintray</name>
-        	<url>https://dl.bintray.com/javaee-security-spec/maven</url>
-    	</repository>
+        <repository>
+            <id>bintray-snapshot</id>
+            <name>libs-snapshot</name>
+            <url>http://oss.jfrog.org/artifactory/libs-snapshot</url>
+             <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
 	</repositories>
 
 	<dependencyManagement>
@@ -73,7 +73,7 @@
 		<dependency>
    			<groupId>org.glassfish.soteria</groupId>
    			<artifactId>soteria</artifactId>
- 			<version>1.0-m01</version>
+ 			<version>1.0-m02-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>

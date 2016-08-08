@@ -7,13 +7,13 @@ import static org.omnifaces.util.Faces.getRequestBaseURL;
 import static org.omnifaces.util.Faces.getResponse;
 import static org.omnifaces.util.Faces.invalidateSession;
 import static org.omnifaces.util.Faces.redirect;
+import static org.omnifaces.util.Faces.responseComplete;
 import static org.omnifaces.util.Messages.addFlashGlobalInfo;
 import static org.omnifaces.util.Messages.addGlobalError;
 
 import java.io.IOException;
 
 import javax.enterprise.context.RequestScoped;
-import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.security.SecurityContext;
@@ -22,6 +22,7 @@ import javax.security.identitystore.credential.Credential;
 import javax.security.identitystore.credential.UsernamePasswordCredential;
 import javax.servlet.ServletException;
 
+import org.omnifaces.cdi.Param;
 import org.omnifaces.util.Faces;
 
 
@@ -33,28 +34,33 @@ public class LoginBean {
 	private String loginPassword;
 	private boolean rememberMe;
 	
+	@Inject
+    @Param(name = "cnt")
+    private boolean loginToContinue;
+	
     @Inject
     private SecurityContext securityContext;
 	
 	public void loginNew() throws IOException, ServletException {
+	    loginToContinue = false;
 		login();
 		redirect(getRequestBaseURL()); // Would use navigation outcome, but we need to redirect to / here.
 	}
 
 	public void login() throws IOException, ServletException {
 		
-	    FacesContext context = FacesContext.getCurrentInstance();
         Credential credential = new UsernamePasswordCredential(loginUserName, loginPassword);
         
         AuthStatus status = securityContext.authenticate(
             getResponse(), 
             withParams()
-                .credential(credential));
+                .credential(credential)
+                .newAuthentication(!loginToContinue));
         
         if (status.equals(SEND_CONTINUE)) {
             // Authentication mechanism has send a redirect, should not
             // send anything to response from JSF now.
-            context.responseComplete();
+            responseComplete();
         } else if (status.equals(FAILURE)) {
         	addGlobalError("Authentication failed");
         }
