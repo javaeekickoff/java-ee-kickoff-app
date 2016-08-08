@@ -29,9 +29,15 @@
 			SELECT
 				_user
 			FROM
-				User _user					
+				User _user
+					JOIN
+				_user.loginTokens _loginToken
+					JOIN FETCH
+				_user.loginTokens
 			WHERE
-				_user.loginToken = :loginToken
+				_loginToken.tokenHash = :tokenHash AND
+				_loginToken.type = :tokenType AND
+				_loginToken.expiration &gt; CURRENT_TIMESTAMP
 		</query>
 	</named-query>
 
@@ -43,6 +49,26 @@
 				User _user					
 			WHERE
 				_user.email = :email
+		</query>
+	</named-query>
+
+	<named-query name="LoginToken.removeLoginToken">
+		<query>
+			DELETE
+			FROM
+				LoginToken _loginToken
+			WHERE
+				_loginToken.tokenHash = :tokenHash
+		</query>
+	</named-query>
+
+	<named-query name="LoginToken.removeExpiredLoginTokens">
+		<query>
+			DELETE
+			FROM
+			LoginToken _loginToken
+			WHERE
+			_loginToken.expiration &lt; CURRENT_TIMESTAMP
 		</query>
 	</named-query>
 	

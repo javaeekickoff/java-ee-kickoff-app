@@ -39,6 +39,14 @@
 			<url>http://repository.primefaces.org</url>
 			<layout>default</layout>
 		</repository>
+		<repository>
+        	<snapshots>
+            	<enabled>false</enabled>
+        	</snapshots>
+        	<id>bintray-javaee-security-maven</id>
+        	<name>bintray</name>
+        	<url>https://dl.bintray.com/javaee-security-spec/maven</url>
+    	</repository>
 	</repositories>
 
 	<dependencyManagement>
@@ -61,25 +69,17 @@
 			<version>${jee.version}</version>
 			<scope>provided</scope>
 		</dependency>
+		
+		<dependency>
+   			<groupId>org.glassfish.soteria</groupId>
+   			<artifactId>soteria</artifactId>
+ 			<version>1.0-m01</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.omnifaces</groupId>
 			<artifactId>omnifaces</artifactId>
-			<version>2.2</version>
-		</dependency>
-
-		<!-- TODO: Update or replace by WIP JSR 375 proposal  -->
-		<dependency>
-			<groupId>org.omnifaces</groupId>
-			<artifactId>omnifaces-security</artifactId>
-			<version>0.6-ALPHA</version>
-			<exclusions>
-				<!-- Social auth used by this versionof omnisecurity transitively includes this  -->
-				<exclusion>
-					<groupId>javax.servlet</groupId>
-					<artifactId>servlet-api</artifactId>
-				</exclusion>
-			</exclusions>
+			<version>2.4</version>
 		</dependency>
 
 		<dependency>

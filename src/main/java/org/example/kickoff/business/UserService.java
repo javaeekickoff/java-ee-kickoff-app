@@ -1,13 +1,19 @@
 package org.example.kickoff.business;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.example.kickoff.jpa.JPA.getOptional;
 import static org.example.kickoff.jpa.JPA.getOptionalSingleResult;
 import static org.example.kickoff.model.Group.USERS;
+import static org.omnifaces.utils.security.MessageDigests.digest;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -16,12 +22,15 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.example.kickoff.model.Credentials;
+import org.example.kickoff.model.LoginToken;
+import org.example.kickoff.model.LoginToken.TokenType;
 import org.example.kickoff.model.User;
 
 @Stateless
 public class UserService {
 
 	private static final int DEFAULT_SALT_LENGTH = 40;
+	private static final String MESSAGE_DIGEST_ALGORITHM = "SHA-256";
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -63,9 +72,37 @@ public class UserService {
 		entityManager.merge(user);
 	}
 
-
 	public User getByEmail(String email) {
 		return getOptionalSingleResult(entityManager.createNamedQuery("User.getByEmail", User.class).setParameter("email", email));
+	}
+	
+	public Optional<User> getUserByEmail(String email) {
+		return getOptional(
+			entityManager.createNamedQuery("User.getByEmail", User.class)
+						 .setParameter("email", email));
+	}
+	
+	public User getUserByEmailAndPassword(String email, String password) {
+		User user = getOptionalSingleResult(
+						entityManager.createNamedQuery("User.getByEmail", User.class)
+									 .setParameter("email", email));
+
+		if (user == null) {
+			throw new InvalidCredentialsException();
+		}
+
+		Credentials credentials = user.getCredentials();
+		if (credentials == null) {
+			throw new InvalidCredentialsException();
+		}
+
+		byte[] passwordHash = digest(password, credentials.getSalt(), MESSAGE_DIGEST_ALGORITHM);
+
+		if (!Arrays.equals(passwordHash, credentials.getPasswordHash())) {
+			throw new InvalidCredentialsException();
+		}
+
+		return user;
 	}
 
 	public User getUserByCredentials(String email, String password) {
@@ -84,37 +121,40 @@ public class UserService {
 
 		return credentials.getUser();
 	}
-
-	public User getUserByLoginToken(String loginToken) {
-		User user = getOptionalSingleResult(entityManager.createNamedQuery("User.getByLoginToken", User.class).setParameter("loginToken", loginToken));
-
-		if (user == null) {
-			throw new InvalidCredentialsException("Invalid token");
-		}
-
-		return user;
+	
+	public String generateLoginToken(String email, String remoteAddress, String description, TokenType tokenType) {
+		Instant expiration = Instant.now().plus(14, ChronoUnit.DAYS);
+		return generateLoginToken(email, remoteAddress, description, tokenType, expiration);
 	}
 
-	public List<User> getUsers() {
-		return entityManager.createNamedQuery("User.getAll", User.class).getResultList();
-	}
-
-	public String generateLoginToken(String email) {
-
+	public String generateLoginToken(String email, String remoteAddress, String description, TokenType tokenType, Instant expiration) {
 		String loginToken = UUID.randomUUID().toString();
 
-		getOptionalSingleResult(
-			entityManager.createNamedQuery("Credentials.getByEmail", Credentials.class).setParameter("email", email)
-		).getUser().setLoginToken(loginToken);
+		User user = getUserByEmail(email).get();
+
+		createLoginToken(loginToken, user, remoteAddress, expiration, description,
+		                 tokenType);
 
 		return loginToken;
 	}
+	
+	public Optional<User> getUserByLoginToken(String loginToken, org.example.kickoff.model.LoginToken.TokenType type) {
+		return getOptional(
+				entityManager.createNamedQuery("User.getByLoginToken", User.class)
+				             .setParameter("tokenHash", digest(loginToken, MESSAGE_DIGEST_ALGORITHM))
+				             .setParameter("tokenType", type)
+		);
+	}
+	
+	public void removeLoginToken(String loginToken) {
+		entityManager.createNamedQuery("LoginToken.removeLoginToken")
+					 .setParameter("tokenHash", digest(loginToken, MESSAGE_DIGEST_ALGORITHM))
+					 .executeUpdate();
+	}
 
-
-	public void removeLoginToken(String email) {
-		getOptionalSingleResult(
-			entityManager.createNamedQuery("Credentials.getByEmail", Credentials.class).setParameter("email", email)
-		).getUser().setLoginToken(null);
+	public List<User> getUsers() {
+		return entityManager.createNamedQuery("User.getAll", User.class)
+							.getResultList();
 	}
 
 	private void setCredentials(User user, String password) {
@@ -140,7 +180,7 @@ public class UserService {
 
 	private byte[] hashPassword(String password, byte[] salt) {
 		try {
-			MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+			MessageDigest messageDigest = MessageDigest.getInstance(MESSAGE_DIGEST_ALGORITHM);
 
 			messageDigest.update(salt);
 
@@ -149,5 +189,20 @@ public class UserService {
 		catch (NoSuchAlgorithmException e) {
 			throw new RuntimeException();
 		}
+	}
+	
+	private LoginToken createLoginToken(String rawToken, User user, String ipAddress, Instant expiration, String description, TokenType tokenType) {
+		org.example.kickoff.model.LoginToken loginToken = new LoginToken();
+		loginToken.setTokenHash(digest(rawToken, MESSAGE_DIGEST_ALGORITHM));
+		loginToken.setExpiration(Date.from(expiration));
+		loginToken.setDescription(description);
+		loginToken.setType(tokenType);
+
+		loginToken.setUser(user);
+		user.getLoginTokens().add(loginToken);
+
+		loginToken.setIpAddress(ipAddress);
+
+		return loginToken;
 	}
 }

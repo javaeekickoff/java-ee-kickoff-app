@@ -1,5 +1,6 @@
 package org.example.kickoff.model;
 
+import static java.util.stream.Collectors.toList;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.FetchType.EAGER;
@@ -7,9 +8,7 @@ import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -18,6 +17,7 @@ import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
@@ -34,11 +34,15 @@ public class User extends BaseEntity<Long> {
 	@Email
 	@Column(nullable = false, unique = true)
 	private String email;
+	
+	@Column(name = "email_verified")
+	private boolean emailVerified = true; // for now
 
 	@OneToOne(mappedBy = "user", fetch = LAZY, cascade = ALL)
 	private Credentials credentials;
-
-	private String loginToken; // TODO: make collection later
+	
+	@OneToMany(cascade = ALL, mappedBy = "user", orphanRemoval = true)
+	private List<LoginToken> loginTokens = new ArrayList<>();
 
 	@ElementCollection(targetClass = Group.class, fetch = EAGER)
 	@Enumerated(STRING)
@@ -63,6 +67,14 @@ public class User extends BaseEntity<Long> {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	
+	public boolean isEmailVerified() {
+		return emailVerified;
+	}
+
+	public void setEmailVerified(boolean emailVerified) {
+		this.emailVerified = emailVerified;
+	}
 
 	public Credentials getCredentials() {
 		return credentials;
@@ -71,13 +83,13 @@ public class User extends BaseEntity<Long> {
 	public void setCredentials(Credentials credentials) {
 		this.credentials = credentials;
 	}
-
-	public String getLoginToken() {
-		return loginToken;
+	
+	public List<LoginToken> getLoginTokens() {
+		return loginTokens;
 	}
 
-	public void setLoginToken(String loginToken) {
-		this.loginToken = loginToken;
+	public void setLoginTokens(List<LoginToken> loginTokens) {
+		this.loginTokens = loginTokens;
 	}
 
 	public List<Group> getGroups() {
@@ -87,17 +99,13 @@ public class User extends BaseEntity<Long> {
 	public void setGroups(List<Group> groups) {
 		this.groups = groups;
 	}
-
-	public List<String> getRoles() {
-		Set<String> roles = new HashSet<>();
-
-		for (Group group : getGroups()) {
-			for (Role role : group.getRoles()) {
-				roles.add(role.name());
-			}
-		}
-
-		return new ArrayList<>(roles);
+	
+	public List<String> getRolesAsStrings() {
+		return groups.stream()
+		             .flatMap(group -> group.getRoles().stream())
+		             .distinct()
+		             .map(Role::name)
+		             .collect(toList());
 	}
 
 }
