@@ -4,7 +4,7 @@ import static javax.security.identitystore.CredentialValidationResult.NOT_VALIDA
 
 import java.util.function.Supplier;
 
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.security.identitystore.CredentialValidationResult;
 import javax.security.identitystore.IdentityStore;
@@ -17,7 +17,7 @@ import org.example.kickoff.business.InvalidCredentialsException;
 import org.example.kickoff.business.UserService;
 import org.example.kickoff.model.User;
 
-@RequestScoped
+@ApplicationScoped
 public class KickOffIdentityStore implements IdentityStore {
 
 	@Inject
@@ -59,8 +59,8 @@ public class KickOffIdentityStore implements IdentityStore {
 			}
 
 			return new CredentialValidationResult(
-				userSupplier.get().getEmail(),
-				userSupplier.get().getRolesAsStrings());
+			                user.getEmail(),
+			                user.getRolesAsStrings());
 
 		} catch (InvalidCredentialsException e) {
 			return INVALID_RESULT;

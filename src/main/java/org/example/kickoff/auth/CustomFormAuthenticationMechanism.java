@@ -1,5 +1,6 @@
 package org.example.kickoff.auth;
-import javax.enterprise.inject.spi.CDI;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.security.auth.message.AuthException;
 import javax.security.auth.message.AuthStatus;
 import javax.security.authentication.mechanism.http.HttpAuthenticationMechanism;
@@ -30,14 +31,16 @@ import javax.servlet.http.HttpServletResponse;
 	errorPage="",
 	useForwardToLogin = false
 )
+@ApplicationScoped
 public class CustomFormAuthenticationMechanism implements HttpAuthenticationMechanism {
+    
+    @Inject
+    private IdentityStore identityStore;
     
 	@Override
 	public AuthStatus validateRequest(HttpServletRequest request, HttpServletResponse response, HttpMessageContext httpMessageContext) throws AuthException {
         
         if (hasCredential(httpMessageContext)) {
-            
-        	IdentityStore identityStore = CDI.current().select(IdentityStore.class).get();
             
             Credential credential = httpMessageContext
         		.getAuthParameters()
