@@ -24,7 +24,8 @@ import javax.servlet.http.HttpServletResponse;
  */
 @AutoApplySession // For "is user already logged-in"
 @RememberMe(
-	cookieMaxAgeSeconds = 60 * 60 * 24 * 14 // 14 days
+	cookieMaxAgeSeconds = 60 * 60 * 24 * 14, // 14 days
+	isRememberMeExpression = "loginBean.rememberMe"
 )
 @LoginToContinue(
 	loginPage="/login?cnt=true",
