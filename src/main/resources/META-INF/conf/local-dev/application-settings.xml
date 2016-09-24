@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<comment>
+		Settings for the application that are specific to the LOCAL DEV stage. 
+		Note that these are merged with conf/application-settings.xml.
+		Settings specified here will override those.
+	</comment>
+
+	<!-- Application -->
+	<entry key="stageName">local-dev</entry>
+	<entry key="applicationURLScheme">http</entry>
+	<entry key="applicationDomain">localhost</entry>
+	<entry key="applicationPortNumber">8080</entry>
+	
+	<!-- Mail -->
+	<entry key="mandrillRequestResponseLogging">true</entry>
+</properties>

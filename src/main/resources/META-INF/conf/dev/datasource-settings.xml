@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<comment>
+		Settings for the main data source that are specific to the DEV stage. 
+		Note that these are merged with conf/datasource-settings.xml.
+		Settings specified here will override those.
+	</comment>
+	
+	<entry key="password">devExamplePassword</entry>
+</properties>

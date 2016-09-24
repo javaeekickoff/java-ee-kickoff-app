@@ -1,36 +1,35 @@
 package org.example.kickoff.model;
 
-import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
+import static org.hibernate.annotations.CacheConcurrencyStrategy.TRANSACTIONAL;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.Cache;
+import org.omnifaces.persistence.model.BaseEntity;
+
 @Entity
-@Table(name="mycredentials")
 public class Credentials extends BaseEntity<Long> {
 
-	@Id
-	@GeneratedValue(strategy = IDENTITY)
+	private static final long serialVersionUID = 1L;
+
+	@Id @GeneratedValue(strategy = IDENTITY)
 	private Long id;
 
-	@OneToOne(fetch = EAGER)
-	@JoinColumn(name = "user_id")
+	@ManyToOne
+	@Cache(usage = TRANSACTIONAL)
 	private User user;
 
-	@NotNull
 	@Column(name = "password_hash", length = 32)
-	private byte[] passwordHash;
+	private @NotNull byte[] passwordHash;
 
-	@NotNull
 	@Column(length = 40)
-	private byte[] salt;
+	private @NotNull byte[] salt;
 
 	@Override
 	public Long getId() {

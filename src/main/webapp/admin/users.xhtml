@@ -1,59 +1,43 @@
 <ui:composition template="/WEB-INF/templates/layout.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+	xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
 	xmlns:o="http://omnifaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:of="http://omnifaces.org/functions"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:k="http://kickoff.example.org/ui"
 >
-
-	<ui:define name="title">Users</ui:define>
-
 	<ui:define name="content">
-	
-		<h:form id="form">
-	
-			<p:dataTable value="#{usersBacking.users}" var="user" paginator="true" rows="25" editable="true" filteredValue="#{usersBacking.filteredUsers}">
-	
-				<p:ajax event="rowEdit" listener="#{usersBacking.onEdit}" update=":messages"/>
-	
-				<p:column headerText="User ID" sortBy="#{user.id}" filterBy="#{user.id}" >
-	 				#{user.id}
-	 			</p:column>
-	
-				<p:column headerText="Email address" sortBy="#{user.email}" filterBy="#{user.email}" filterMatchMode="contains">
-					<p:cellEditor>
-						<f:facet name="output">#{user.email}</f:facet>
-						<f:facet name="input">
-							<p:inputText value="#{user.email}" />
-						</f:facet>
-					</p:cellEditor>
-				</p:column>
+		<k:form id="usersForm">
+			<k:table id="usersTable" value="#{usersBacking.users}">
+				<k:column field="id" type="number" />
+				<k:column field="email" />
+				<k:column field="emailVerified" type="boolean" />
+				<k:column field="fullName" />
+				<k:column field="groups" type="list" />
+				<k:column field="created" type="instant" />
 
-				<p:column headerText="Groups" filterBy="#{user.groups}" filterOptions="#{usersBacking.groupsFilter}" filterMatchMode="contains">
- 					<p:cellEditor>
-						<f:facet name="output">
-							<ui:repeat var="group" value="#{user.groups}">
-								#{group}<br />
-							</ui:repeat>
-						</f:facet>
+				<p:column headerText="#{i18n['general.actions']}" styleClass="actions">
+					<k:link path="admin/users/edit" value="">
+						<i class="fa fa-pencil" />
+						<f:param name="id" value="#{item.id}" />
+					</k:link>
+					<p:commandLink id="delete" rendered="#{item.id gt 1}"
+						onclick="if(!confirm('Are you sure to delete user with ID #{user.id}?'))return false" 
+						action="#{usersBacking.delete(item)}" update="@form">
+						<i class="fa fa-trash" />
+					</p:commandLink>
+				</p:column>
+			</k:table>
+		</k:form>
+	</ui:define>
+</ui:composition>
 
-						<f:facet name="input">
-							<p:selectManyCheckbox value="#{user.groups}" collectionType="java.util.ArrayList" layout="pageDirection">
-								<f:converter converterId="omnifaces.GenericEnumConverter"/>
-								<f:selectItems value="#{usersBacking.groups}" var="group" itemValue="#{group}">
-						        	#{group}
-								</f:selectItems>
-							</p:selectManyCheckbox>
-						</f:facet>
-					</p:cellEditor>
-				</p:column>
-	
-				<p:column headerText="Edit">
-					<p:rowEditor />
-				</p:column>
-				
+<!-- 
 				<p:column headerText="Delete">
 					<p:commandButton id="deleteButton" value="Delete" update=":confirmDeleteForm" oncomplete="confirmDeleteDialog.show()">
 						<f:setPropertyActionListener value="#{user}" target="#{deleteUserBacking.user}" />
@@ -65,10 +49,7 @@
 						<f:setPropertyActionListener value="#{user}" target="#{changePasswordBacking.user}" />  
 					</p:commandButton>
 				</p:column>
-	
-			</p:dataTable>
-		</h:form>
-		
+
 		<p:dialog header="Change password" widgetVar="passwordDialog" resizable="false" id="passwordDlg" modal="true" closable="true">
 			<h:form id="passwordForm">
 				<o:validateEqual components="password confirmPassword"/>
@@ -89,14 +70,6 @@
 			</h:form>
 	
 		</p:dialog>
-
-		<script type="text/javascript">  
-		    function handlePasswordChangeRequest(xhr, status, args) {  
-		        if(!args.validationFailed) {  
-		        	passwordDialog.hide();
-		        }  
-		    }  
-		</script>  
 		
 		<p:dialog header="Delete user" widgetVar="confirmDeleteDialog" resizable="false"
 			id="confirmDeleteDlg" modal="true" closable="true">
@@ -113,6 +86,4 @@
 			</h:form>
 	
 		</p:dialog>
-
-	</ui:define>	
-</ui:composition>
+ -->		

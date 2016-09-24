@@ -1,0 +1,33 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+	xmlns:k="http://kickoff.example.org/ui"
+>
+	<ul>
+		<li>
+			<c:if test="#{empty activeUser}">
+				<k:link path="login" />
+			</c:if>
+			<c:if test="#{not empty activeUser}">
+				<k:link path="user/profile" value=""><i class="fa fa-user" /></k:link>
+				<ul>
+					<li>
+						<k:link path="user/profile" />
+					</li>
+					<c:if test="#{activeUser.hasRole('VIEW_ADMIN_PAGES')}">
+						<li>
+							<k:link path="admin/users" />
+						</li>
+					</c:if>
+					<li>
+						<k:form id="logoutForm">
+							<h:commandLink value="#{i18n['general.logout']}" action="#{logoutBacking.logout}" />
+						</k:form>
+					</li>
+				</ul>
+			</c:if>
+		</li>
+	</ul>
+</ui:composition>

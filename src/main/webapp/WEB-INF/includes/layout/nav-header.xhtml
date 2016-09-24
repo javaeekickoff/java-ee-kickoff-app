@@ -1,0 +1,16 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:k="http://kickoff.example.org/ui"
+>
+	<ul>
+		<li><k:link path="about" /></li>
+		<li><k:link path="help" /></li>
+		<li><k:link path="contact" /></li>
+	</ul>
+	<aside>
+		<ui:insert name="nav-user">
+			<ui:include src="/WEB-INF/includes/layout/nav-user.xhtml" />
+		</ui:insert>
+	</aside>
+</ui:composition>

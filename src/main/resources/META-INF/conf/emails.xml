@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<comment>			
+		Emails content
+	</comment>
+
+
+	<!-- NOTE: Don't indent CDATA content! -->
+
+	<!-- NOTE: Don't use HTML <br> or <p>, this will be taken care of automatically based on newlines! -->
+	<!--       The code will convert 2 successive newlines to <br/><br/> not <p>.                      -->
+	<!--       Note that block elements like <blockquote> and <ul> already start at a new "paragraph". -->
+
+	<entry key="default_salutation_content_text"><![CDATA[
+Dear {toUser.fullName},
+	]]></entry>
+
+
+	<!-- New user registered ====================================================================================== -->
+
+	<entry key="newImplicitLoanUserRegistered_subject_content_text"><![CDATA[
+Verify your email to be able to secure a loan
+	]]></entry>
+
+	<entry key="newImplicitLoanUserRegistered_body_content_HTML"><![CDATA[
+<h3>Just one more thing before you can sign the final agreement for your loan</h3>
+You''re almost ready. To complete the process please verify your email address by clicking the button below.
+
+<a href="*|CTA1_URL|*">*|CTA1_URL|*</a>
+
+After you''ve completed the verification you can continue with the loan application.
+	]]></entry>
+	
+	<entry key="newImplicitLoanUserRegistered_call_to_action1_label_text"><![CDATA[
+Verify my email
+	]]>
+	</entry>
+
+
+	<!-- New user registered ====================================================================================== -->
+
+	<entry key="newUserRegistered_subject_content_text"><![CDATA[
+Verify your email to login to Blue Ocean
+	]]></entry>
+
+	<entry key="newUserRegistered_body_content_HTML"><![CDATA[
+<h3>Just one more thing before you can start earning!</h3>
+You''re almost ready to get started, to complete your sign up please verify your email address by clicking the button below.
+
+<a href="*|CTA1_URL|*">*|CTA1_URL|*</a>
+
+After you''ve completed your signup you can start TODO: full in more text here
+	]]></entry>
+	
+	<entry key="newUserRegistered_call_to_action1_label_text"><![CDATA[
+Verify my email
+	]]>
+	</entry>
+	
+	
+	
+	<!-- New User Email Verified =================================================================================== -->
+
+	<entry key="newEmailVerified_subject_content_text"><![CDATA[
+New User with a verified email
+	]]></entry>
+
+	<entry key="newEmailVerified_body_content_HTML"><![CDATA[
+I have just completed the signup!
+
+<ul>
+<li>User email: {user.email}</li>
+<li>User name: {user.fullName}</li>
+<li>Referral: {referral}</li>
+</ul>
+	]]></entry>
+	
+	
+	<!-- User request password ===================================================================================== -->
+
+	<entry key="passwordReset_subject_content_text">
+	<![CDATA[
+Reset your password
+	]]>
+	</entry>
+
+	<entry key="passwordReset_body_content_HTML">
+	<![CDATA[
+We have received a request to reset the password of your account. If you did not request this reset, just ignore this email. Otherwise, please visit the following link to reset your password.
+	]]>
+	</entry>
+	
+	<entry key="passwordReset_body2_content_HTML">
+	<![CDATA[
+Valid until: {expiration,dateTime,long}
+Request from: {ip}
+	]]>
+	</entry>
+	
+	<entry key="passwordReset_call_to_action1_label_text">
+	<![CDATA[
+Reset my password
+	]]>
+	</entry>
+	
+	
+</properties>

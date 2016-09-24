@@ -1,0 +1,32 @@
+<ui:composition template="/WEB-INF/templates/layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:of="http://omnifaces.org/functions"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:k="http://kickoff.example.org/ui"
+>
+	<ui:define name="content">
+		<o:importConstants type="org.example.kickoff.model.Group" />
+
+		<k:form id="editUserForm">
+			<fieldset>
+				<k:input id="email" type="email" value="#{editUserBacking.user.email}" />
+				<k:input id="fullName" value="#{editUserBacking.user.fullName}" />
+				<k:input id="groups" type="checkboxes" value="#{editUserBacking.user.groups}" required="true">
+					<f:selectItems value="#{Group}" />
+					<f:converter converterId="omnifaces.GenericEnumConverter" />
+				</k:input>
+
+				<k:buttons>
+					<k:button id="cancel" path="admin/users" />
+					<k:button id="save" action="#{editUserBacking.save}" />
+				</k:buttons>
+			</fieldset>
+		</k:form>
+	</ui:define>
+</ui:composition>

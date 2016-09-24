@@ -1,0 +1,232 @@
+/*
+ * Define here ONLY .ui-xxx classes from PrimeFaces/jQueryUI.
+ */
+
+/* General ---------------------------------------------------------------------------------------------------------- */
+
+.ui-widget.ui-state-default {
+	border: 1px solid #{lightGray};
+}
+
+.ui-widget.ui-state-hover {
+	border-color: #{semiGray};
+}
+
+.ui-widget.ui-state-highlight,
+.ui-widget.ui-state-focus {
+	border-color: #{black};
+}
+
+.ui-widget.ui-state-error {
+	border-color: #{red};
+}
+
+.ui-corner-all {
+	border-radius: 3px;
+}
+
+.ui-icon {
+	display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: 1.2em;
+    text-indent: 0;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.ui-shadow {
+	box-shadow: 0 1px 3px #{gray};
+}
+
+
+/* Inputs ----------------------------------------------------------------------------------------------------------- */
+
+.ui-inputfield {
+	position: relative;
+	font-size: 1em;
+	color: #{black};
+}
+
+.ui-inputfield,
+.ui-spinner,
+.ui-selectonemenu,
+.ui-autocomplete {
+	box-sizing: border-box;
+	width: 100%;
+	height: 40px;
+	padding: .5em;
+	background: white;
+}
+
+.ui-autocomplete-panel,
+.ui-selectonemenu-panel {
+	z-index: 9997 !important;	
+}
+
+.ui-selectonemenu-panel .ui-selectonemenu-item.ui-state-disabled,
+.ui-autocomplete-panel .ui-autocomplete-item.ui-state-disabled {
+	display: none;
+}
+
+.ui-selectonemenu-panel .ui-selectonemenu-item.ui-state-hover,
+.ui-selectonemenu-panel .ui-selectonemenu-item.ui-state-highlight,
+.ui-autocomplete-panel .ui-autocomplete-item.ui-state-hover,
+.ui-autocomplete-panel .ui-autocomplete-item.ui-state-highlight {
+	background: #{brightGray};
+}
+
+.ui-spinner-button.ui-state-default {
+	height: 20px;
+	width: 20px;
+	border-radius: 20px;
+	line-height: 20px;
+	padding: 0;
+	background: white;
+	border: 2px solid #{gray};
+	color: #{gray};
+}
+
+.ui-spinner-button.ui-state-focus,
+.ui-spinner-button.ui-state-hover {
+	border-color: #{black};
+	color: #{black};
+}
+
+.ui-spinner-button.ui-state-default .ui-button-text {
+	display: inline;
+	padding: 0;
+}
+
+.ui-spinner-up.ui-state-default {
+	top: 16px;
+	right: 16px;
+}
+
+.ui-spinner-down.ui-state-default {
+	top: 16px;
+	right: 54px;
+}
+
+.ui-spinner .ui-icon {
+	position: static;
+	margin: 0;
+	vertical-align: middle;
+}
+
+.ui-spinner-up .ui-icon:after {
+	content: "\f067"; /* fa-plus */
+}
+
+.ui-spinner-down .ui-icon:after {
+	content: "\f068"; /* fa-minus */
+}
+
+.ui-chkbox {
+	float: left;
+}
+
+.ui-chkbox .ui-chkbox-box {
+	box-sizing: border-box;
+	width: 25px;
+	height: 25px;
+	padding: 2px;
+	line-height: 25px;
+	text-align: center;
+}
+
+.ui-chkbox .ui-icon-check:after {
+	content: "\f00c"; /* fa-check */
+	color: #{red};
+}
+
+
+/* Buttons ---------------------------------------------------------------------------------------------------------- */
+
+.ui-button.ui-state-default {
+	height: 40px;
+	padding: 0 1em;
+	text-transform: uppercase;
+	color: white;
+	background: #{green};
+}
+
+.ui-button.ui-state-hover,
+.ui-button.ui-state-focus {
+	box-shadow: 0 3px 6px 0 #{gray};
+}
+
+.ui-button.secondary.ui-state-default {
+	background: #{blue};
+}
+
+.ui-button.tertiary.ui-state-default {
+	background: #{gray};
+}
+
+
+/* Tables ----------------------------------------------------------------------------------------------------------- */
+
+.ui-datatable table {
+	table-layout: auto;
+}
+
+.ui-datatable thead th,
+.ui-datatable tbody td {
+	border: 1px solid #{lightGray};
+}
+.ui-datatable tr:nth-child(even) {
+	background: white;
+}
+
+.ui-datatable th.ui-state-active,
+.ui-datatable tr:nth-child(odd),
+.ui-datatable tr:nth-child(even) td.ui-state-active {
+	background: #{brightGray};
+}
+
+.ui-datatable th.ui-state-hover,
+.ui-datatable tr:nth-child(odd) td.ui-state-active {
+	background: #{lightGray};
+}
+
+.ui-datatable th {
+	font-weight: normal;
+	background: white;
+}
+
+.ui-datatable th.ui-state-active {
+	font-weight: bold;
+}
+
+.ui-datatable th.ui-filter-column:not(.filterable) .ui-column-filter {
+	display: none;
+}
+
+/* k:dataTable actions */
+.ui-datatable-actions .ui-inputfield.globalFilter {
+	width: 200px;
+}
+
+.ui-datatable-actions .ui-button.export {
+	float: right;
+}
+
+/* k:column types */
+.ui-datatable td.text {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.ui-datatable td.number,
+.ui-datatable td.currency {
+	white-space: nowrap;
+	text-align: right;
+}
+
+.ui-datatable td.boolean,
+.ui-datatable td.actions {
+	white-space: nowrap;
+	text-align: center;
+}

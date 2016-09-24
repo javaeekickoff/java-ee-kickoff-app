@@ -1,77 +1,49 @@
 package org.example.kickoff.view.admin;
 
-import static org.example.kickoff.validator.Demo.canUpdate;
-
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.io.Serializable;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
-import javax.faces.model.SelectItem;
+import javax.faces.model.DataModel;
+import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.example.kickoff.business.UserService;
-import org.example.kickoff.model.Group;
+import org.example.kickoff.business.service.UserService;
 import org.example.kickoff.model.User;
-import org.primefaces.event.RowEditEvent;
+import org.example.kickoff.view.PagedDataModel;
+import org.omnifaces.cdi.ViewScoped;
+import org.omnifaces.persistence.model.dto.SortFilterPage;
+import org.primefaces.model.SortOrder;
 
 @Named
-@RequestScoped
-public class UsersBacking {
+@ViewScoped
+public class UsersBacking implements Serializable {
 
-	@EJB
+	private static final long serialVersionUID = 1L;
+
+	private PagedDataModel<User> users;
+
+	@Inject
 	private UserService userService;
 
-	private List<User> users;
-	private List<User> filteredUsers;
-	private List<Group> groups;
-	private SelectItem[] groupFilterOptions;
-
 	@PostConstruct
-	private void onPreload() {
-		users = userService.getUsers();
-		groups = Arrays.asList(Group.values());
+	public void init() {
+		users = new PagedDataModel<User>("created", SortOrder.DESCENDING, "id", "email", "fullName") {
+			private static final long serialVersionUID = 1L;
 
-		List<SelectItem> list = new ArrayList<>();
-
-		list.add(new SelectItem("", "Select"));
-		for (Group group : groups) {
-			SelectItem item = new SelectItem(group, group.toString());
-			list.add(item);
-		}
-
-		groupFilterOptions = list.toArray(new SelectItem[list.size()]);
-	}
-	
-	public void onEdit(RowEditEvent event) {
-		User user = (User) event.getObject();
-		if (canUpdate(user)) {
-			userService.update(user);
-		} else {
-			users = userService.getUsers();
-		}
+			@Override
+			public List<User> load(SortFilterPage page, boolean countNeedsUpdate) {
+				return userService.getByPage(page, countNeedsUpdate);
+			}
+		};
 	}
 
-	public List<User> getUsers() {
+	public void delete(User user) {
+		userService.delete(user);
+	}
+
+	public DataModel<User> getUsers() {
 		return users;
-	}
-
-	public List<User> getFilteredUsers() {
-		return filteredUsers;
-	}
-
-	public void setFilteredUsers(List<User> filteredUsers) {
-		this.filteredUsers = filteredUsers;
-	}
-
-	public List<Group> getGroups() {
-		return groups;
-	}
-
-	public SelectItem[] getGroupsFilter() {
-		return groupFilterOptions;
 	}
 
 }

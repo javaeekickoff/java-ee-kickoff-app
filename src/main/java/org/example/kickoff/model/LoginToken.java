@@ -1,54 +1,58 @@
 package org.example.kickoff.model;
 
+import static java.time.temporal.ChronoUnit.MONTHS;
+import static javax.persistence.EnumType.STRING;
 import static javax.persistence.GenerationType.IDENTITY;
-import static javax.persistence.TemporalType.TIMESTAMP;
+import static org.hibernate.annotations.CacheConcurrencyStrategy.TRANSACTIONAL;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.time.Instant;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.Cache;
+import org.omnifaces.persistence.model.BaseEntity;
+
 @Entity
-@Table(name = "login_token")
 public class LoginToken extends BaseEntity<Long> {
 
-	public enum TokenType {REMEMBER_ME, API, RESET_PASSWORD}
+	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = IDENTITY)
+	public enum TokenType {
+		REMEMBER_ME,
+		API,
+		RESET_PASSWORD
+	}
+
+	@Id @GeneratedValue(strategy = IDENTITY)
 	private Long id;
 
-	@Column(name = "token_hash", length = 32, unique = true)
+	@Column(length = 32, unique = true)
 	private byte[] tokenHash;
 
-	@Temporal(TIMESTAMP)
-	private Date created;
+	@Column
+	private Instant created;
 
-	@Temporal(TIMESTAMP)
-	private Date expiration;
+	@Column
+	private Instant expiration;
 
-	@Column(name="ip_address")
+	@Column
 	private String ipAddress;
 
-	@Size(max = 256)
+	@Column @Size(max = 256)
 	private String description;
 
 	@ManyToOne(optional = false)
-	@JoinColumn(name = "user_id")
+	@Cache(usage = TRANSACTIONAL)
 	private User user;
 
-	@Enumerated(EnumType.STRING)
+	@Enumerated(STRING)
 	private TokenType type;
 
 	@Override
@@ -77,19 +81,19 @@ public class LoginToken extends BaseEntity<Long> {
 		this.tokenHash = tokenHash;
 	}
 
-	public Date getCreated() {
+	public Instant getCreated() {
 		return created;
 	}
 
-	public void setCreated(Date created) {
+	public void setCreated(Instant created) {
 		this.created = created;
 	}
 
-	public Date getExpiration() {
+	public Instant getExpiration() {
 		return expiration;
 	}
 
-	public void setExpiration(Date expiration) {
+	public void setExpiration(Instant expiration) {
 		this.expiration = expiration;
 	}
 
@@ -119,13 +123,10 @@ public class LoginToken extends BaseEntity<Long> {
 
 	@PrePersist
 	public void setTimestamps() {
-		created = new Date();
+		created = Instant.now();
 
 		if (expiration == null) {
-			Calendar calendar = Calendar.getInstance();
-			calendar.add(Calendar.MONTH, 1);
-
-			expiration = calendar.getTime();
+			expiration = created.plus(1, MONTHS);
 		}
 	}
 

@@ -1,0 +1,20 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+>
+	<link rel="icon" type="image/png" sizes="16x16" href="#{resource['kickoff:icons/favicon-16x16.png']}" />
+	<link rel="icon" type="image/png" sizes="32x32" href="#{resource['kickoff:icons/favicon-32x32.png']}" />
+	<link rel="icon" type="image/png" sizes="96x96" href="#{resource['kickoff:icons/favicon-96x96.png']}" />
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400,700" />
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono" />
+
+	<!-- Normally, below is rendered by PF HeadRenderer, but since we've disabled it in our faces-config.xml, it doesn't get rendered anymore. -->
+	<h:outputStylesheet library="primefaces" name="components.css" />
+	<h:outputStylesheet library="primefaces" name="fa/font-awesome.css" />
+	<h:outputScript library="primefaces" name="jquery/jquery.js" target="head" />
+	<h:outputScript library="primefaces" name="jquery/jquery-plugins.js" target="head" />
+	<h:outputScript library="primefaces" name="core.js" target="head" />
+	<h:outputScript library="primefaces" name="components.js" target="head" />
+	<h:outputScript target="head">PrimeFaces.settings.locale="en";</h:outputScript>
+</ui:composition>

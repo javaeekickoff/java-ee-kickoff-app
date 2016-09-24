@@ -1,0 +1,464 @@
+/* 
+ * The great z-index overview:
+ * 
+ * 9999: progress overlay
+ * 9998: noscript/nobrowser warnings, menus (nav, pop, tooltip, etc)
+ * 9997: p:selectOneMenu panel, p:autoComplete panel, p:calendar panel
+ * 9996: fixed header
+ */
+
+/*
+ * The great margin vs padding guideline:
+ *
+ * - margins of block elements next each other auto-collapse
+ * - margin of inline(-block) elements doesn't auto-collapse 
+ * - margin is outside click/touch area
+ * - margin doesn't cover background
+ */
+
+/*
+ * The great px vs em guideline:
+ *
+ * - use px on position/offset/dimensions (*width, *height, *size, *shadow, *spacing, *radius) of all elements
+ * - use px on margin/padding of border-box elements (as of now, only input fields are border-box)
+ * - use em on font sizes and line heights which are relative to the px-fixed values of the body 
+ * - use em on the remainder, which is usually only margin/padding of (inline-)block elements
+ * 
+ * Base font size is 16px and base line height is 26px. Use em to specify relative sizes. Online calculator: pxtoem.com
+ * This scales better when changing base font size in screen width breakpoints.
+ * 11px = .688em
+ * 13px = .813em
+ * 14px = .875em
+ * 16px = 1em
+ * 20px = 1.25em
+ * 24px = 1.5em
+ * 32px = 2em
+ * 40px = 2.5em
+ * 42px = 2.625em
+ * If line height needs to scale too (e.g. icons), use exactly the same em value for line-height as used for font-size.
+ */
+
+/*
+ * Colors except "white" and "transparent" are defined as application attributes in colors.css.
+ */
+
+/*
+ * Do NOT define here .ui-xxx classes from PrimeFaces/jQueryUI, use primefaces.css for that.
+ */
+
+/* Fonts ------------------------------------------------------------------------------------------------------------ */
+
+body,
+body input,
+body select,
+body textarea,
+body button {
+	font-family: 'Roboto Condensed', sans-serif;
+	font-weight: 400;
+}
+
+body code,
+body input[type=password] {
+	font-family: 'Roboto Mono', monospace;
+	font-size: .875em;
+	font-weight: 400;
+}
+
+body b,
+body dt,
+body strong {
+	font-weight: 700;
+}
+
+body small {
+	font-size: .875em;
+	font-weight: 300;
+}
+
+body i.fa {
+	width: 1.25em;
+	height: 1.25em;
+	font-size: 1.25em;
+	line-height: 1.25em;
+}
+
+body img {
+	line-height: 1em;
+}
+
+
+/* Layout ----------------------------------------------------------------------------------------------------------- */
+
+html {
+	height: 100%;
+	overflow-y: scroll;
+	background: #{brightGray};
+}
+
+body {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	min-width: 300px;
+	margin: 0;
+	color: #{black};
+}
+
+body .warningPadding {
+	height: 30px;
+}
+
+body .warningMessage {
+	position: fixed;
+	z-index: 9998;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 30px;
+	text-align: center;
+	color: white;
+	background: #{orange};
+}
+
+body .warningMessage a {
+	color: white;
+	text-decoration: underline;
+}
+
+body > header {
+	position: fixed;
+	z-index: 9996;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 5em;
+	line-height: 5em;
+	padding: 0 1em;
+	background: white;
+	border-bottom: 1px solid #{red};
+}
+
+body > header > div#logo {
+	float: left;
+}
+
+body > header > div#logo img {
+	vertical-align: middle;
+}
+
+body > header > input#hamburger,
+body > header > input#hamburger + label {
+	position: absolute;
+	display: none;
+	color: #{red};
+}
+
+body > header nav {
+	float: left;
+	margin-left: 1em;
+}
+
+body > header nav ul {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+
+body > header nav li {
+	display: inline-block;
+}
+
+body > header nav a {
+	display: block;
+	padding: 0 1em;
+	text-align: center;
+	vertical-align: middle;
+	white-space: nowrap;
+}
+
+body > header nav a:focus,
+body > header nav a:hover {
+	text-decoration: none;
+	background: #{brightGray};
+}
+
+body > header nav a:active,
+body > header nav a.current {
+	background: #{lightGray};
+}
+
+body > header nav i {
+	padding: 0 1em;
+}
+
+body > header nav aside {
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+
+body > header nav li ul {
+	border: 1px solid #{red};
+	border-top: 0;
+}
+
+body > header nav li li {
+	width: 100%;
+	line-height: 3em;
+}
+
+body > main {
+	flex: 1;
+	width: 100%;
+	max-width: 1200px;
+	margin: 5em auto 1em;
+}
+
+body > main header,
+body > main article {
+	margin: 1em;
+}
+
+body > footer {
+	padding-bottom: 1em;
+	background: #{lightGray};
+}
+
+body > footer section {
+	display: inline-block;
+	margin: 0 1em;
+	vertical-align: top;
+}
+
+body > footer ul {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+
+body > footer p {
+	margin: 1em;
+}
+
+/* General ---------------------------------------------------------------------------------------------------------- */
+
+a {
+	text-decoration: none;
+	color: #{blue};
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+pre {
+	padding: .5em;
+	overflow: auto;
+	overflow-y: hidden;
+	word-wrap: normal;
+	background: white;
+	line-height: 1em;
+}
+
+nav li ul {
+	display: none;
+	position: absolute;
+	left: 0;
+	min-width: 100%;
+	background: white;
+	line-height: normal;
+}
+
+nav aside li ul {
+	left: auto;
+	right: 0;
+}
+nav li:hover ul {
+	display: block;
+}
+
+.dev {
+	margin: .5em 0;
+	padding: 0 .5em;
+	background: #{yellow};
+}
+
+.dev:before {
+	content: "DEV";
+	margin-right: .5em;
+	font-weight: 700;
+	color: #{red};
+}
+
+
+/* Forms ------------------------------------------------------------------------------------------------------------ */
+
+html #overlay {
+	display: none;
+}
+
+html.progress #overlay {
+	position: fixed;
+	z-index: 9999;
+	display: block;
+	opacity: 0;
+}
+
+html.progress,
+html.progress * {
+	cursor: wait !important;
+}
+
+fieldset {
+	max-width: 600px;
+	margin: 1em auto;
+	padding: 1em 2em;
+	border: 0;
+	border-radius: 6px;
+	background: white;
+}
+
+fieldset .field {
+	position: relative;
+	box-sizing: border-box;
+	margin: 1em 0;
+}
+
+fieldset .field label > span {
+	float: right;
+	padding-left: .5em;
+}
+
+fieldset .field.checkbox label {
+	padding-left: .5em;
+}
+
+fieldset .field ul.messages {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+
+fieldset .field.buttons ul.messages {
+	margin: .5em 0;
+}
+
+fieldset .field ul.messages .info {
+	color: #{green};
+}
+
+fieldset .field ul.messages .warn {
+	color: #{blue};
+}
+
+fieldset .field ul.messages .error {
+	color: #{red};
+}
+
+
+/* Normal screens (3-column layout) --------------------------------------------------------------------------------- */
+/* This covers desktops more than 1200px and tablets (w=1024px) in landscape ---------------------------------------- */
+
+@media
+	screen,
+	screen and (max-device-width:1024px) and (orientation:landscape)
+{
+	body {
+		font-size: 18px;
+		line-height: 28px;
+		transition: all .3s;
+	}
+
+}
+
+
+/* Medium and print layout (2-column based) ------------------------------------------------------------------------- */
+/* This covers desktops less than 1200px and tablets (w=1024px) in portrait ----------------------------------------- */
+
+@media print {
+	body .hideOnPrint {
+		display: none !important;
+	}
+}
+
+@media
+	print, 
+	screen and (max-width:1199px) and (min-device-width:1025px),
+	screen and (max-width:1023px) and (max-device-width:1024px) and (orientation:portrait)
+{
+	body {
+		font-size: 15px;
+		line-height: 25px;
+		transition: all .3s;
+	}
+}
+
+
+/* Small screens (1-column based) ----------------------------------------------------------------------------------- */
+/* This covers desktops less than 800px and mobiles (w=768px) in any orientation ------------------------------------ */
+
+@media
+	screen and (max-width:799px) and (min-device-width:769px),
+	screen and (max-width:767px) and (max-device-width:768px)
+{
+	body .hideOnMobile {
+		display: none;
+	}
+	
+	body {
+		font-size: 18px;
+		line-height: 28px;
+		transition: all .3s;
+	}
+
+	body > header {
+		height: 4em;
+		line-height: 4em;
+	}
+	
+	body > header > input#hamburger + label {
+		display: block;
+		padding: 0 1em;
+		cursor: pointer;
+		right: 0;
+		transition: right .3s;
+		background: white;
+	}
+	
+	body > header > input#hamburger:checked + label {
+		right: 33%;
+	}
+
+	body > header > input#hamburger ~ nav {
+		position: fixed;
+		z-index: 9998;
+		top: 0;
+		right: -33%;
+		transition: right .3s;
+		width: 32%;
+		height: 100%;
+		overflow-y: auto;
+		background: white;
+		border-left: 1px solid #{red};
+	}
+
+	body > header > input#hamburger:checked ~ nav {
+		right: 0;
+	}
+
+	body > header nav li,
+	body > header nav li ul {
+		display: block;
+		border: 0;
+		line-height: 3em;
+	}
+
+	body > header nav a {
+		padding: 0;
+	}
+
+	body > header nav aside {
+		position: static;
+	}
+
+}

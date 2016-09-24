@@ -1,29 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<entity-mappings version="2.0" xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_2_0.xsd">
-	
-	<named-query name="Credentials.getByEmail">
-		<query>
-			SELECT
-				c
-			FROM
-				User u
-					JOIN
-				u.credentials c
-			WHERE
-				u.email = :email
-		</query>
-	</named-query>
-	
-	<named-query name="User.getAll">
+<entity-mappings
+	xmlns="http://java.sun.com/xml/ns/persistence/orm"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_2_0.xsd"
+	version="2.0"
+>
+	<named-query name="User.getByEmail">
 		<query>
 			SELECT
 				_user
 			FROM
 				User _user					
+			WHERE
+				_user.email = :email
 		</query>
 	</named-query>
-	
+
 	<named-query name="User.getByLoginToken">
 		<query>
 			SELECT
@@ -40,36 +32,4 @@
 				_loginToken.expiration &gt; CURRENT_TIMESTAMP
 		</query>
 	</named-query>
-
-	<named-query name="User.getByEmail">
-		<query>
-			SELECT
-				_user
-			FROM
-				User _user					
-			WHERE
-				_user.email = :email
-		</query>
-	</named-query>
-
-	<named-query name="LoginToken.removeLoginToken">
-		<query>
-			DELETE
-			FROM
-				LoginToken _loginToken
-			WHERE
-				_loginToken.tokenHash = :tokenHash
-		</query>
-	</named-query>
-
-	<named-query name="LoginToken.removeExpiredLoginTokens">
-		<query>
-			DELETE
-			FROM
-			LoginToken _loginToken
-			WHERE
-			_loginToken.expiration &lt; CURRENT_TIMESTAMP
-		</query>
-	</named-query>
-	
 </entity-mappings>

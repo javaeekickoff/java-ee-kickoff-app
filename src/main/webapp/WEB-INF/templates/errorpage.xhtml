@@ -1,0 +1,54 @@
+<!-- 
+
+	IMPORTANT:
+	
+	The error page and layout MAY NOT reference any backing bean which performs business logic as it may in turn 
+	cause new exceptions which in turn would cause the rendering of error page to completely fail (and cause the 
+	server-default 500 error page to be shown).
+	
+	The error page and layout MAY NOT contain any <x:form>, UNLESS the <f:view> is stateless.
+
+ -->
+<ui:composition template="/WEB-INF/templates/layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:of="http://omnifaces.org/functions"
+	xmlns:k="http://kickoff.example.org/ui"
+>
+	<ui:param name="bodyStyleClass" value="errorpage" />
+
+	<ui:define name="nav-user">
+		<!-- Explicitly hide nav-user which may contain a logout form. -->
+	</ui:define>
+
+	<ui:define name="content">
+		<section>
+			<p>
+				<h:outputFormat value="#{i18n[page.name += '.paragraph.1']}" escape="false">
+					<f:param value="#{of:formatNumber(session.maxInactiveInterval / 60, '#')}" />
+				</h:outputFormat>
+			</p>
+			<p>
+				<o:outputFormat value="#{i18n[page.name += '.paragraph.2']}" escape="false">
+					<o:param><k:link path="home" value="#{i18n['general.home']}" /></o:param>
+				</o:outputFormat>
+			</p>
+		</section>
+
+		<ui:insert name="errorpageContent" />
+
+		<h:outputScript rendered="#{facesContext.partialViewContext.ajaxRequest}">
+			// Scroll back to left top, for the case the page was scrolled halfway or so.
+			scrollTo(0, 0);
+
+			// Remove any PrimeFaces overlays, in case the exception was thrown while opening a dialog.
+			// They're opened during oncomplete, the timeout should therefore run after that.
+			setTimeout(function() {
+				$(".ui-widget-overlay").remove();
+			}, 300);
+		</h:outputScript>
+	</ui:define>
+</ui:composition>

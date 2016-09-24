@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<comment>
+		Base settings for the main data source that are common for all stages.
+		Note that the initial settings can also be specified in /WEB-INF/web.xml.
+	</comment>
+
+	<entry key="className">org.h2.jdbcx.JdbcDataSource</entry>
+	<entry key="url">jdbc:h2:mem:test</entry>
+	<entry key="user">sa</entry>
+	<entry key="password">sa</entry>
+</properties>

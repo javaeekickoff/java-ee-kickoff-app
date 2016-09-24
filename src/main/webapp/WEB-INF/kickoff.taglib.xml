@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<facelet-taglib
+	xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facelettaglibrary_2_2.xsd"
+	version="2.2"
+>
+	<namespace>http://kickoff.example.org/ui</namespace>
+	<short-name>k</short-name>
+	<composite-library-name>kickoff/composites</composite-library-name> <!-- NOTE: when altered, don't forget to alter ResourceHandlerImplPatch -->
+
+	<tag>
+		<description>Renders a development-only div.</description>
+		<tag-name>dev</tag-name>
+		<source>tags/dev.xhtml</source>
+	</tag>
+
+	<tag>
+		<description>Renders an internal link.</description>
+		<tag-name>link</tag-name>
+		<source>tags/link.xhtml</source>
+		<attribute>
+			<description>The GET path of page to navigate, WITHOUT leading slash and extension.</description>
+			<name>path</name>
+			<required>true</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description>The value of the link. Defaults to page title.</description>
+			<name>value</name>
+			<required>false</required>
+			<type>java.lang.Object</type>
+		</attribute>
+	</tag>
+
+	<tag>
+		<description>Renders a a form which always submits to exact request URI.</description>
+		<tag-name>form</tag-name>
+		<source>tags/form.xhtml</source>
+		<attribute>
+			<description>The ID of the form.</description>
+			<name>id</name>
+			<required>true</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description>Whether the form represents a fieldset. Defaults to false.</description>
+			<name>fieldset</name>
+			<required>false</required>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<description>Whether the form is stateless. Defaults to false. Note that setting to true affects the entire view.</description>
+			<name>stateless</name>
+			<required>false</required>
+			<type>boolean</type>
+		</attribute>
+	</tag>
+
+	<tag>
+		<description>
+			<![CDATA[
+				Renders an input field with label and message list.
+				This must be placed in k:form fieldset=true.
+				The markup is like below:
+				<pre>
+&lt;div id="id_f" class="field {type} {severity}"&gt;
+    &lt;label id="id_l" /&gt;
+    &lt;input id="id" widgetVar="id_w" /&gt;
+    &lt;ul id="id_m" class="messages" /&gt;
+&lt;/div&gt;
+				</pre>
+			]]>
+		</description>
+		<tag-name>input</tag-name>
+		<source>tags/input.xhtml</source>
+
+		<!-- Field -->
+		<attribute>
+			<description>
+				<![CDATA[
+					The ID of the input field, this usually represents the property name.
+					This is set as ID the <code>&lt;input&gt;</code> element itself and used as general key for label.
+					The <code>&lt;div&gt;</code> element representing the whole field will get the same ID suffixed with "_f".
+					The <code>&lt;label&gt;</code> element representing the label will get the same ID suffixed with "_l".
+					The <code>&lt;ul&gt;</code> element representing the message list will get the same ID suffixed with "_m".
+					The PrimeFaces widgetVar value will be the same ID suffixed with "_w".
+					There are seven named inserts which you can define via ui:define: beforeLabel, label, insideLabel, beforeInput, input, beforeMessages and messages.
+					The default insert ends up inside input.
+				]]>
+			</description>
+			<name>id</name>
+			<required>true</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Whether to render HTML output or not. Defaults to true. Under the covers, this actually uses <code>&lt;c:if&gt;</code> instead of <code>rendered</code>, so it should save unnecessary bean initialization.]]></description>
+			<name>rendered</name>
+			<required>false</required>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[The style class of the field. This is applied on the <code>&lt;div&gt;</code> element representing the whole field.]]></description>
+			<name>styleClass</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[The style class of the label of the field. This is applied on the <code>&lt;label&gt;</code> element representing the label.]]></description>
+			<name>labelStyleClass</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[The style class of the input field itself. This is applied on the <code>&lt;input&gt;</code> element itself.]]></description>
+			<name>inputStyleClass</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[The style class of the message list of the field. This is applied on the <code>&lt;ul&gt;</code> element representing the message list.]]></description>
+			<name>messagesStyleClass</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+
+		<!-- Label -->
+		<attribute>
+			<description>The label of the field. Defaults to #{i18n['general.' += id]}.</description>
+			<name>label</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description>The tooltip of the label of the field.</description>
+			<name>tooltip</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+
+		<!-- Input -->
+		<attribute>
+			<description>
+				The type of the input field. Special types are a.o. 'menu', 'checkbox', 'number', 'autocomplete', 'password' and 'custom'.
+				Other types are interpreted as HTML5 input type. Defaults to 'text'.
+			</description>
+			<name>type</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description>The value of the input field.</description>
+			<name>value</name>
+			<required>true</required>
+			<type>java.lang.Object</type>
+		</attribute>
+		<attribute>
+			<description>Whether the input field is required. Defaults to false. Only use this setting for conditionally required fields or checkboxes; normally @NotNull must be used.</description>
+			<name>required</name>
+			<required>false</required>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<description>Whether the input field supports client side autocomplete. Defaults to true.</description>
+			<name>autocomplete</name>
+			<required>false</required>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<description>The maximum length of the input field. This must be a positive number. Defaults to 255.</description>
+			<name>maxlength</name>
+			<required>false</required>
+			<type>java.lang.Integer</type>
+		</attribute>
+		<attribute>
+			<description>The p:autoComplete method in case type attribute is set to 'autocomplete'.</description>
+			<name>completeMethod</name>
+			<required>false</required>
+			<type>javax.el.MethodExpression</type>
+		</attribute>
+		
+		<!-- Messages -->
+		<attribute>
+			<description>Whether to HTML-escape the message list. Defaults to true.</description>
+			<name>escapeMessages</name>
+			<required>false</required>
+			<type>boolean</type>
+		</attribute>
+	</tag>
+	
+	<tag>
+		<description>Renders a field for buttons. This must be placed in k:form fieldset=true.</description>
+		<tag-name>buttons</tag-name>
+		<source>tags/buttons.xhtml</source>
+	</tag>
+
+	<tag>
+		<description>Renders a button which can act as either navigation button or submit button. This must be placed in k:buttons.</description>
+		<tag-name>button</tag-name>
+		<source>tags/button.xhtml</source>
+		<attribute>
+			<description>The ID of the submit button.</description>
+			<name>id</name>
+			<required>true</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description>The value of the button. Defaults to #{i18n['general.' += id]}.</description>
+			<name>value</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description>The GET path of page to navigate, WITHOUT leading slash and extension.</description>
+			<name>path</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description>The POST action method of the button. This is ignored when 'path' attribute is specified.</description>
+			<name>action</name>
+			<required>false</required>
+			<type>javax.el.MethodExpression</type>
+		</attribute>
+		<attribute>
+			<description>Whether or not to use ajax. Defaults to true. Applies only when 'action' is specified.</description>
+			<name>ajax</name>
+			<required>false</required>
+			<type>boolean</type>
+		</attribute>
+	</tag>
+
+	<tag>
+		<description>Renders a table based on PagedDataModel. Each item is available by #{item}.</description>
+		<tag-name>table</tag-name>
+		<source>tags/table.xhtml</source>
+		<attribute>
+			<description>The ID of the table.</description>
+			<name>id</name>
+			<required>true</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description>Data model must be an instance of PagedDataModel.</description>
+			<name>value</name>
+			<required>true</required>
+			<type>org.example.kickoff.view.PagedDataModel</type>
+		</attribute>
+	</tag>
+
+	<tag>
+		<description>Renders a table column for a specific field. By default nowrap/ellipsis.</description>
+		<tag-name>column</tag-name>
+		<source>tags/column.xhtml</source>
+		<attribute>
+			<description>The field (property) name of the #{item} representing the column value. By default, this is also used in id, field, sortBy and filterBy of p:column.</description>
+			<name>field</name>
+			<required>true</required>
+			<type>java.lang.String</type>
+		</attribute>
+	</tag>
+
+</facelet-taglib>

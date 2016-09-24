@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<comment>
+		Settings for the application that are specific to the LIVE stage. 
+		Note that these are merged with conf/application-settings.xml.
+		Settings specified here will override those.
+	</comment>
+
+	<!-- Application -->
+	<entry key="stageName">live</entry>
+	<entry key="developmentMode">false</entry>
+	<entry key="applicationURLScheme">https</entry>
+	<entry key="applicationDomain">kickoff.example.org</entry>
+</properties>

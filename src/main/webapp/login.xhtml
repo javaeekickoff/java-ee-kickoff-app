@@ -1,39 +1,41 @@
 <ui:composition template="/WEB-INF/templates/layout.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
 	xmlns:o="http://omnifaces.org/ui"
+	xmlns:of="http://omnifaces.org/functions"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:k="http://kickoff.example.org/ui"
 >
-	<ui:define name="title">Login to continue</ui:define>
-	
 	<ui:define name="content">
-		
-		<ui:param name="requestDataKey" value="org.omnifaces.security.jaspic.original.request"/>
-		<ui:param name="requestData" value="#{sessionScope[requestDataKey]}"/>
- 	
- 		<h:panelGroup rendered="#{!empty requestData}">
- 			Login to continue to: #{requestData.requestURL}
- 		</h:panelGroup>
-		
-		<hr/>
- 
-          <h:form>
-        	<h:panelGrid columns="3">
-        	
-        		<o:outputLabel for="username" value="User name" />
-        		<h:inputText id="username" value="#{loginBean.loginUserName}" type="email" />
-        		(test users: foo@bar.com, foo1@bar.com)
-        		
-        		<o:outputLabel for="password" value="Password" />
-        		<h:inputSecret id="password" value="#{loginBean.loginPassword}" />
-        		(test password: foo)
-        		
-        		<o:outputLabel for="rememberme" value="Remember me" />
-        		<h:selectBooleanCheckbox id="rememberme" value="#{loginBean.rememberMe}" />
-        	</h:panelGrid>
-        	<h:commandButton value="Login" action="#{loginBean.login}" disabled="#{!empty request.userPrincipal}" />
-        </h:form>
-        
+		<k:form id="loginForm" fieldset="true" stateless="true">
+			<k:dev>
+				<br/>Test users: <code>admin@kickoff.example.org</code>, <code>user@kickoff.example.org</code>
+				<br/>Test password: <code>passw0rd</code>
+			</k:dev>
+
+			<k:input id="email" type="email" value="#{loginBacking.email}">
+				<f:validator validatorId="emailVerifiedValidator" />
+			</k:input>
+			<k:input id="password" type="password" value="#{loginBacking.password}">
+				<ui:define name="insideLabel">
+					<k:link path="reset-password" value="#{i18n['general.forgotPassword']}" />
+				</ui:define>
+			</k:input>
+			<k:input id="rememberMe" type="checkbox" value="#{loginBacking.rememberMe}" />
+
+			<k:buttons>
+				<k:button id="login" action="#{loginBacking.login}" ajax="false" /> <!-- Ajax must be false, otherwise browser won't remember autofill for login. -->
+			</k:buttons>
+
+			<p>
+				<o:outputFormat value="#{i18n['login.paragraph.signup']}" escape="false">
+					<o:param><k:link path="signup" /></o:param>
+				</o:outputFormat>
+			</p>
+		</k:form>
 	</ui:define>
 </ui:composition>

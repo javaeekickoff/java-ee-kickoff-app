@@ -1,0 +1,46 @@
+/* Grays ------------------------------------------------------------------------------------------------------------ */
+
+.color-black {
+	color: #{applicationScope['black']='#181818'};
+}
+.color-black-light {
+	color: #{applicationScope['lightBlack']='#383838'};
+}
+.color-gray-dark {
+	color: #{applicationScope['darkGray']='#787878'};
+}
+.color-gray-semi {
+	color: #{applicationScope['semiGray']='#989898'};
+}
+.color-gray {
+	color: #{applicationScope['gray']='#B8B8B8'};
+}
+.color-gray-light {
+	color: #{applicationScope['lightGray']='#E8E8E8'};
+}
+.color-gray-bright {
+	color: #{applicationScope['brightGray']='#F8F8F8'};
+}
+
+
+/* Primary ---------------------------------------------------------------------------------------------------------- */
+
+.color-red {
+	color: #{applicationScope['red']='#D81838'};
+}
+.color-green {
+	color: #{applicationScope['green']='#38B868'};
+}
+.color-blue {
+	color: #{applicationScope['blue']='#3868B8'};
+}
+
+
+/* Secondary -------------------------------------------------------------------------------------------------------- */
+
+.color-orange {
+	color: #{applicationScope['orange']='#F89800'};
+}
+.color-yellow {
+	color: #{applicationScope['yellow']='#F8D800'};
+}

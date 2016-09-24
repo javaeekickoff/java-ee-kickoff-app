@@ -1,0 +1,65 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:of="http://omnifaces.org/functions"
+	xmlns:p="http://primefaces.org/ui"
+>
+	<!-- p:dataTable -->
+	<o:tagAttribute name="id" />
+	<o:tagAttribute name="value" />
+	<o:tagAttribute name="selectionMode" />
+	<o:tagAttribute name="rows" default="10" />
+	<o:tagAttribute name="rowsPerPage" default="10,25,50" />
+	<o:tagAttribute name="styleClass" />
+
+	<!-- Searching/exporting -->
+	<o:tagAttribute name="searchable" default="#{true}" />
+	<o:tagAttribute name="searchPlaceholder" default="#{i18n['tags.dataTable.search.placeholder']}" />
+	<o:tagAttribute name="exportable" default="#{true}" />
+	<o:tagAttribute name="csvUserId" />
+	<o:tagAttribute name="csvSuffix" default="#{of:formatDate(now, 'yyyyMMddHHmmss')}" />
+
+	<ui:fragment rendered="#{searchable or exportable or hasActions}">
+		<p class="ui-datatable-actions hideOnPrint ui-helper-clearfix">
+			<ui:fragment rendered="#{searchable}">
+				<p:inputText id="filter" a:type="search" styleClass="globalFilter" placeholder="#{searchPlaceholder}" 
+					onkeypress="if(event.keyCode==13){$(this).next().click();return false;}"
+					a:onsearch="$(this).next().click()">
+				</p:inputText>
+				<p:button id="search" value="Search" styleClass="search"
+					onclick="var $f=PF('#{id}').jq.find('input[type=hidden][id$=globalFilter]');var $v=$(this).prev().val();if($f.val()!=$v){$f.val($v);PF('#{id}').filter();}return false;">
+				</p:button>
+			</ui:fragment>
+
+			<p:commandButton id="export" a:value="CSV" value="CSV" ajax="false" styleClass="export" rendered="#{exportable}">
+				<p:dataExporter target="#{id}" type="csv" fileName="#{id}#{empty csvUserId ? '' : '-' += csvUserId}-#{csvSuffix}" />
+			</p:commandButton>
+
+			<ui:insert name="actions">
+				<ui:param name="hasActions" value="false" />
+			</ui:insert>
+		</p>
+	</ui:fragment>
+
+	<o:moveComponent for="#{id}" destination="FACET" facet="header">
+		<h:inputHidden id="globalFilter" />
+	</o:moveComponent>
+
+	<p:dataTable id="#{id}" widgetVar="#{id}" value="#{value}" var="item" lazy="true" reflow="true" styleClass="#{styleClass}"
+		filteredValue="#{value.filteredValue}" sortOrder="#{value.sortOrder}" sortField="#{value.sortField}"
+		rows="#{rows}" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="false"
+		rowsPerPageTemplate="#{rowsPerPage}" currentPageReportTemplate="{startRecord} - {endRecord} of {totalRecords}"
+		paginatorTemplate="#{i18n['tags.dataTable.paginatorTemplage.prefix']} {RowsPerPageDropdown} &#xA;&#xA; {CurrentPageReport} {PreviousPageLink} {NextPageLink}"
+	>
+		<c:if test="#{not empty selectionMode}">
+			<f:attribute name="selection" value="#{value.selection}" />
+			<f:attribute name="selectionMode" value="#{selectionMode}" />
+		</c:if>
+		<ui:insert />
+	</p:dataTable>
+</ui:composition>

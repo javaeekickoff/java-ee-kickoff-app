@@ -1,0 +1,23 @@
+<!-- 
+	This tag file renders a form which always submits to exact request URI.
+-->
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+	xmlns:o="http://omnifaces.org/ui"
+>
+	<o:tagAttribute name="id" />
+	<o:tagAttribute name="fieldset" default="#{false}" />
+	<o:tagAttribute name="stateless" default="#{false}" />
+	
+	<f:view transient="#{stateless}">
+		<o:form id="#{id}" useRequestURI="true" styleClass="#{stateless ? 'stateless' : ''}">
+			<c:if test="#{fieldset}"><h:outputText value="&lt;fieldset&gt;" escape="false" /></c:if>
+				<ui:insert />
+			<c:if test="#{fieldset}"><h:outputText value="&lt;/fieldset&gt;" escape="false" /></c:if>
+		</o:form>
+	</f:view>
+</ui:composition>

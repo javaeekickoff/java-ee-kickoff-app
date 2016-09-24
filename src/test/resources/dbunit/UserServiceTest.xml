@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+	<user id="1001" email="test@test.test" />
+	<credentials user_id="1001" password_hash="E0K/IHFmCEwlgr4R5gaBOQy2Kwh+IwkMeWWBDer6x2k=" salt="fVJkXbtOO1HAs3GOPtwB9WGCsOSvdBITJsBAMzvN1Y5rWLbdEZFu6A==" />
+	<user_group user_id="1001" group_name="USERS" />
+</dataset>

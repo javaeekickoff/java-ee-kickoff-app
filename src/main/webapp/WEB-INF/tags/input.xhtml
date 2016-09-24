@@ -1,0 +1,157 @@
+<!-- 
+	This tag file renders an input field with label and message list.
+	This must be placed in k:form fieldset=true.
+	The markup is like below:
+
+	<pre>
+		&lt;div id="id_f" class="field {type} {severity}"&gt;
+		    &lt;label id="id_l" /&gt;
+		    &lt;input id="id" widgetVar="id_w" /&gt;
+		    &lt;ul id="id_m" class="messages" /&gt;
+		&lt;/div&gt;
+	</pre>
+-->
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:p="http://primefaces.org/ui"
+>
+	<!-- Field -->
+	<o:tagAttribute name="id" />
+	<o:tagAttribute name="rendered" default="#{true}" />
+	<o:tagAttribute name="styleClass" />
+	<o:tagAttribute name="labelStyleClass" />
+	<o:tagAttribute name="inputStyleClass" />
+	<o:tagAttribute name="messagesStyleClass" />
+
+	<!-- Label -->
+	<o:tagAttribute name="label" default="#{i18n['general.' += id]}" />
+	<o:tagAttribute name="tooltip" />
+
+	<!-- Input -->
+	<o:tagAttribute name="type" default="text" />
+	<o:tagAttribute name="value" />
+	<o:tagAttribute name="required" default="#{false}" />
+	<o:tagAttribute name="disabled" default="#{false}" />
+	<o:tagAttribute name="autocomplete" default="#{true}" />
+	<o:tagAttribute name="maxlength" default="#{255}" />
+	<o:methodParam name="completeMethodParam" value="#{completeMethod}" />
+
+	<!-- Messages -->
+	<o:tagAttribute name="escapeMessages" default="#{true}" />
+
+
+	<h:panelGroup layout="block" id="#{id}_f" styleClass="field #{type} #{styleClass} #{facesContext.getMessageList(component.findComponent(id).clientId)[0].severity}">
+		<c:if test="#{rendered ne false}">
+			<ui:insert name="beforeLabel" />
+
+			<ui:insert name="label">
+				<h:outputLabel id="#{id}_l" for="#{id}" value="#{label}" styleClass="#{labelStyleClass}">
+					<c:if test="#{not empty tooltip}"><f:attribute name="title" value="#{tooltip}" /></c:if>
+					<span><ui:insert name="insideLabel" /></span>
+				</h:outputLabel>
+			</ui:insert>
+
+			<ui:insert name="beforeInput" />
+
+			<ui:insert name="input">
+				<c:set var="autocomplete" value="#{autocomplete ne false ? 'on' : 'off'}" />
+
+				<c:choose>
+					<c:when test="#{type eq 'menu'}">
+						<p:selectOneMenu 
+							id="#{id}" widgetVar="#{id}_w" styleClass="#{inputStyleClass}" label="#{label}" tabindex="1"
+							value="#{value}" required="#{required}" disabled="#{disabled}" autocomplete="#{autocomplete}"
+							converter="baseEntitySelectItemsConverter"
+						>
+							<c:if test="#{not empty var}"><f:attribute name="var" value="#{var}" /></c:if>
+							<f:selectItem itemValue="#{null}" itemDisabled="#{true}" />
+							<ui:insert />
+						</p:selectOneMenu>
+					</c:when>
+					<c:when test="#{type eq 'checkbox'}">
+						<p:selectBooleanCheckbox
+							id="#{id}" widgetVar="#{id}_w" styleClass="#{inputStyleClass}" label="#{label}" tabindex="1"
+							value="#{value}" disabled="#{disabled}"
+						>
+							<c:if test="#{required}">
+								<f:validator validatorId="omnifaces.RequiredCheckboxValidator" />
+								<f:attribute name="requiredMessage" value="#{i18n['tags.inputField.checkbox.requiredMessage']}" />
+							</c:if>
+							<ui:insert />
+						</p:selectBooleanCheckbox>
+					</c:when>
+					<c:when test="#{type eq 'checkboxes'}">
+						<p:selectManyCheckbox
+							id="#{id}" widgetVar="#{id}_w" styleClass="#{inputStyleClass}" label="#{label}" tabindex="1"
+							value="#{value}" required="#{required}" disabled="#{disabled}"
+							layout="pageDirection" collectionType="java.util.ArrayList"
+						>
+							<ui:insert />
+						</p:selectManyCheckbox>
+					</c:when>
+					<c:when test="#{type eq 'number'}">
+						<p:spinner
+							id="#{id}" widgetVar="#{id}_w" styleClass="#{inputStyleClass}" label="#{label}" tabindex="1"
+							value="#{value}" required="#{required}" disabled="#{disabled}" autocomplete="#{autocomplete}"
+							min="#{min}" max="#{max}" maxlength="#{fn:length(max)}"
+						>
+							<ui:insert />
+						</p:spinner>
+					</c:when>
+					<c:when test="#{type eq 'autocomplete'}">
+						<p:autoComplete 
+							id="#{id}" widgetVar="#{id}_w" styleClass="#{inputStyleClass}" label="#{label}" tabindex="1"
+							value="#{value}" required="#{required}" disabled="#{disabled}" autocomplete="off"
+							maxlength="#{maxlength}"
+							queryDelay="200" minQueryLength="#{minlength}" completeMethod="#{completeMethodParam}"
+						>
+							<c:if test="#{not empty var}">
+								<f:attribute name="var" value="#{var}" />
+								<f:attribute name="itemValue" value="#{requestScope[var]}" />
+								<f:attribute name="itemLabel" value="#{itemLabel}" />
+								<o:converter converterId="omnifaces.ListConverter" list="#{list}" />
+							</c:if>
+							<ui:insert />
+						</p:autoComplete>
+					</c:when>
+					<c:when test="#{type eq 'password'}">
+						<p:password 
+							id="#{id}" widgetVar="#{id}_w" styleClass="#{inputStyleClass}" label="#{label}" tabindex="1"
+							value="#{value}" required="#{required}" disabled="#{disabled}" autocomplete="#{autocomplete}"
+							maxlength="#{maxlength}" redisplay="#{component.valid}"
+						>
+							<ui:insert />
+						</p:password>
+					</c:when>
+					<c:when test="#{type eq 'custom'}">
+						<ui:insert />
+					</c:when>
+
+					<!-- Other specific input types can be added as new c:when here. -->
+
+					<c:otherwise>
+						<p:inputText type="#{type}" 
+							id="#{id}" widgetVar="#{id}_w" styleClass="#{inputStyleClass}" label="#{label}" tabindex="1"
+							value="#{value}" required="#{required}" autocomplete="#{autocomplete}" disabled="#{disabled}"
+							maxlength="#{maxlength}"
+						>
+							<ui:insert />
+						</p:inputText>
+					</c:otherwise>
+				</c:choose>
+			</ui:insert>
+
+			<ui:insert name="beforeMessages" />
+
+			<ui:insert name="messages">
+				<o:messages id="#{id}_m" for="#{id}" escape="#{escapeMessages}" 
+					styleClass="messages #{messagesStyleClass}" infoClass="info" warnClass="warn" errorClass="error" />
+			</ui:insert>
+		</c:if>
+	</h:panelGroup>
+</ui:composition>
