@@ -7,10 +7,10 @@
 >
 	<ul>
 		<li>
-			<c:if test="#{empty activeUser}">
+			<c:if test="#{not activeUser.present}">
 				<k:link path="login" />
 			</c:if>
-			<c:if test="#{not empty activeUser}">
+			<c:if test="#{activeUser.present}">
 				<k:link path="user/profile" value=""><i class="fa fa-user" /></k:link>
 				<ul>
 					<li>
