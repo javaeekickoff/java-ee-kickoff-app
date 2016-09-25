@@ -1,35 +1,44 @@
 package org.example.kickoff.view.resourcehandler;
 
+import java.net.MalformedURLException;
+
+import javax.faces.FacesException;
 import javax.faces.application.Resource;
 import javax.faces.application.ResourceHandler;
 
 import org.omnifaces.resourcehandler.DefaultResourceHandler;
+import org.omnifaces.util.Faces;
 
 /**
- * Patches Mojarra bug of unnecessarily logging
- * WARNING JSF1064: Unable to find or serve resource from library, kickoff/composites
+ * Patches Mojarra bug of unnecessarily logging as below when it's about to locate a tagfile.
+ * "WARNING JSF1064: Unable to find or serve resource from library, kickoff/composites"
  */
 public class ResourceHandlerImplPatch extends DefaultResourceHandler {
+
+	private static final String COMPOSITE_LIBRARY_NAME = "kickoff/composites";
 
 	public ResourceHandlerImplPatch(ResourceHandler wrapped) {
 		super(wrapped);
 	}
 
-	/**
-	 * Returns our composite library name as defined in kickoff.taglib.xml.
-	 */
 	@Override
 	public String getLibraryName() {
-		return "kickoff/composites";
+		return COMPOSITE_LIBRARY_NAME;
 	}
 
-	/**
-	 * This override returns null instead of delegating to wrapper which eventually ends up in
-	 * Mojarra's ResourceHandlerImpl which thus logs the unnecessary warning.
-	 */
 	@Override
 	public Resource createResourceFromLibrary(String resourceName, String contentType) {
-		return null;
+		try {
+			if (Faces.getResource("/resources/" + COMPOSITE_LIBRARY_NAME + "/" + resourceName) != null) {
+				return getWrapped().createResource(resourceName, COMPOSITE_LIBRARY_NAME, contentType);
+			}
+			else {
+				return null; // So ResourceHandlerImpl with its unnecessary logging will be skipped.
+			}
+		}
+		catch (MalformedURLException e) {
+			throw new FacesException(e);
+		}
 	}
 
 }
