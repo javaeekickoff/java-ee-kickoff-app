@@ -3,6 +3,7 @@
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
 	xmlns:k="http://kickoff.example.org/ui"
 >
 	<ul>
@@ -30,6 +31,22 @@
 					</ul>
 				</c:otherwise>
 			</c:choose>
+		</li>
+		<li>
+			<a href="#" onclick="return false">
+				<h:graphicImage styleClass="flag" library="kickoff" name="flags/#{language.code}.svg" width="24" height="18" />
+			</a>
+			<k:form id="languageForm" fieldset="false">
+				<ul>
+					<c:forEach items="#{language.others}" var="otherLanguage">
+						<li>
+							<h:commandLink action="#{language.switchTo(otherLanguage)}">
+								<h:graphicImage styleClass="flag" library="kickoff" name="flags/#{otherLanguage}.svg" width="24" height="18" />
+							</h:commandLink>
+						</li>
+					</c:forEach>
+				</ul>
+			</k:form>
 		</li>
 	</ul>
 </ui:composition>

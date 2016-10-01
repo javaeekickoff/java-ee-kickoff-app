@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"
+<html lang="#{language.code}"
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
@@ -12,7 +12,7 @@
 >
 	<c:set var="dev" value="#{facesContext.application.projectStage eq 'Development'}" scope="application" />
 
-	<f:view contentType="text/html" locale="en">
+	<f:view contentType="text/html" locale="#{language.locale}">
 		<ui:insert name="metadata" />
 
 		<h:head id="head">

@@ -85,6 +85,7 @@ body i.fa {
 
 body img {
 	line-height: 1em;
+	vertical-align: inherit;
 }
 
 
@@ -188,10 +189,6 @@ body > header nav a.current {
 	background: #{lightGray};
 }
 
-body > header nav i {
-	padding: 0 1em;
-}
-
 body > header nav aside {
 	position: absolute;
 	top: 0;
@@ -266,7 +263,6 @@ nav li ul {
 	display: none;
 	position: absolute;
 	left: 0;
-	min-width: 100%;
 	background: white;
 	line-height: normal;
 }
@@ -371,8 +367,8 @@ fieldset .field ul.messages .error {
 	}
 	
 	body {
-		font-size: 18px;
-		line-height: 28px;
+		font-size: 16px;
+		line-height: 26px;
 		transition: all .3s;
 	}
 
@@ -468,6 +464,11 @@ fieldset .field ul.messages .error {
 		display: block;
 		border: 0;
 		line-height: 3em;
+	}
+
+	body > header nav li ul {
+		position: relative;
+		margin-top: -3em;
 	}
 
 	body > header nav a {

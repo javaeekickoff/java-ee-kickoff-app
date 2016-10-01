@@ -32,3 +32,9 @@ $(document).on("click keyup change", ".field :input, .field .ui-inputfield", fun
 
 	$input.data("oldValue", newValue);
 });
+
+$(document).on("click", "main", function() {
+	if (kickoff.isMobile()) {
+		$("#hamburger:checked").prop("checked", false);
+	}
+});

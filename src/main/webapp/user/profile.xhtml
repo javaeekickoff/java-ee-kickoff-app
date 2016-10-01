@@ -13,7 +13,7 @@
 >
 	<ui:define name="content">
 		<k:form id="userForm">
-			<h2>Account</h2>
+			<h2>#{i18n['user_profile.header.account']}</h2>
 
 			<k:input id="fullName" value="#{profileBacking.user.fullName}" />
 			<k:input id="email" value="#{profileBacking.user.email}" disabled="true" />
@@ -25,7 +25,7 @@
 		</k:form>
 
 		<k:form id="changePasswordForm">
-			<h2>Change Password</h2>
+			<h2>#{i18n['user_profile.header.change_password']}</h2>
 
 			<k:input id="currentPassword" type="password" value="#{profileBacking.currentPassword}" autocomplete="false" />
 			<k:input id="newPassword" type="password" value="#{profileBacking.newPassword}" autocomplete="false" />

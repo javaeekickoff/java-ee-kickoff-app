@@ -29,7 +29,7 @@ public class LocalDateConverter implements Converter {
             return getFormatter(context, component).format((LocalDate) modelValue);
         }
         else {
-            throw new ConverterException(createError("localDateConverter.getAsString", modelValue));
+            throw new IllegalArgumentException("This converter can only be used on LocalDate.");
         }
     }
 
@@ -43,7 +43,7 @@ public class LocalDateConverter implements Converter {
             return LocalDate.parse(submittedValue, getFormatter(context, component));
         }
         catch (DateTimeParseException e) {
-            throw new ConverterException(createError("localDateConverter.getAsObject", submittedValue), e);
+            throw new ConverterException(createError("localDateConverter", submittedValue), e);
         }
     }
 
@@ -55,7 +55,7 @@ public class LocalDateConverter implements Converter {
         String pattern = (String) component.getAttributes().get("pattern");
 
         if (pattern == null) {
-            throw new IllegalArgumentException("pattern attribute is required");
+            throw new IllegalArgumentException("The 'pattern' attribute is required");
         }
 
         return pattern;
