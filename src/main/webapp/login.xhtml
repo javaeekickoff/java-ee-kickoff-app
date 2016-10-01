@@ -11,13 +11,13 @@
 	xmlns:k="http://kickoff.example.org/ui"
 >
 	<ui:define name="content">
-		<k:form id="loginForm" fieldset="true" stateless="true">
+		<k:form id="loginForm">
 			<k:dev>
 				<br/>Test users: <code>admin@kickoff.example.org</code>, <code>user@kickoff.example.org</code>
 				<br/>Test password: <code>passw0rd</code>
 			</k:dev>
 
-			<k:input id="email" type="email" value="#{loginBacking.email}">
+			<k:input id="email" type="email" value="#{loginBacking.user.email}">
 				<f:validator validatorId="emailVerifiedValidator" />
 			</k:input>
 			<k:input id="password" type="password" value="#{loginBacking.password}">

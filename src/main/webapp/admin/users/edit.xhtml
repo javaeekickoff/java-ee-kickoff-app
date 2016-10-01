@@ -14,19 +14,17 @@
 		<o:importConstants type="org.example.kickoff.model.Group" />
 
 		<k:form id="editUserForm">
-			<fieldset>
-				<k:input id="email" type="email" value="#{editUserBacking.user.email}" />
-				<k:input id="fullName" value="#{editUserBacking.user.fullName}" />
-				<k:input id="groups" type="checkboxes" value="#{editUserBacking.user.groups}" required="true">
-					<f:selectItems value="#{Group}" />
-					<f:converter converterId="omnifaces.GenericEnumConverter" />
-				</k:input>
+			<k:input id="fullName" value="#{editUserBacking.user.fullName}" />
+			<k:input id="email" type="email" value="#{editUserBacking.user.email}" />
+			<k:input id="groups" type="checkboxes" value="#{editUserBacking.user.groups}" required="true">
+				<f:selectItems value="#{Group}" />
+				<f:converter converterId="omnifaces.GenericEnumConverter" />
+			</k:input>
 
-				<k:buttons>
-					<k:button id="cancel" path="admin/users" />
-					<k:button id="save" action="#{editUserBacking.save}" />
-				</k:buttons>
-			</fieldset>
+			<k:buttons>
+				<k:button id="cancel" path="admin/users" />
+				<k:button id="save" action="#{editUserBacking.save}" />
+			</k:buttons>
 		</k:form>
 	</ui:define>
 </ui:composition>

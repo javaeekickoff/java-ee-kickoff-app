@@ -19,7 +19,7 @@ public class LogoutBacking {
 	public void logout() throws ServletException, IOException {
 		Faces.logout();
 		invalidateSession();
-		addFlashGlobalWarn("login.message.warn.logged_out");
+		addFlashGlobalWarn("auth.message.warn.logged_out");
 		redirect("");
 	}
 

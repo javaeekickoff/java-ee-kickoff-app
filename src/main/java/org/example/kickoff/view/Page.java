@@ -45,6 +45,10 @@ public class Page {
 		return PAGES.computeIfAbsent(path, k -> new Page(path));
 	}
 
+	public boolean is(String path) {
+		return path.equals(current.path);
+	}
+
 	public String getName() {
 		return current.name;
 	}

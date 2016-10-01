@@ -1,6 +1,8 @@
 package org.example.kickoff.model.producer;
 
 import static java.time.Instant.now;
+import static org.omnifaces.util.Beans.getManager;
+import static org.omnifaces.util.BeansLocal.destroy;
 
 import java.io.Serializable;
 
@@ -40,11 +42,18 @@ public class ActiveUserProducer implements Serializable {
 				activeUser.setLastLogin(now());
 				userService.update(activeUser);
 			}
+
+			refreshInjectedActiveUsers();
 		}
 	}
 
 	public void onLoggedOut(@Observes LoggedOutEvent event) {
 		activeUser = null;
+		refreshInjectedActiveUsers();
+	}
+
+	private void refreshInjectedActiveUsers() {
+		destroy(getManager(), ActiveUser.class);
 	}
 
 }

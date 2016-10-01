@@ -1,6 +1,6 @@
 <!-- 
 	This tag file renders a field for buttons.
-	This must be placed in k:form fieldset=true.
+	This must be placed in k:form.
 	This also contains global message list and will focus the first form.
 -->
 <ui:composition
@@ -10,9 +10,9 @@
 	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
 	xmlns:p="http://primefaces.org/ui"
 >
-	<h:panelGroup id="#{component.namingContainer.id}_b" layout="block" styleClass="field buttons">
+	<h:panelGroup id="buttons_f" layout="block" styleClass="field buttons">
 		<ui:insert />
-		<h:messages id="#{component.namingContainer.id}_m" globalOnly="true" redisplay="false" 
+		<h:messages id="buttons_m" globalOnly="true" redisplay="false" 
 			styleClass="messages" infoClass="info" warnClass="warn" errorClass="error">
 		</h:messages>
 		<c:if test="#{not _focus_installed_}">

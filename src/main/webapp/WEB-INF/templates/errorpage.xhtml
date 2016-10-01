@@ -18,37 +18,33 @@
 	xmlns:of="http://omnifaces.org/functions"
 	xmlns:k="http://kickoff.example.org/ui"
 >
-	<ui:param name="bodyStyleClass" value="errorpage" />
-
-	<ui:define name="nav-user">
-		<!-- Explicitly hide nav-user which may contain a logout form. -->
-	</ui:define>
-
 	<ui:define name="content">
-		<section>
-			<p>
-				<h:outputFormat value="#{i18n[page.name += '.paragraph.1']}" escape="false">
-					<f:param value="#{of:formatNumber(session.maxInactiveInterval / 60, '#')}" />
-				</h:outputFormat>
-			</p>
-			<p>
-				<o:outputFormat value="#{i18n[page.name += '.paragraph.2']}" escape="false">
-					<o:param><k:link path="home" value="#{i18n['general.home']}" /></o:param>
-				</o:outputFormat>
-			</p>
-		</section>
-
-		<ui:insert name="errorpageContent" />
-
-		<h:outputScript rendered="#{facesContext.partialViewContext.ajaxRequest}">
-			// Scroll back to left top, for the case the page was scrolled halfway or so.
-			scrollTo(0, 0);
-
-			// Remove any PrimeFaces overlays, in case the exception was thrown while opening a dialog.
-			// They're opened during oncomplete, the timeout should therefore run after that.
-			setTimeout(function() {
-				$(".ui-widget-overlay").remove();
-			}, 300);
-		</h:outputScript>
+		<f:view transient="true">
+			<section>
+				<p>
+					<h:outputFormat value="#{i18n[page.name += '.paragraph.1']}" escape="false">
+						<f:param value="#{of:formatNumber(session.maxInactiveInterval / 60, '#')}" />
+					</h:outputFormat>
+				</p>
+				<p>
+					<o:outputFormat value="#{i18n[page.name += '.paragraph.2']}" escape="false">
+						<o:param><k:link path="home" value="#{i18n['general.home']}" /></o:param>
+					</o:outputFormat>
+				</p>
+			</section>
+	
+			<ui:insert name="errorpageContent" />
+	
+			<h:outputScript rendered="#{facesContext.partialViewContext.ajaxRequest}">
+				// Scroll back to left top, for the case the page was scrolled halfway or so.
+				scrollTo(0, 0);
+	
+				// Remove any PrimeFaces overlays, in case the exception was thrown while opening a dialog.
+				// They're opened during oncomplete, the timeout should therefore run after that.
+				setTimeout(function() {
+					$(".ui-widget-overlay").remove();
+				}, 300);
+			</h:outputScript>
+		</f:view>
 	</ui:define>
 </ui:composition>

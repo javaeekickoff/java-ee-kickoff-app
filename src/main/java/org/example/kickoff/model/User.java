@@ -48,7 +48,7 @@ public class User extends TimestampedEntity<Long> {
 	private @NotNull @Email String email;
 
 	@Column
-	private String fullName;
+	private @NotNull String fullName;
 
 	/*
 	 * TODO: implement.

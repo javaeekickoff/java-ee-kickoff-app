@@ -6,12 +6,15 @@ import java.lang.reflect.TypeVariable;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.example.kickoff.business.exception.NonDeletableEntityException;
 import org.omnifaces.persistence.model.BaseEntity;
 import org.omnifaces.persistence.model.NonDeletable;
+import org.omnifaces.persistence.model.dto.SortFilterPage;
+import org.omnifaces.utils.collection.PartialResultList;
 
 public abstract class BaseEntityService<I extends Number, E extends BaseEntity<I>> {
 
@@ -19,6 +22,9 @@ public abstract class BaseEntityService<I extends Number, E extends BaseEntity<I
 	private EntityManager entityManager;
 
 	private final Class<E> entityClass;
+
+	@Inject
+	private GenericEntityService genericEntityService;
 
 	public BaseEntityService() {
 		entityClass = detectEntityClass();
@@ -61,8 +67,21 @@ public abstract class BaseEntityService<I extends Number, E extends BaseEntity<I
 		return (Class<E>) typeArgument;
 	}
 
+	public E get(E entity) {
+		return getById(entity.getId());
+	}
+
 	public E getById(I id) {
 		return entityManager.find(entityClass, id);
+	}
+
+	public PartialResultList<E> getByPage(SortFilterPage sortFilterPage, boolean getCount) {
+		return genericEntityService.getAllPagedAndSorted(entityClass,
+			(builder, query, tp) -> query.from(entityClass),
+			new HashMap<>(),
+			sortFilterPage,
+			getCount
+		);
 	}
 
 	public I save(E entity) {
@@ -79,12 +98,7 @@ public abstract class BaseEntityService<I extends Number, E extends BaseEntity<I
 			throw new NonDeletableEntityException();
 		}
 
-		if (entityManager.contains(entity)) {
-			entityManager.remove(entity);
-		}
-		else {
-			entityManager.remove(getById(entity.getId()));
-		}
+		entityManager.remove(entityManager.contains(entity) ? entity : get(entity));
 	}
 
 }

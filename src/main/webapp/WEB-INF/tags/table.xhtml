@@ -19,7 +19,7 @@
 
 	<!-- Searching/exporting -->
 	<o:tagAttribute name="searchable" default="#{true}" />
-	<o:tagAttribute name="searchPlaceholder" default="#{i18n['tags.dataTable.search.placeholder']}" />
+	<o:tagAttribute name="searchPlaceholder" default="#{i18n['tags.table.search.placeholder']}" />
 	<o:tagAttribute name="exportable" default="#{true}" />
 	<o:tagAttribute name="csvUserId" />
 	<o:tagAttribute name="csvSuffix" default="#{of:formatDate(now, 'yyyyMMddHHmmss')}" />
@@ -53,8 +53,8 @@
 	<p:dataTable id="#{id}" widgetVar="#{id}" value="#{value}" var="item" lazy="true" reflow="true" styleClass="#{styleClass}"
 		filteredValue="#{value.filteredValue}" sortOrder="#{value.sortOrder}" sortField="#{value.sortField}"
 		rows="#{rows}" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="false"
-		rowsPerPageTemplate="#{rowsPerPage}" currentPageReportTemplate="{startRecord} - {endRecord} of {totalRecords}"
-		paginatorTemplate="#{i18n['tags.dataTable.paginatorTemplage.prefix']} {RowsPerPageDropdown} &#xA;&#xA; {CurrentPageReport} {PreviousPageLink} {NextPageLink}"
+		rowsPerPageTemplate="#{rowsPerPage}" currentPageReportTemplate="#{i18n['tags.table.currentPageReportTemplate']}"
+		paginatorTemplate="#{i18n['tags.table.paginatorTemplate']}"
 	>
 		<c:if test="#{not empty selectionMode}">
 			<f:attribute name="selection" value="#{value.selection}" />

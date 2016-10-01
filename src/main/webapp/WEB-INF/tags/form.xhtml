@@ -10,9 +10,9 @@
 	xmlns:o="http://omnifaces.org/ui"
 >
 	<o:tagAttribute name="id" />
-	<o:tagAttribute name="fieldset" default="#{false}" />
-	<o:tagAttribute name="stateless" default="#{false}" />
-	
+	<o:tagAttribute name="fieldset" default="#{true}" />
+	<o:tagAttribute name="stateless" default="#{not activeUser.present}" />
+
 	<f:view transient="#{stateless}">
 		<o:form id="#{id}" useRequestURI="true" styleClass="#{stateless ? 'stateless' : ''}">
 			<c:if test="#{fieldset}"><h:outputText value="&lt;fieldset&gt;" escape="false" /></c:if>

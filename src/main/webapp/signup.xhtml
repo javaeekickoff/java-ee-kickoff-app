@@ -11,7 +11,8 @@
 	xmlns:k="http://kickoff.example.org/ui"
 >
 	<ui:define name="content">
-		<k:form id="signupForm" fieldset="true" stateless="true">
+		<k:form id="signupForm">
+			<k:input id="fullName" type="text" value="#{signupBacking.user.fullName}" />
 			<k:input id="email" type="email" value="#{signupBacking.user.email}" autocomplete="false">
 				<f:validator validatorId="duplicateEmailValidator" />
 			</k:input>

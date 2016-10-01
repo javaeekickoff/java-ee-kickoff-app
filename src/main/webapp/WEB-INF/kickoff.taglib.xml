@@ -44,13 +44,13 @@
 			<type>java.lang.String</type>
 		</attribute>
 		<attribute>
-			<description>Whether the form represents a fieldset. Defaults to false.</description>
+			<description>Whether the form represents a fieldset. Defaults to true.</description>
 			<name>fieldset</name>
 			<required>false</required>
 			<type>boolean</type>
 		</attribute>
 		<attribute>
-			<description>Whether the form is stateless. Defaults to false. Note that setting to true affects the entire view.</description>
+			<description>Whether the form is stateless. Defaults to whether user is not logged in. Note that setting to true affects the entire view.</description>
 			<name>stateless</name>
 			<required>false</required>
 			<type>boolean</type>

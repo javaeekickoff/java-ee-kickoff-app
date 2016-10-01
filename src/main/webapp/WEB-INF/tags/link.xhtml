@@ -14,7 +14,7 @@
 		outcome="/#{path}" 
 		value="#{value eq null ? i18n[page.get(path).name += '.title'] : value}"
 		title="#{empty component.value ? i18n[page.get(path).name += '.title'] : null}"
-		styleClass="page #{path eq page.path ? 'current' : ''}">
+		styleClass="page #{page.is(path) ? 'current' : ''}">
 		<ui:insert />
 	</h:link>
 </ui:composition>

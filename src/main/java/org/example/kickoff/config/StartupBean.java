@@ -6,13 +6,14 @@ import static java.util.ResourceBundle.getBundle;
 import static org.example.kickoff.model.Group.ADMIN;
 import static org.example.kickoff.model.Group.USER;
 import static org.omnifaces.util.Faces.getLocale;
+import static org.omnifaces.utils.Lang.isEmpty;
 
 import java.util.ResourceBundle;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
-import org.example.kickoff.business.exception.InvalidCredentialsException;
+import org.example.kickoff.business.exception.InvalidUsernameException;
 import org.example.kickoff.business.service.UserService;
 import org.example.kickoff.model.User;
 import org.omnifaces.cdi.Startup;
@@ -34,8 +35,9 @@ public class StartupBean {
 	 	try {
 			userService.getByEmailAndPassword("admin@kickoff.example.org", "passw0rd");
 		}
-	 	catch (InvalidCredentialsException e) {
+	 	catch (InvalidUsernameException e) {
 			User user = new User();
+			user.setFullName("Test Admin");
 			user.setEmail("admin@kickoff.example.org");
 			user.setGroups(asList(ADMIN, USER));
 			userService.registerUser(user, "passw0rd");
@@ -44,8 +46,9 @@ public class StartupBean {
 		try {
 			userService.getByEmailAndPassword("user@kickoff.example.org", "passw0rd");
 		}
-		catch (InvalidCredentialsException e) {
+		catch (InvalidUsernameException e) {
 			User user = new User();
+			user.setFullName("Test User");
 			user.setEmail("user@kickoff.example.org");
 			user.setGroups(asList(USER));
 			userService.registerUser(user, "passw0rd");
@@ -62,7 +65,7 @@ public class StartupBean {
 				if (bundle.containsKey(message)) {
 					message = bundle.getString(message);
 				}
-				return format(message, params);
+				return isEmpty(params) ? message : format(message, params);
 			}
 		});
 	}

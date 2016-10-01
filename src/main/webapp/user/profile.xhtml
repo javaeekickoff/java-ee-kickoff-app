@@ -12,19 +12,19 @@
 	xmlns:k="http://kickoff.example.org/ui"
 >
 	<ui:define name="content">
-		<k:form id="userForm" fieldset="true">
+		<k:form id="userForm">
 			<h2>Account</h2>
 
-			<k:input id="id" value="#{profileBacking.user.id}" disabled="true" />
-			<k:input id="email" value="#{profileBacking.user.email}" disabled="true" />
 			<k:input id="fullName" value="#{profileBacking.user.fullName}" />
+			<k:input id="email" value="#{profileBacking.user.email}" disabled="true" />
+			<k:input id="id" value="#{profileBacking.user.id}" disabled="true" />
 
 			<k:buttons>
 				<k:button id="save" action="#{profileBacking.save}" />
 			</k:buttons>
 		</k:form>
 
-		<k:form id="changePasswordForm" fieldset="true">
+		<k:form id="changePasswordForm">
 			<h2>Change Password</h2>
 
 			<k:input id="currentPassword" type="password" value="#{profileBacking.currentPassword}" autocomplete="false" />

@@ -7,27 +7,29 @@
 >
 	<ul>
 		<li>
-			<c:if test="#{not activeUser.present}">
-				<k:link path="login" />
-			</c:if>
-			<c:if test="#{activeUser.present}">
-				<k:link path="user/profile" value=""><i class="fa fa-user" /></k:link>
-				<ul>
-					<li>
-						<k:link path="user/profile" />
-					</li>
-					<c:if test="#{activeUser.hasRole('VIEW_ADMIN_PAGES')}">
+			<c:choose>
+				<c:when test="#{not activeUser.present}">
+					<k:link path="login" />
+				</c:when>
+				<c:otherwise>
+					<k:link path="user/profile" value=""><i class="fa fa-user" /></k:link>
+					<ul>
 						<li>
-							<k:link path="admin/users" />
+							<k:link path="user/profile" />
 						</li>
-					</c:if>
-					<li>
-						<k:form id="logoutForm">
-							<h:commandLink value="#{i18n['general.logout']}" action="#{logoutBacking.logout}" />
-						</k:form>
-					</li>
-				</ul>
-			</c:if>
+						<c:if test="#{activeUser.can('VIEW_ADMIN_PAGES')}">
+							<li>
+								<k:link path="admin/users" />
+							</li>
+						</c:if>
+						<li>
+							<k:form id="logoutForm" fieldset="false">
+								<h:commandLink value="#{i18n['general.logout']}" action="#{logoutBacking.logout}" />
+							</k:form>
+						</li>
+					</ul>
+				</c:otherwise>
+			</c:choose>
 		</li>
 	</ul>
 </ui:composition>

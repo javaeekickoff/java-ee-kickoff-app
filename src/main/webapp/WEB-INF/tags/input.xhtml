@@ -1,6 +1,6 @@
 <!-- 
 	This tag file renders an input field with label and message list.
-	This must be placed in k:form fieldset=true.
+	This must be placed in k:form.
 	The markup is like below:
 
 	<pre>
@@ -80,7 +80,7 @@
 						>
 							<c:if test="#{required}">
 								<f:validator validatorId="omnifaces.RequiredCheckboxValidator" />
-								<f:attribute name="requiredMessage" value="#{i18n['tags.inputField.checkbox.requiredMessage']}" />
+								<f:attribute name="requiredMessage" value="#{i18n['tags.input.checkbox.requiredMessage']}" />
 							</c:if>
 							<ui:insert />
 						</p:selectBooleanCheckbox>

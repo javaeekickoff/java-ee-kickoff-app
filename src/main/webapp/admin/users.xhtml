@@ -12,7 +12,7 @@
 	xmlns:k="http://kickoff.example.org/ui"
 >
 	<ui:define name="content">
-		<k:form id="usersForm">
+		<k:form id="usersForm" fieldset="false">
 			<k:table id="usersTable" value="#{usersBacking.users}">
 				<k:column field="id" type="number" />
 				<k:column field="email" />
@@ -38,12 +38,6 @@
 </ui:composition>
 
 <!-- 
-				<p:column headerText="Delete">
-					<p:commandButton id="deleteButton" value="Delete" update=":confirmDeleteForm" oncomplete="confirmDeleteDialog.show()">
-						<f:setPropertyActionListener value="#{user}" target="#{deleteUserBacking.user}" />
-					</p:commandButton>
-				</p:column>
-
 				<p:column headerText="Password">
 					<p:commandButton id="selectButton" value="Change password" update=":passwordForm:changePassword" oncomplete="passwordDialog.show()">  
 						<f:setPropertyActionListener value="#{user}" target="#{changePasswordBacking.user}" />  
@@ -65,22 +59,6 @@
 					<p>
 						<p:commandButton value="Change password" actionListener="#{changePasswordBacking.changePassword}" update=":messages :passwordForm" oncomplete="handlePasswordChangeRequest(xhr, status, args)" />
 					</p>
-				</h:panelGrid>
-
-			</h:form>
-	
-		</p:dialog>
-		
-		<p:dialog header="Delete user" widgetVar="confirmDeleteDialog" resizable="false"
-			id="confirmDeleteDlg" modal="true" closable="true">
-			<h:form id="confirmDeleteForm">
-			
-				<h:panelGrid id="deleteUser" columns="2">
-					<f:facet name="header">
-						Are you sure you want to delete user #{deleteUserBacking.user.email}?
-					</f:facet>
-					<p:commandButton value="Delete user" action="#{deleteUserBacking.deleteUser}" ajax="false"/>
-					<p:commandButton value="Cancel"	update=":confirmDeleteForm, :form" oncomplete="confirmDeleteDialog.hide()" />
 				</h:panelGrid>
 
 			</h:form>

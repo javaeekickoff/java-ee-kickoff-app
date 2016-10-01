@@ -6,14 +6,12 @@ import static org.omnifaces.persistence.JPA.getOptionalSingleResult;
 import static org.omnifaces.utils.security.MessageDigests.digest;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 import javax.annotation.Resource;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -23,8 +21,6 @@ import org.example.kickoff.business.exception.InvalidUsernameException;
 import org.example.kickoff.model.Credentials;
 import org.example.kickoff.model.LoginToken.TokenType;
 import org.example.kickoff.model.User;
-import org.omnifaces.persistence.model.dto.SortFilterPage;
-import org.omnifaces.utils.collection.PartialResultList;
 
 @Stateless
 public class UserService extends BaseEntityService<Long, User> {
@@ -37,9 +33,6 @@ public class UserService extends BaseEntityService<Long, User> {
 
 	@Resource
 	private SessionContext sessionContext;
-
-	@Inject
-	private GenericEntityService genericEntityService;
 
 	public void registerUser(User user, String password) {
 		if (getByEmail(user.getEmail()).isPresent()) {
@@ -57,17 +50,31 @@ public class UserService extends BaseEntityService<Long, User> {
 
 	@Override
 	public void update(User user) {
-		Optional<User> existingUser = getByEmail(user.getEmail());
+		User existingUser = get(user);
 
-		if (existingUser.isPresent() && !user.equals(existingUser.get())) {
-			throw new InvalidUsernameException();
+		if (!user.getEmail().equals(existingUser.getEmail())) { // Email changed.
+			Optional<User> otherUser = getByEmail(user.getEmail());
+
+			if (otherUser.isPresent()) {
+				if (!user.equals(otherUser.get())) {
+					throw new DuplicateEntityException();
+				}
+				else {
+					// Since email verification status can be updated asynchronous, the DB status is leading.
+					// Set the current user to whatever is already in the DB.
+					user.setEmailVerified(otherUser.get().isEmailVerified());
+				}
+			}
+			else {
+				user.setEmailVerified(false);
+			}
 		}
 
 		super.update(user);
 	}
 
 	public void updatePassword(User user, String password) {
-		User existingUser = getByEmail(user.getEmail()).orElseThrow(InvalidUsernameException::new);
+		User existingUser = get(user);
 		setCredentials(existingUser, password);
 		super.update(existingUser);
 	}
@@ -104,15 +111,6 @@ public class UserService extends BaseEntityService<Long, User> {
 
 	public User getActiveUser() {
 		return getByEmail(sessionContext.getCallerPrincipal().getName()).orElse(null);
-	}
-
-	public PartialResultList<User> getByPage(SortFilterPage sortFilterPage, boolean getCount) {
-		return genericEntityService.getAllPagedAndSorted(User.class,
-			(builder, query, tp) -> query.from(User.class),
-			new HashMap<>(),
-			sortFilterPage,
-			getCount
-		);
 	}
 
 	private static void setCredentials(User user, String password) {

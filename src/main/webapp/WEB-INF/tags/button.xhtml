@@ -9,16 +9,20 @@
 	xmlns:o="http://omnifaces.org/ui"
 	xmlns:p="http://primefaces.org/ui"
 >
+	<o:tagAttribute name="id" />
+	<o:tagAttribute name="path" />
+	<o:tagAttribute name="value" default="#{i18n['general.' += id]}" />
 	<o:methodParam name="actionParam" value="#{action}" />
+	<o:tagAttribute name="ajax" default="#{true}" />
 
 	<c:choose>
 		<c:when test="#{empty path}">
-			<p:commandButton id="#{id}" value="#{i18n['general.' += id]}" tabindex="1"
-				action="#{actionParam}" update="@form" ajax="#{ajax ne false}">
+			<p:commandButton id="#{id}" value="#{value}" tabindex="1"
+				action="#{actionParam}" update="@(.field)" ajax="#{ajax}">
 			</p:commandButton>
 		</c:when>
 		<c:otherwise>
-			<p:button id="#{id}" value="#{i18n['general.' += id]}" tabindex="2"
+			<p:button id="#{id}" value="#{value}" tabindex="2"
 				outcome="/#{path}" styleClass="tertiary" />
 		</c:otherwise>
 	</c:choose>	
