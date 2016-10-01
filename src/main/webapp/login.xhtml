@@ -33,7 +33,11 @@
 
 			<p>
 				<o:outputFormat value="#{i18n['login.paragraph.signup']}" escape="false">
-					<o:param><k:link path="signup" /></o:param>
+					<o:param>
+						<k:link path="signup">
+							<f:param name="email" value="#{loginBacking.user.email}" disable="#{empty loginBacking.user.email}" />
+						</k:link>
+					</o:param>
 				</o:outputFormat>
 			</p>
 		</k:form>

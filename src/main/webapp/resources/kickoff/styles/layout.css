@@ -46,6 +46,7 @@
  * Do NOT define here .ui-xxx classes from PrimeFaces/jQueryUI, use primefaces.css for that.
  */
 
+
 /* Fonts ------------------------------------------------------------------------------------------------------------ */
 
 body,
@@ -240,6 +241,7 @@ body > footer p {
 	margin: 1em;
 }
 
+
 /* General ---------------------------------------------------------------------------------------------------------- */
 
 a {
@@ -363,6 +365,11 @@ fieldset .field ul.messages .error {
 	screen,
 	screen and (max-device-width:1024px) and (orientation:landscape)
 {
+	body:after {
+		content: "desktop";
+		display: none;
+	}
+	
 	body {
 		font-size: 18px;
 		line-height: 28px;
@@ -386,6 +393,11 @@ fieldset .field ul.messages .error {
 	screen and (max-width:1199px) and (min-device-width:1025px),
 	screen and (max-width:1023px) and (max-device-width:1024px) and (orientation:portrait)
 {
+	body:after {
+		content: "tablet";
+		display: none;
+	}
+	
 	body {
 		font-size: 15px;
 		line-height: 25px;
@@ -401,6 +413,11 @@ fieldset .field ul.messages .error {
 	screen and (max-width:799px) and (min-device-width:769px),
 	screen and (max-width:767px) and (max-device-width:768px)
 {
+	body:after {
+		content: "mobile";
+		display: none;
+	}
+	
 	body .hideOnMobile {
 		display: none;
 	}

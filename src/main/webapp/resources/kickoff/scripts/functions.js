@@ -1,28 +1,38 @@
 /*
- * Define all custom functions here. 
+ * Define all custom functions and global initialization here. 
  * 
  * IMPORTANT: use a custom namespace so they don't pollute global scope!
  */
-var kickoff = function(document) {
+var kickoff = function(window, document) {
+
+
+	// "Constants" ----------------------------------------------------------------------------------------------------
+
+	var DEFAULT_ANIMATION_SPEED = 300;
+
+	
+	// Properties -----------------------------------------------------------------------------------------------------
 
 	var self = {};
+	var currentMedia;
 	var windowUnloading;
 
-	self.windowUnloading = function() {
-		windowUnloading = true;
+
+	// Public functions -----------------------------------------------------------------------------------------------
+
+	self.isDesktop = function() {
+	    return currentMedia == "desktop";
 	}
 
-	self.startProgress = function() {
-		$("html").addClass("progress");
-		$(document).trigger("kStartProgress");
+	self.isTablet = function() {
+	    return currentMedia == "tablet";
 	}
 
-	self.stopProgress = function(selector) {
-		$(document).trigger("kStopProgress", selector);
-		$("html").removeClass("progress");
+	self.isMobile = function() {
+	    return currentMedia == "mobile";
 	}
 
-	self.inProgress = function() {
+	self.isInProgress = function() {
 		return $("html").hasClass("progress");
 	}
 
@@ -44,11 +54,18 @@ var kickoff = function(document) {
 		}
 	}
 
-	self.showServerError = function() {
-		self.showMessage("The server did not respond as expected!", "fatal");
+	self.pfOnsuccess = function(callback) {
+		var args = arguments.callee.caller.arguments;
+
+		if (args && args[2] && !args[2].validationFailed) {
+			callback($(document.getElementById(args[0].pfSettings.source)));
+		}
 	}
 
-	self.autohideMessages = function() {
+
+	// Private functions ----------------------------------------------------------------------------------------------
+	
+	function autohideGlobalMessages() {
 		var $messages = $("#messages > div");
 
 		if (!$messages.length || $messages.hasClass("ui-messages-fatal")) { // Don't autohide fatal messages.
@@ -61,18 +78,63 @@ var kickoff = function(document) {
 		var readingTimeMillis = 3000 + (wordCount * 200);
 
 		setTimeout(function() {
-			$messages.slideUp();
+			$messages.slideUp(DEFAULT_ANIMATION_SPEED);
 		}, readingTimeMillis);
 	}
 
-	self.pfOnsuccess = function(callback) {
-		var args = arguments.callee.caller.arguments;
 
-		if (args && args[2] && !args[2].validationFailed) {
-			callback($(document.getElementById(args[0].pfSettings.source)));
+	// Global initialization ------------------------------------------------------------------------------------------
+
+	/**
+	 * Setup window events.
+	 */
+	$(window).on("load", function() {
+		autohideGlobalMessages();
+	}).on("resize orientationchange load", function() {
+		var media = window.getComputedStyle ? window.getComputedStyle(document.body, ":after").content.replace(/"/g, "") : "desktop";
+
+		if (media != currentMedia) {
+			currentMedia = media;
+			$(window).trigger("mediachange", media);
 		}
-	}
+	}).on("unload", function() {
+		windowUnloading = true;
+	});
+
+	/**
+	 * Setup confirm unload message.
+	 */
+	$(document).on("change", "form:not(.stateless) :input:not(.stateless)", function() {
+		window.onbeforeunload = function() { return $("body").data("unloadmessage"); };
+	}); OmniFaces.Util.addSubmitListener(function() {
+		window.onbeforeunload = null;
+	});
+
+	/**
+	 * Setup PrimeFaces ajax progress behavior.
+	 */
+	$(document).on("pfAjaxStart", function(event) {
+		$("html").addClass("progress");
+		$(document).trigger("kStartProgress");
+		PrimeFaces.customFocus = true;
+	}).on("pfAjaxSuccess", function(event, xhr, options) {
+		PrimeFaces.ajax.Queue.abortAll();
+	}).on("pfAjaxError", function(event, xhr, options) {
+		self.showMessage("The server did not respond as expected!", "fatal");
+	}).on("pfAjaxComplete", function(event, xhr, options) {
+		$("form.validationFailed").removeClass("validationFailed");
+
+		if (xhr && xhr.pfArgs && options && options.source) {
+			var $form = $(document.getElementById(options.source)).closest("form");
+			$form.toggleClass("validationFailed", !!xhr.pfArgs.validationFailed);
+		}
+
+		window.onbeforeunload = null;
+		$(document).trigger("kStopProgress", selector);
+		$("html").removeClass("progress");
+		autohideGlobalMessages();
+	});
 
 	return self;
 
-}(document);
+}(window, document);
