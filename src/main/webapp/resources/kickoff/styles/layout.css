@@ -206,7 +206,10 @@ body > header nav li li {
 }
 
 body > main {
+	display: block; /* Safari */
 	flex: 1;
+	-ms-flex: 1 0 auto; /* Those must indeed be declared AFTER flex: 1 as those browsers support it but have bugs. */
+	-moz-box-flex: 1 0 0%; 
 	width: 100%;
 	max-width: 1200px;
 	margin: 5em auto 1em;
