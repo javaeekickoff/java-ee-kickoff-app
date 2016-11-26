@@ -1,12 +1,12 @@
 /*
- * Define all event listeners here.
+ * Define all document event listeners here.
  * 
  * IMPORTANT: use $(document).on("event", "selector", function) syntax so that it's safe against DOM changes on ajax updates.
  * So: do NOT use $("selector").on("event", function) nor $("selector").event(function) syntaxes for this!
  */
 
 /**
- * Remove field's own highlight and message on entering input.
+ * Remove field's own highlight and message on entering <k:input> value.
  */
 $(document).on("click keyup change", ".field :input, .field .ui-inputfield", function() {
 	var $input = $(this);
@@ -33,6 +33,9 @@ $(document).on("click keyup change", ".field :input, .field .ui-inputfield", fun
 	$input.data("oldValue", newValue);
 });
 
+/**
+ * Close hamburger menu when main section is clicked.
+ */
 $(document).on("click", "main", function() {
 	if (kickoff.isMobile()) {
 		$("#hamburger:checked").prop("checked", false);

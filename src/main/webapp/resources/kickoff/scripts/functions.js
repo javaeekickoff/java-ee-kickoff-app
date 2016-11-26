@@ -6,11 +6,6 @@
 var kickoff = function(window, document) {
 
 
-	// "Constants" ----------------------------------------------------------------------------------------------------
-
-	var DEFAULT_ANIMATION_SPEED = 300;
-
-	
 	// Properties -----------------------------------------------------------------------------------------------------
 
 	var self = {};
@@ -37,21 +32,19 @@ var kickoff = function(window, document) {
 	}
 
 	self.showMessage = function(message, severity) {
-		if (!windowUnloading) {
-			if (severity == "fatal") {
-				message += "<br/>Please <a href='#' onclick='location.reload(true)'>reload</a> and try again.";
-			}
-			else if (!severity) {
-				severity = "info";
-			}
-
-			$("#messages").html("<div class='ui-messages-" + severity + " ui-corner-all'>"
-				+ "<a href='#' class='ui-messages-close' onclick='$(this).parent().fadeOut();return false;'>"
-				+ "<span class='ui-icon ui-icon-close'></span></a><span class='ui-messages-" + severity + "-icon'></span>"
-				+ "<ul><li><span class='ui-messages-" + severity + "-summary'>"
-				+ message
-				+ "</span></li></ul></div>");
+		if (severity == "fatal") {
+			message += "<br/>Please <a href='#' onclick='location.reload(true)'>reload</a> and try again.";
 		}
+		else if (!severity) {
+			severity = "info";
+		}
+
+		$("#messages").html("<div class='ui-messages-" + severity + " ui-corner-all'>"
+			+ "<a href='#' class='ui-messages-close' onclick='$(this).parent().fadeOut();return false;'>"
+			+ "<span class='ui-icon ui-icon-close'></span></a><span class='ui-messages-" + severity + "-icon'></span>"
+			+ "<ul><li><span class='ui-messages-" + severity + "-summary'>"
+			+ message
+			+ "</span></li></ul></div>");
 	}
 
 	self.pfOnsuccess = function(callback) {
@@ -65,7 +58,11 @@ var kickoff = function(window, document) {
 
 	// Private functions ----------------------------------------------------------------------------------------------
 	
-	function autohideGlobalMessages() {
+	var hideGlobalMessages = function() {
+		$("#messages > div").slideUp();
+	};
+	
+	var autoHideGlobalMessages = function() {
 		var $messages = $("#messages > div");
 
 		if (!$messages.length || $messages.hasClass("ui-messages-fatal")) { // Don't autohide fatal messages.
@@ -73,65 +70,100 @@ var kickoff = function(window, document) {
 		}
 
 		var wordCount = $messages.text().split(/\W/).length;
+		var readingTimeMillis = 3000 + (wordCount * 200); // First 3 secs "warming up" time (i.e. give human eye chance to find/focus/understand message dialog) and then 200ms per word.
 
-		// First 3 secs "warming up" time (i.e. give human eye chance to find/focus/understand message dialog) and then 200ms per word.
-		var readingTimeMillis = 3000 + (wordCount * 200);
+		setTimeout(hideGlobalMessages, readingTimeMillis);
+		$("#messages").on("click", hideGlobalMessages);
+	};
 
-		setTimeout(function() {
-			$messages.slideUp(DEFAULT_ANIMATION_SPEED);
-		}, readingTimeMillis);
-	}
+	var getSubmittingForm = function(source) {
+		var sourceClientId = (typeof source === "object") ? source.id : source;
+		var $form = $(document.getElementById(sourceClientId)).closest("form");
+
+		while (!$form.length && sourceClientId.indexOf(":") > 0) { // May happen when source disappears after a conditional rendering.
+			sourceClientId = sourceClientId.substring(0, sourceClientId.lastIndexOf(":"));
+			$form = $(document.getElementById(sourceClientId)).closest("form");
+		}
+
+		return $form;
+	};
 
 
 	// Global initialization ------------------------------------------------------------------------------------------
 
 	/**
+	 * Set default jQuery UI animation speed to 300ms.
+	 */
+	$.fx.speeds._default = 300;
+
+	/**
 	 * Setup window events.
+	 * - On window load, autohide global (flash) messa.ges.
+	 * - On window load, resize and orientationchange, trigger custom window event 'mediachange' when CSS media changes, and trigger custom window event 'render'.
+	 * - On window unload, mark state so that any ajax errors caused by window unload won't trigger server error.
 	 */
 	$(window).on("load", function() {
-		autohideGlobalMessages();
-	}).on("resize orientationchange load", function() {
+		autoHideGlobalMessages();
+	}).on("load resize orientationchange", function() {
 		var media = window.getComputedStyle ? window.getComputedStyle(document.body, ":after").content.replace(/"/g, "") : "desktop";
 
 		if (media != currentMedia) {
 			currentMedia = media;
 			$(window).trigger("mediachange", media);
 		}
+
+		$(window).trigger("render");
 	}).on("unload", function() {
 		windowUnloading = true;
 	});
 
 	/**
-	 * Setup confirm unload message.
+	 * Setup unload events. 
+	 * - On change of non-stateless inputs in non-stateless forms, mark unsaved changes.
+	 * - On submit of any form in the document, unmark unsaved changes.
+	 * - On window beforeunload, if there are any unsaved changes, show the unload message defined as <body data-unloadmessage>.
+	 * This explicitly uses window.onbeforeunload instead of $(window).on("beforeunload") or window.addEventListener("beforeunload"), 
+	 * so OmmiFaces ViewScoped unload script will continue to work properly.
 	 */
 	$(document).on("change", "form:not(.stateless) :input:not(.stateless)", function() {
-		window.onbeforeunload = function() { return $("body").data("unloadmessage"); };
+		$("body").data("unsavedchanges", true);
 	}); OmniFaces.Util.addSubmitListener(function() {
-		window.onbeforeunload = null;
-	});
+		$("body").data("unsavedchanges", false);
+	}); window.onbeforeunload = function() {
+		return $("body").data("unsavedchanges") ? $("body").data("unloadmessage") : null;
+	};
 
 	/**
-	 * Setup PrimeFaces ajax progress behavior.
+	 * Setup PrimeFaces ajax events.
+	 * - On ajax start, disable PF built in focus listener which refocuses last active element (as we already have our own focus logic via o:highlight).
+	 * - On ajax send, trigger progress overlay and custom document event 'startProgress'.
+	 * - On ajax success, abort all PF ajax requests currently in queue (double submit prevention when e.g. submit+blur are invoked simultaneously).
+	 * - On ajax error, show fatal server error message (only if windows is not unloading).
+	 * - On ajax complete, toggle 'validationFailed' class on parent form if necessary, trigger custom document event 'stopProgress', hide overlay and autohide global messages.
 	 */
 	$(document).on("pfAjaxStart", function(event) {
-		$("html").addClass("progress");
-		$(document).trigger("kStartProgress");
 		PrimeFaces.customFocus = true;
+	}).on("pfAjaxSend", function(event, xhr, options) {
+		$("html").addClass("progress");
+		$(document).trigger("startProgress");
 	}).on("pfAjaxSuccess", function(event, xhr, options) {
 		PrimeFaces.ajax.Queue.abortAll();
 	}).on("pfAjaxError", function(event, xhr, options) {
-		self.showMessage("The server did not respond as expected!", "fatal");
+		if (!windowUnloading) {
+			self.showMessage("The server did not respond as expected!", "fatal");
+		}
 	}).on("pfAjaxComplete", function(event, xhr, options) {
 		$("form.validationFailed").removeClass("validationFailed");
 
 		if (xhr && xhr.pfArgs && options && options.source) {
-			var $form = $(document.getElementById(options.source)).closest("form");
-			$form.toggleClass("validationFailed", !!xhr.pfArgs.validationFailed);
+			getSubmittingForm(options.source).toggleClass("validationFailed", !!xhr.pfArgs.validationFailed);
 		}
 
-		window.onbeforeunload = null;
-		$(document).trigger("kStopProgress", selector);
-		$("html").removeClass("progress");
+		if (self.isInProgress()) {
+			$(document).trigger("stopProgress", selector);
+			$("html").removeClass("progress");
+		}
+
 		autohideGlobalMessages();
 	});
 
