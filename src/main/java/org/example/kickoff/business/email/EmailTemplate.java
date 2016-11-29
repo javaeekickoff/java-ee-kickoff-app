@@ -10,11 +10,8 @@ public class EmailTemplate {
 		SALUTATION_CONTENT("salutation_content", false),
 		BODY_TITLE("body_title", false),
 		BODY_CONTENT("body_content", true),
-		BODY2_TITLE("body2_title", true),
-		BODY2_CONTENT("body2_content", true),
 		OBJECT_CONTENT("object_content", true),
-		CALL_TO_ACTION1_LABEL("call_to_action1_label", false),
-		CALL_TO_ACTION2_LABEL("call_to_action2_label", false);
+		CALL_TO_ACTION_LABEL("call_to_action_label", false);
 
 		private final String key;
 		private final boolean html;
@@ -33,6 +30,8 @@ public class EmailTemplate {
 		}
 	}
 
+	private String templateId;
+
 	// TODO convert to enum
 	private String type;
 
@@ -43,23 +42,23 @@ public class EmailTemplate {
 
 	private Map<EmailTemplatePart, String> templateParts = new HashMap<>();
 
-	private String callToAction1URL;
-	private String callToAction2URL;
-
-	public EmailTemplate() {
-	}
+	private String callToActionURL;
 
 	public EmailTemplate(String type) {
 		this.type = type;
 	}
 
-	public String getType() {
-		return type;
+	public EmailTemplate(String templateId, String type) {
+		this.templateId = templateId;
+		this.type = type;
 	}
 
-	public EmailTemplate setType(String type) {
-		this.type = type;
-		return this;
+	public String getTemplateId() {
+		return templateId;
+	}
+
+	public String getType() {
+		return type;
 	}
 
 	public EmailUser getToUser() {
@@ -112,21 +111,12 @@ public class EmailTemplate {
 		return this;
 	}
 
-	public String getCallToAction1URL() {
-		return callToAction1URL;
+	public String getCallToActionURL() {
+		return callToActionURL;
 	}
 
-	public EmailTemplate setCallToAction1URL(String url) {
-		callToAction1URL = url;
-		return this;
-	}
-
-	public String getCallToAction2URL() {
-		return callToAction2URL;
-	}
-
-	public EmailTemplate setCallToAction2URL(String url) {
-		callToAction2URL = url;
+	public EmailTemplate setCallToActionURL(String url) {
+		callToActionURL = url;
 		return this;
 	}
 

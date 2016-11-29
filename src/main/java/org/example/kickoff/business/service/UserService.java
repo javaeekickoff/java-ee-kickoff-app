@@ -5,16 +5,24 @@ import static org.omnifaces.persistence.JPA.getOptional;
 import static org.omnifaces.persistence.JPA.getOptionalSingleResult;
 import static org.omnifaces.utils.security.MessageDigests.digest;
 
+import java.time.ZonedDateTime;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Resource;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.example.kickoff.business.email.EmailService;
+import org.example.kickoff.business.email.EmailTemplate;
+import org.example.kickoff.business.email.EmailUser;
 import org.example.kickoff.business.exception.DuplicateEntityException;
 import org.example.kickoff.business.exception.InvalidPasswordException;
 import org.example.kickoff.business.exception.InvalidUsernameException;
@@ -26,6 +34,7 @@ import org.example.kickoff.model.User;
 public class UserService extends BaseEntityService<Long, User> {
 
 	private static final int DEFAULT_SALT_LENGTH = 40;
+	private static final long DEFAULT_PASSWORD_RESET_EXPIRATION_TIME_IN_MINUTES = TimeUnit.HOURS.toMinutes(1);
 	private static final String MESSAGE_DIGEST_ALGORITHM = "SHA-256";
 
 	@PersistenceContext
@@ -33,6 +42,12 @@ public class UserService extends BaseEntityService<Long, User> {
 
 	@Resource
 	private SessionContext sessionContext;
+
+	@Inject
+	private LoginTokenService loginTokenService;
+
+	@Inject
+	private EmailService emailService;
 
 	public void registerUser(User user, String password) {
 		if (getByEmail(user.getEmail()).isPresent()) {
@@ -77,6 +92,31 @@ public class UserService extends BaseEntityService<Long, User> {
 		User existingUser = get(user);
 		setCredentials(existingUser, password);
 		super.update(existingUser);
+	}
+
+	public void updatePassword(String loginToken, String password) {
+		User user = getByLoginToken(loginToken, TokenType.RESET_PASSWORD);
+
+		if (user != null) {
+			updatePassword(user, password);
+			loginTokenService.remove(loginToken);
+		}
+	}
+
+	public void requestResetPassword(String email, String ipAddress, String callbackUrlFormat) {
+		User user = getByEmail(email).orElseThrow(InvalidUsernameException::new);
+		ZonedDateTime expiration = ZonedDateTime.now().plusMinutes(DEFAULT_PASSWORD_RESET_EXPIRATION_TIME_IN_MINUTES);
+		String token = loginTokenService.generate(email, ipAddress, "Reset Password", TokenType.RESET_PASSWORD, expiration.toInstant());
+
+		EmailTemplate emailTemplate = new EmailTemplate("resetPassword")
+			.setToUser(new EmailUser(user))
+			.setCallToActionURL(String.format(callbackUrlFormat, token));
+
+		Map<String, Object> messageParameters = new HashMap<>();
+		messageParameters.put("expiration", expiration);
+		messageParameters.put("ip", ipAddress);
+
+		emailService.sendTemplate(emailTemplate, messageParameters);
 	}
 
 	public Optional<User> getByEmail(String email) {

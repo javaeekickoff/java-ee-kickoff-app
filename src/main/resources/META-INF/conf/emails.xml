@@ -19,55 +19,30 @@ Dear {toUser.fullName},
 
 	<!-- New user registered ====================================================================================== -->
 
-	<entry key="newImplicitLoanUserRegistered_subject_content_text"><![CDATA[
-Verify your email to be able to secure a loan
-	]]></entry>
-
-	<entry key="newImplicitLoanUserRegistered_body_content_HTML"><![CDATA[
-<h3>Just one more thing before you can sign the final agreement for your loan</h3>
-You''re almost ready. To complete the process please verify your email address by clicking the button below.
-
-<a href="*|CTA1_URL|*">*|CTA1_URL|*</a>
-
-After you''ve completed the verification you can continue with the loan application.
-	]]></entry>
-	
-	<entry key="newImplicitLoanUserRegistered_call_to_action1_label_text"><![CDATA[
-Verify my email
-	]]>
-	</entry>
-
-
-	<!-- New user registered ====================================================================================== -->
-
 	<entry key="newUserRegistered_subject_content_text"><![CDATA[
-Verify your email to login to Blue Ocean
+Verify Your Email
 	]]></entry>
 
 	<entry key="newUserRegistered_body_content_HTML"><![CDATA[
-<h3>Just one more thing before you can start earning!</h3>
-You''re almost ready to get started, to complete your sign up please verify your email address by clicking the button below.
+To complete your sign up please verify your email address by clicking the button below.
 
 <a href="*|CTA1_URL|*">*|CTA1_URL|*</a>
-
-After you''ve completed your signup you can start TODO: full in more text here
 	]]></entry>
-	
-	<entry key="newUserRegistered_call_to_action1_label_text"><![CDATA[
-Verify my email
+
+	<entry key="newUserRegistered_call_to_action_label_text"><![CDATA[
+Verify Your Email
 	]]>
 	</entry>
-	
-	
-	
+
+
 	<!-- New User Email Verified =================================================================================== -->
 
 	<entry key="newEmailVerified_subject_content_text"><![CDATA[
-New User with a verified email
+New user with a verified email
 	]]></entry>
 
 	<entry key="newEmailVerified_body_content_HTML"><![CDATA[
-I have just completed the signup!
+Below user has just completed the signup:
 
 <ul>
 <li>User email: {user.email}</li>
@@ -75,34 +50,29 @@ I have just completed the signup!
 <li>Referral: {referral}</li>
 </ul>
 	]]></entry>
-	
-	
+
+
 	<!-- User request password ===================================================================================== -->
 
-	<entry key="passwordReset_subject_content_text">
+	<entry key="resetPassword_subject_content_text">
 	<![CDATA[
-Reset your password
+Reset Your password
 	]]>
 	</entry>
 
-	<entry key="passwordReset_body_content_HTML">
+	<entry key="resetPassword_body_content_HTML">
 	<![CDATA[
-We have received a request to reset the password of your account. If you did not request this reset, just ignore this email. Otherwise, please visit the following link to reset your password.
+We have received a request from IP address {ip} to reset the password of your account.
+If you did not request this reset, just ignore this email.
+Otherwise, please press the below button to reset your password.
+This request is valid until {expiration,dateTime,long}.
 	]]>
 	</entry>
-	
-	<entry key="passwordReset_body2_content_HTML">
+
+	<entry key="resetPassword_call_to_action_label_text">
 	<![CDATA[
-Valid until: {expiration,dateTime,long}
-Request from: {ip}
+Reset Your password
 	]]>
 	</entry>
-	
-	<entry key="passwordReset_call_to_action1_label_text">
-	<![CDATA[
-Reset my password
-	]]>
-	</entry>
-	
-	
+
 </properties>

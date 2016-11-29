@@ -28,9 +28,9 @@ public class LoginTokenService extends BaseEntityService<Long, LoginToken> {
 	@Inject
 	private UserService userService;
 
-	public String generate(String email, String remoteAddress, String description, TokenType tokenType) {
+	public String generate(String email, String ipAddress, String description, TokenType tokenType) {
 		Instant expiration = now().plus(14, DAYS);
-		return generate(email, remoteAddress, description, tokenType, expiration);
+		return generate(email, ipAddress, description, tokenType, expiration);
 	}
 
 	public String generate(String email, String ipAddress, String description, TokenType tokenType, Instant expiration) {

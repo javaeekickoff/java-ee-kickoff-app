@@ -21,20 +21,20 @@ public abstract class EmailService  {
 	private static final String LOG_MAIL_FAIL = "Failed to send mail [type=%s, to=%s, replyTo=%s, subject=%s]";
 	private static final List<String> ALLOWED_FROM_DOMAINS = Arrays.asList("kickoff.example.org");
 
-	private EmailUser defaultMailUser;
+	private EmailUser defaultEmailUser;
 
 	@Inject @ApplicationSetting
-	private String notificationFromEmail;
+	private String fromEmail;
 
 	@Inject @ApplicationSetting
-	private Boolean disableMailService;
+	private Boolean disableEmailService;
 
 	@Inject
 	private EmailTemplateService emailTemplateService;
 
 	@PostConstruct
 	public void init() {
-		defaultMailUser = new EmailUser(notificationFromEmail, "The Java EE Kickoff Team");
+		defaultEmailUser = new EmailUser(fromEmail, "The Java EE Kickoff Team");
 	}
 
 	public void sendTemplate(EmailTemplate templateEmail) {
@@ -42,25 +42,25 @@ public abstract class EmailService  {
 	}
 
 	public void sendTemplate(EmailTemplate templateEmail, Map<String, Object> messageParameters) {
-		if (disableMailService) {
+		if (disableEmailService) {
 			return;
 		}
 
 		if (templateEmail.getFromUser() == null) {
-			templateEmail.setFromUser(defaultMailUser);
+			templateEmail.setFromUser(defaultEmailUser);
 		}
 		else { // Prevent sending email from other domains.
 			EmailUser fromUser = templateEmail.getFromUser();
 			String email = fromUser.getEmail();
 
 			if (email != null && email.contains("@") && !ALLOWED_FROM_DOMAINS.contains(email.substring(email.indexOf("@") + 1))) {
-				templateEmail.setFromUser(new EmailUser(defaultMailUser.getEmail(), fromUser.getFullName() + " via Java EE Kickoff App"));
+				templateEmail.setFromUser(new EmailUser(defaultEmailUser.getEmail(), fromUser.getFullName() + " via Java EE Kickoff App"));
 				templateEmail.setReplyTo(fromUser.getEmail());
 			}
 		}
 
 		if (templateEmail.getToUser() == null) {
-			templateEmail.setToUser(defaultMailUser);
+			templateEmail.setToUser(defaultEmailUser);
 		}
 
 		emailTemplateService.addUserParameters("toUser", templateEmail.getToUser(), messageParameters);
@@ -79,11 +79,11 @@ public abstract class EmailService  {
 	public abstract void sendTemplateMessage(EmailTemplate templateEmail, Map<String, Object> messageParameters, Map<String, String> templateContent);
 
 	public void sendPlainText(EmailUser to, String subject, String body) {
-		sendPlainText(to, defaultMailUser, subject, body, null);
+		sendPlainText(to, defaultEmailUser, subject, body, null);
 	}
 
 	public void sendPlainText(EmailUser to, EmailUser from, String subject, String body, String replyTo) {
-		if (disableMailService) {
+		if (disableEmailService) {
 			return;
 		}
 

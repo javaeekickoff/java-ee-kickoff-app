@@ -43,7 +43,7 @@ public class EmailTemplateService {
 		messageParameters.putIfAbsent(prefix + ".email", user.getEmail());
 		messageParameters.putIfAbsent(prefix + ".fullName", user.getFullName());
 
-		String linkPattern = String.format("<span class='profile'>%s</span>", String.format("{%s.fullName}", prefix));
+		String linkPattern = String.format("<span class=\"profile\">%s</span>", String.format("{%s.fullName}", prefix));
 		messageParameters.putIfAbsent(prefix, NameBasedMessageFormat.format(linkPattern, messageParameters));
 
 		return messageParameters;

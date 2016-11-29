@@ -160,7 +160,7 @@ var kickoff = function(window, document) {
 		}
 
 		if (self.isInProgress()) {
-			$(document).trigger("stopProgress", selector);
+			$(document).trigger("stopProgress");
 			$("html").removeClass("progress");
 		}
 
