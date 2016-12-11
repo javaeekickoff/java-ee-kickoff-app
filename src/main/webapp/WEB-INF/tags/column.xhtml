@@ -1,56 +1,27 @@
-<ui:composition
+<ui:composition template="/optimusfaces/tags/column.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
 	xmlns:o="http://omnifaces.org/ui"
-	xmlns:of="http://omnifaces.org/functions"
-	xmlns:p="http://primefaces.org/ui"
 >
-	<!-- Column -->
-	<o:tagAttribute name="type" default="text" />
-	<o:tagAttribute name="field" />
-	<o:tagAttribute name="id" default="#{field}" />
-	<o:tagAttribute name="value" default="#{item[field]}" />
-	<o:tagAttribute name="rendered" default="#{true}" />
-	<o:tagAttribute name="header" default="#{i18n['general.' += field]}" />
-	<o:tagAttribute name="width" />
-	<o:tagAttribute name="styleClass" />
+	<!-- New custom attribute. -->
+	<ui:param name="type" value="#{empty type ? 'text' : type}" /> <!-- Value MAY NOT be an EL expression referencing #{item}! -->
 
-	<!-- Sorting/filtering/exporting -->
-	<o:tagAttribute name="sortable" default="#{true}" />
-	<o:tagAttribute name="sortBy" default="#{value}" />
-	<o:tagAttribute name="filterBy" default="#{sortBy}" />
-	<o:tagAttribute name="filterOptions" />
-	<o:tagAttribute name="exportable" default="#{true}" />
-	<o:tagAttribute name="export" default="#{value}" />
+	<!-- Override default attribute values. -->
+	<ui:param name="head" value="#{empty head ? i18n['general.' += field] : head}" />
+	<ui:param name="styleClass" value="#{type}" />
 
-	<c:set var="exporting" value="#{facesContext.currentPhaseId.ordinal eq 5 or not empty param[component.namingContainer.parent.namingContainer.findComponent('export').clientId]}" />
+	<ui:define name="cell">
+		<c:choose>
+			<c:when test="#{type eq 'boolean'}">#{value ? 'Y' : 'N'}</c:when>
+			<c:when test="#{type eq 'number'}">#{of:formatNumberDefault(value)}</c:when>
+			<c:when test="#{type eq 'currency'}">#{of:formatCurrency(value, '$')}</c:when>
+			<c:when test="#{type eq 'list'}"><ui:repeat value="#{value}" var="_item">#{_item}<br /></ui:repeat></c:when>
+			<c:when test="#{type eq 'custom'}"><ui:insert /></c:when>
 
-	<p:column
-		id="#{id}" rendered="#{exporting ? rendered and exportable : rendered}" headerText="#{header}" field="#{field}"
-		styleClass="#{type} #{styleClass} #{empty filterOptions ? '' : 'filterable'} #{component.sortField eq field ? 'ui-state-active' : ''}"
-		filterable="#{searchable and (not empty filterOptions or component.namingContainer.value.filterableFields.contains(field))}" filterMatchMode="contains"
-	>
-		<c:if test="#{not empty width}"><f:attribute name="width" value="#{width}" /></c:if>
-		<c:if test="#{sortable}"><f:attribute name="sortBy" value="#{sortBy}" /></c:if>
-		<c:if test="#{searchable}"><f:attribute name="filterBy" value="#{fitlerBy}" /></c:if>
-		<c:if test="#{not empty filterOptions}"><f:attribute name="filterOptions" value="#{filterOptions}" /></c:if>
+			<!-- Add more types here! -->
 
-		<ui:fragment rendered="#{exporting}">
-			#{export}
-		</ui:fragment>
-
-		<ui:fragment rendered="#{not exporting}">
-			<c:choose>
-				<c:when test="#{type eq 'boolean'}">#{value ? 'Y' : 'N'}</c:when>
-				<c:when test="#{type eq 'number'}">#{of:formatNumberDefault(value)}</c:when>
-				<c:when test="#{type eq 'currency'}">#{of:formatCurrency(value, '$')}</c:when>
-				<c:when test="#{type eq 'list'}"><ui:repeat value="#{value}" var="_item">#{_item}<br /></ui:repeat></c:when>
-				<c:when test="#{type eq 'custom'}"><ui:insert /></c:when>
-				<c:otherwise>#{value}</c:otherwise>
-			</c:choose>
-		</ui:fragment>
-	</p:column>
+			<c:otherwise>#{value}</c:otherwise>
+		</c:choose>
+	</ui:define>
 </ui:composition>

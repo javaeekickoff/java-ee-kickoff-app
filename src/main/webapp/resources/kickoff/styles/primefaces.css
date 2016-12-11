@@ -25,7 +25,11 @@
 	border-radius: 3px;
 }
 
-.ui-icon {
+.ui-icon,
+.ui-paginator .ui-paginator-first,
+.ui-paginator .ui-paginator-prev,
+.ui-paginator .ui-paginator-next,
+.ui-paginator .ui-paginator-last {
 	display: inline-block;
     font: normal normal normal 14px/1 FontAwesome;
     font-size: 1.2em;
@@ -203,12 +207,20 @@
 	display: none;
 }
 
-/* k:dataTable actions */
-.ui-datatable-actions .ui-inputfield.globalFilter {
-	width: 200px;
+/* k:table actions */
+.ui-datatable-actions {
+
 }
 
-.ui-datatable-actions .ui-button.export {
+.ui-datatable-actions .ui-inputfield.filter {
+	width: auto;
+}
+
+.ui-datatable-actions .ui-button {
+	margin-left: .5em;
+}
+
+.ui-datatable-actions .buttons {
 	float: right;
 }
 
@@ -229,4 +241,48 @@
 .ui-datatable td.actions {
 	white-space: nowrap;
 	text-align: center;
+}
+
+.ui-columntoggler {
+	background: white;
+}
+
+.ui-columntoggler .ui-columntoggler-close {
+	display: none;
+}
+
+.ui-columntoggler .ui-columntoggler-items {
+	padding: .2em;
+}
+
+.ui-columntoggler .ui-columntoggler-item .ui-chkbox {
+	position: static;
+	margin-top: 0;
+}
+
+
+/* Paginator -------------------------------------------------------------------------------------------------------- */
+
+.ui-paginator .ui-icon {
+	display: none;
+}
+
+.ui-paginator .ui-paginator-first:after {
+	content: "\f100"; /* fa-angle-double-left */
+}
+
+.ui-paginator .ui-paginator-prev:after {
+	content: "\f104"; /* fa-angle-left */
+}
+
+.ui-paginator .ui-paginator-next:after {
+	content: "\f105"; /* fa-angle-right */
+}
+
+.ui-paginator .ui-paginator-last:after {
+	content: "\f101"; /* fa-angle-double-right */
+}
+
+.ui-paginator .ui-state-disabled {
+	color: #{gray};
 }

@@ -10,8 +10,8 @@ import javax.inject.Named;
 
 import org.example.kickoff.business.service.UserService;
 import org.example.kickoff.model.User;
-import org.example.kickoff.view.PagedDataModel;
 import org.omnifaces.cdi.ViewScoped;
+import org.omnifaces.optimusfaces.model.PagedDataModel;
 import org.omnifaces.persistence.model.dto.SortFilterPage;
 import org.primefaces.model.SortOrder;
 
