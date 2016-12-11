@@ -9,7 +9,7 @@
 
 	<!-- Override default attribute values. -->
 	<ui:param name="head" value="#{empty head ? i18n['general.' += field] : head}" />
-	<ui:param name="styleClass" value="#{type}" />
+	<ui:param name="styleClass" value="#{type} #{styleClass}" />
 
 	<ui:define name="cell">
 		<c:choose>
