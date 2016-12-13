@@ -1,7 +1,7 @@
-java-ee-kickoff-app [![Build Status](https://travis-ci.org/javaeekickoff/java-ee-kickoff-app.svg?branch=master)](https://travis-ci.org/javaeekickoff/java-ee-kickoff-app)
+[java-ee-kickoff-app](http://javaeekickoff.omnifaces.org/) [![Build Status](https://travis-ci.org/javaeekickoff/java-ee-kickoff-app.svg?branch=master)](https://travis-ci.org/javaeekickoff/java-ee-kickoff-app)
 ===================
 
-Basic project template to kickoff a new Java EE web application. Primarily designed for WildFly (10).
+Basic project template to kickoff a new Java EE web application. Primarily designed for WildFly (10). Live demo is available at [javaeekickoff.omnifaces.org](http://javaeekickoff.omnifaces.org/).
 
 Following Java EE web applications are built using this template:
 
