@@ -125,7 +125,7 @@ var kickoff = function(window, document) {
 	 * This explicitly uses window.onbeforeunload instead of $(window).on("beforeunload") or window.addEventListener("beforeunload"), 
 	 * so OmmiFaces ViewScoped unload script will continue to work properly.
 	 */
-	$(document).on("change", "form:not(.stateless) :input:not(.stateless)", function() {
+	$(document).on("change", "form:not(.stateless) :input:not(.stateless):not(.ui-column-filter)", function() {
 		$("body").data("unsavedchanges", true);
 	}); OmniFaces.Util.addSubmitListener(function() {
 		$("body").data("unsavedchanges", false);

@@ -137,7 +137,7 @@ body > header {
 	line-height: 5em;
 	padding: 0 1em;
 	background: white;
-	border-bottom: 1px solid #{red};
+	border-bottom: 1px solid #{darkGray};
 }
 
 body > header > div#logo {
@@ -196,8 +196,9 @@ body > header nav aside {
 }
 
 body > header nav li ul {
-	border: 1px solid #{red};
+	border: 1px solid #{darkGray};
 	border-top: 0;
+	right: -1px;
 }
 
 body > header nav li li {
@@ -279,7 +280,7 @@ nav li:hover ul {
 }
 
 .dev {
-	margin: .5em 0;
+	margin: 1em 0;
 	padding: 0 .5em;
 	background: #{yellow};
 }
@@ -313,7 +314,7 @@ html.progress * {
 fieldset {
 	max-width: 600px;
 	margin: 1em auto;
-	padding: 1em 2em;
+	padding: .5em 1.5em;
 	border: 0;
 	border-radius: 6px;
 	background: white;
@@ -455,7 +456,7 @@ fieldset .field ul.messages .error {
 		height: 100%;
 		overflow-y: auto;
 		background: white;
-		border-left: 1px solid #{red};
+		border-left: 1px solid #{darkGray};
 	}
 
 	body > header > input#hamburger:checked ~ nav {
@@ -480,6 +481,13 @@ fieldset .field ul.messages .error {
 
 	body > header nav aside {
 		position: static;
+	}
+
+	fieldset {
+		max-width: none;
+		margin: 1em -1em;
+		padding: .5em 1em;
+		border-radius: 0; 
 	}
 
 }
