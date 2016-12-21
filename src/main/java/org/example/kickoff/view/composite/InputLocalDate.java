@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
+import java.time.YearMonth;
 import java.util.List;
 
 import javax.faces.component.FacesComponent;
@@ -27,6 +28,10 @@ import org.primefaces.component.selectonemenu.SelectOneMenu;
 
 @FacesComponent("inputLocalDate")
 public class InputLocalDate extends UIInput implements NamingContainer {
+
+	// Constants ------------------------------------------------------------------------------------------------------
+
+	private static final int DEFAULT_YEAR_RANGE = 100; // Default to -100y ~ +100y
 
 	// Properties -----------------------------------------------------------------------------------------------------
 
@@ -55,8 +60,8 @@ public class InputLocalDate extends UIInput implements NamingContainer {
 	@Override
 	public void encodeBegin(FacesContext context) throws IOException {
 		LocalDate now = now();
-		LocalDate min = coalesce(getAttribute(this, "min"), now.minusYears(100));
-		LocalDate max = coalesce(getAttribute(this, "max"), now.plusYears(100));
+		LocalDate min = coalesce(getAttribute(this, "min"), now.minusYears(DEFAULT_YEAR_RANGE));
+		LocalDate max = coalesce(getAttribute(this, "max"), now.plusYears(DEFAULT_YEAR_RANGE));
 		LocalDate value = (LocalDate) getValue();
 
 		day.setValue(value != null ? value.getDayOfMonth() : null);
@@ -78,7 +83,16 @@ public class InputLocalDate extends UIInput implements NamingContainer {
 
 			if (currentMonth != null) {
 				Integer currentYear = (Integer) year.getValue();
-				maxDays = Month.of(currentMonth).length(currentYear != null && Year.isLeap(currentYear));
+
+				if (currentYear != null) {
+
+					if (YearMonth.of(currentYear, currentMonth).equals(YearMonth.from(max))) {
+						maxDays = max.getDayOfMonth();
+					}
+					else {
+						maxDays = Month.of(currentMonth).length(Year.isLeap(currentYear));
+					}
+				}
 			}
 		}
 
@@ -135,6 +149,8 @@ public class InputLocalDate extends UIInput implements NamingContainer {
 
 			update(month.getClientId());
 		}
+
+		updateDaysIfNecessary();
 	}
 
 	/**
@@ -164,15 +180,7 @@ public class InputLocalDate extends UIInput implements NamingContainer {
 		super.setValid(valid);
 	}
 
-	@Override
-	public void resetValue() {
-		day.resetValue();
-		month.resetValue();
-		year.resetValue();
-		super.resetValue();
-	}
-
-	// Component binding getters/setters ------------------------------------------------------------------------------
+	// Getters/setters ------------------------------------------------------------------------------------------------
 
 	public SelectOneMenu getDay() {
 		return day;
@@ -180,6 +188,14 @@ public class InputLocalDate extends UIInput implements NamingContainer {
 
 	public void setDay(SelectOneMenu day) {
 		this.day = day;
+	}
+
+	public List<Integer> getDays() {
+		return state.get("days");
+	}
+
+	public void setDays(List<Integer> days) {
+		state.put("days", days);
 	}
 
 	public SelectOneMenu getMonth() {
@@ -190,30 +206,20 @@ public class InputLocalDate extends UIInput implements NamingContainer {
 		this.month = month;
 	}
 
-	public SelectOneMenu getYear() {
-		return year;
-	}
-
-	public void setYear(SelectOneMenu year) {
-		this.year = year;
-	}
-
-	// Component state getters/setters --------------------------------------------------------------------------------
-
-	public List<Integer> getDays() {
-		return state.get("days");
-	}
-
-	public void setDays(List<Integer> days) {
-		state.put("days", days);
-	}
-
 	public List<Integer> getMonths() {
 		return state.get("months");
 	}
 
 	public void setMonths(List<Integer> months) {
 		state.put("months", months);
+	}
+
+	public SelectOneMenu getYear() {
+		return year;
+	}
+
+	public void setYear(SelectOneMenu year) {
+		this.year = year;
 	}
 
 	public List<Integer> getYears() {

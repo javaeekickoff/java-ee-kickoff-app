@@ -245,6 +245,10 @@ body > footer p {
 
 /* General ---------------------------------------------------------------------------------------------------------- */
 
+article, aside, footer, header, main, nav, section {
+	display: block;
+}
+
 a {
 	text-decoration: none;
 	color: #{blue};

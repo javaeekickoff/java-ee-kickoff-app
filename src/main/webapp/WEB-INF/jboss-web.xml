@@ -4,4 +4,5 @@
 	"http://www.jboss.org/j2ee/dtd/jboss-web_5_0.dtd">
 <jboss-web>
 	<security-domain>jaspitest</security-domain>
+	<context-root>/</context-root>
 </jboss-web>
