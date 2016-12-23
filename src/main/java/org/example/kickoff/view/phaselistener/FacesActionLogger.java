@@ -1,5 +1,6 @@
 package org.example.kickoff.view.phaselistener;
 
+import static java.lang.System.nanoTime;
 import static java.util.Collections.max;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
@@ -15,12 +16,11 @@ import static org.omnifaces.util.FacesLocal.getRemoteUser;
 import static org.omnifaces.util.FacesLocal.getRequestAttribute;
 import static org.omnifaces.util.FacesLocal.getRequestParameter;
 import static org.omnifaces.util.FacesLocal.getRequestParameterValuesMap;
+import static org.omnifaces.util.FacesLocal.getRequestURIWithQueryString;
 import static org.omnifaces.util.FacesLocal.getSessionId;
 import static org.omnifaces.util.FacesLocal.isRenderResponse;
 import static org.omnifaces.util.FacesLocal.setRequestAttribute;
-import static org.omnifaces.utils.Lang.coalesce;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -75,7 +75,7 @@ public class FacesActionLogger extends DefaultPhaseListener {
 
 		try {
 	        Map<String, Object> log = new LinkedHashMap<>();
-	        log.put("ip", getRemoteAddr(context));
+	        log.put("url", getRequestURIWithQueryString(context));
 	        log.put("user", getUserDetails(context));
 	        log.put("action", getActionDetails(context));
 	        log.put("params", getFilteredParams(context));
@@ -94,6 +94,7 @@ public class FacesActionLogger extends DefaultPhaseListener {
 
 	private static Map<String, Object> getUserDetails(FacesContext context) {
         Map<String, Object> userDetails = new LinkedHashMap<>();
+        userDetails.put("ip", getRemoteAddr(context));
         userDetails.put("email", getRemoteUser(context));
         userDetails.put("session", getSessionId(context));
         userDetails.put("viewState", getRequestParameter(context, VIEW_STATE_PARAM));
@@ -137,12 +138,8 @@ public class FacesActionLogger extends DefaultPhaseListener {
 	private static Map<String, List<String>> getFacesMessages(FacesContext context) {
 		Map<String, List<String>> facesMessages = new TreeMap<>();
 
-		context.getMessages(null).forEachRemaining(message -> {
-			facesMessages.computeIfAbsent("", v -> new ArrayList<>()).add(message.getSummary());
-		});
-
 		context.getClientIdsWithMessages().forEachRemaining(clientId -> {
-			facesMessages.put(coalesce(clientId, ""), context.getMessageList(clientId).stream().map(message -> message.getSummary()).collect(toList()));
+			facesMessages.put(String.valueOf(clientId), context.getMessageList(clientId).stream().map(message -> message.getSummary()).collect(toList()));
 		});
 
 		return facesMessages;
@@ -165,11 +162,11 @@ public class FacesActionLogger extends DefaultPhaseListener {
 		private Map<Integer, Long> endTimes = new HashMap<>();
 
 		public void start(PhaseId phaseId) {
-			startTimes.putIfAbsent(phaseId.getOrdinal(), System.nanoTime());
+			startTimes.putIfAbsent(phaseId.getOrdinal(), nanoTime());
 		}
 
 		public void stop(PhaseId phaseId) {
-			endTimes.putIfAbsent(phaseId.getOrdinal(), System.nanoTime());
+			endTimes.put(phaseId.getOrdinal(), nanoTime());
 		}
 
 		public String getDuration(PhaseId phase) {
