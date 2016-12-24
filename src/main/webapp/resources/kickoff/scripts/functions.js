@@ -112,7 +112,7 @@ var kickoff = function(window, document) {
 			$(window).trigger("mediachange", media);
 		}
 
-		$(window).trigger("render");
+		$(window).trigger("render", media);
 	}).on("unload", function() {
 		windowUnloading = true;
 	});

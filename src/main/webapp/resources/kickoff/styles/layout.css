@@ -23,6 +23,7 @@
  * - use px on margin/padding of border-box elements (as of now, only input fields are border-box)
  * - use em on font sizes and line heights which are relative to the px-fixed values of the body 
  * - use em on the remainder, which is usually only margin/padding of (inline-)block elements
+ * - never use 0em, but use 0 (CSS compressors like YUI compressor may otherwise bug on it)
  * 
  * Base font size is 16px and base line height is 26px. Use em to specify relative sizes. Online calculator: pxtoem.com
  * This scales better when changing base font size in screen width breakpoints.
@@ -363,12 +364,9 @@ fieldset .field ul.messages .error {
 
 
 /* Normal screens (3-column layout) --------------------------------------------------------------------------------- */
-/* This covers desktops more than 1200px and tablets (w=1024px) in landscape ---------------------------------------- */
 
-@media
-	screen,
-	screen and (max-device-width:1024px) and (orientation:landscape)
-{
+@media screen {
+
 	body:after {
 		content: "desktop";
 		display: none;
@@ -383,20 +381,18 @@ fieldset .field ul.messages .error {
 }
 
 
-/* Medium and print layout (2-column based) ------------------------------------------------------------------------- */
-/* This covers desktops less than 1200px and tablets (w=1024px) in portrait ----------------------------------------- */
+/* Medium screens (2-column based) ---------------------------------------------------------------------------------- */
 
 @media print {
+
 	body .hideOnPrint {
 		display: none !important;
 	}
+
 }
 
-@media
-	print, 
-	screen and (max-width:1199px) and (min-device-width:1025px),
-	screen and (max-width:1023px) and (max-device-width:1024px) and (orientation:portrait)
-{
+@media print, screen and (max-width: 1023px) {
+
 	body:after {
 		content: "tablet";
 		display: none;
@@ -407,16 +403,14 @@ fieldset .field ul.messages .error {
 		line-height: 25px;
 		transition: all .3s;
 	}
+
 }
 
 
 /* Small screens (1-column based) ----------------------------------------------------------------------------------- */
-/* This covers desktops less than 800px and mobiles (w=768px) in any orientation ------------------------------------ */
 
-@media
-	screen and (max-width:799px) and (min-device-width:769px),
-	screen and (max-width:767px) and (max-device-width:768px)
-{
+@media screen and (max-width: 767px) {
+
 	body:after {
 		content: "mobile";
 		display: none;
@@ -425,7 +419,7 @@ fieldset .field ul.messages .error {
 	body .hideOnMobile {
 		display: none;
 	}
-	
+
 	body {
 		font-size: 18px;
 		line-height: 28px;
