@@ -10,7 +10,7 @@
 	xmlns:of="http://omnifaces.org/functions"
 	xmlns:p="http://primefaces.org/ui"
 >
-	<c:set var="dev" value="#{facesContext.application.projectStage eq 'Development'}" scope="application" />
+	<c:set var="dev" value="#{faces.development}" scope="application" />
 
 	<f:view contentType="text/html" locale="#{language.locale}">
 		<ui:insert name="metadata" />

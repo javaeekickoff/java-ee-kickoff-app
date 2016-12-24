@@ -12,11 +12,11 @@ import javax.inject.Named;
 @Named
 public class Page {
 
-	private static final Map<String, Page> PAGES = new ConcurrentHashMap<String, Page>();
+	private static final Map<String, Page> PAGES = new ConcurrentHashMap<>();
 
+	private Page current;
 	private String path;
 	private String name;
-	private Page current;
 
 	public Page() {
 		// Keep default c'tor alive.
