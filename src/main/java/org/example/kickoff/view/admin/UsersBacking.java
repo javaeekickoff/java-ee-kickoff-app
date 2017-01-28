@@ -1,7 +1,8 @@
 package org.example.kickoff.view.admin;
 
+import static org.omnifaces.optimusfaces.model.PagedDataModel.pagedDataModelFor;
+
 import java.io.Serializable;
-import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.model.DataModel;
@@ -12,8 +13,6 @@ import org.example.kickoff.business.service.UserService;
 import org.example.kickoff.model.User;
 import org.omnifaces.cdi.ViewScoped;
 import org.omnifaces.optimusfaces.model.PagedDataModel;
-import org.omnifaces.persistence.model.dto.SortFilterPage;
-import org.primefaces.model.SortOrder;
 
 @Named
 @ViewScoped
@@ -28,14 +27,11 @@ public class UsersBacking implements Serializable {
 
 	@PostConstruct
 	public void init() {
-		users = new PagedDataModel<User>("created", SortOrder.DESCENDING, "id", "email", "fullName") {
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public List<User> load(SortFilterPage page, boolean countNeedsUpdate) {
-				return userService.getByPage(page, countNeedsUpdate);
-			}
-		};
+		users = pagedDataModelFor(User.class)
+                      .defaultSortField("created")
+                      .filterableFields("id", "email", "fullName")
+                      .dataLoader((page, count) -> userService.getByPage(page, count))
+                      .build();
 	}
 
 	public void delete(User user) {
