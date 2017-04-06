@@ -12,3 +12,4 @@ deploy:
   domain: omnifacessnapha
   on:
     repo: javaeekickoff/java-ee-kickoff-app
+  skip_cleanup: true
