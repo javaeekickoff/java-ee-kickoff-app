@@ -164,7 +164,7 @@ var kickoff = function(window, document) {
 			$("html").removeClass("progress");
 		}
 
-		autohideGlobalMessages();
+		autoHideGlobalMessages();
 	});
 
 	return self;
