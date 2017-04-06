@@ -1,11 +1,8 @@
 package org.example.kickoff.view.admin;
 
-import static org.omnifaces.optimusfaces.model.PagedDataModel.pagedDataModelFor;
-
 import java.io.Serializable;
 
 import javax.annotation.PostConstruct;
-import javax.faces.model.DataModel;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -27,18 +24,14 @@ public class UsersBacking implements Serializable {
 
 	@PostConstruct
 	public void init() {
-		users = pagedDataModelFor(User.class)
-                      .defaultSortField("created")
-                      .filterableFields("id", "email", "fullName")
-                      .dataLoader((page, count) -> userService.getByPage(page, count))
-                      .build();
+		users = PagedDataModel.forClass(User.class).withDefaultSortField("created").build();
 	}
 
 	public void delete(User user) {
 		userService.delete(user);
 	}
 
-	public DataModel<User> getUsers() {
+	public PagedDataModel<User> getUsers() {
 		return users;
 	}
 
