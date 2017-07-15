@@ -17,8 +17,6 @@ import javax.annotation.Resource;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 import org.example.kickoff.business.email.EmailService;
 import org.example.kickoff.business.email.EmailTemplate;
@@ -29,6 +27,7 @@ import org.example.kickoff.business.exception.InvalidUsernameException;
 import org.example.kickoff.model.Credentials;
 import org.example.kickoff.model.LoginToken.TokenType;
 import org.example.kickoff.model.User;
+import org.omnifaces.persistence.service.BaseEntityService;
 
 @Stateless
 public class UserService extends BaseEntityService<Long, User> {
@@ -36,9 +35,6 @@ public class UserService extends BaseEntityService<Long, User> {
 	private static final int DEFAULT_SALT_LENGTH = 40;
 	private static final long DEFAULT_PASSWORD_RESET_EXPIRATION_TIME_IN_MINUTES = TimeUnit.HOURS.toMinutes(1);
 	private static final String MESSAGE_DIGEST_ALGORITHM = "SHA-256";
-
-	@PersistenceContext
-	private EntityManager entityManager;
 
 	@Resource
 	private SessionContext sessionContext;
@@ -64,8 +60,8 @@ public class UserService extends BaseEntityService<Long, User> {
 	}
 
 	@Override
-	public void update(User user) {
-		User existingUser = get(user);
+	public User update(User user) {
+		User existingUser = manage(user);
 
 		if (!user.getEmail().equals(existingUser.getEmail())) { // Email changed.
 			Optional<User> otherUser = getByEmail(user.getEmail());
@@ -85,11 +81,11 @@ public class UserService extends BaseEntityService<Long, User> {
 			}
 		}
 
-		super.update(user);
+		return super.update(user);
 	}
 
 	public void updatePassword(User user, String password) {
-		User existingUser = get(user);
+		User existingUser = manage(user);
 		setCredentials(existingUser, password);
 		super.update(existingUser);
 	}
@@ -120,14 +116,12 @@ public class UserService extends BaseEntityService<Long, User> {
 	}
 
 	public Optional<User> getByEmail(String email) {
-		return getOptional(entityManager
-			.createNamedQuery("User.getByEmail", User.class)
+		return getOptional(createNamedQuery("User.getByEmail")
 			.setParameter("email", email));
 	}
 
 	public User getByLoginToken(String loginToken, TokenType type) {
-		return getOptionalSingleResult(entityManager
-			.createNamedQuery("User.getByLoginToken", User.class)
+		return getOptionalSingleResult(createNamedQuery("User.getByLoginToken")
 			.setParameter("tokenHash", digest(loginToken, MESSAGE_DIGEST_ALGORITHM))
 			.setParameter("tokenType", type));
 	}

@@ -9,21 +9,17 @@ import java.time.Instant;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 import org.example.kickoff.business.exception.InvalidUsernameException;
 import org.example.kickoff.model.LoginToken;
 import org.example.kickoff.model.LoginToken.TokenType;
 import org.example.kickoff.model.User;
+import org.omnifaces.persistence.service.BaseEntityService;
 
 @Stateless
 public class LoginTokenService extends BaseEntityService<Long, LoginToken> {
 
 	private static final String MESSAGE_DIGEST_ALGORITHM = "SHA-256";
-
-	@PersistenceContext
-	private EntityManager entityManager;
 
 	@Inject
 	private UserService userService;
@@ -49,14 +45,14 @@ public class LoginTokenService extends BaseEntityService<Long, LoginToken> {
 	}
 
 	public void remove(String loginToken) {
-		entityManager.createNamedQuery("LoginToken.remove")
-					 .setParameter("tokenHash", digest(loginToken, MESSAGE_DIGEST_ALGORITHM))
-					 .executeUpdate();
+		createNamedQuery("LoginToken.remove")
+			.setParameter("tokenHash", digest(loginToken, MESSAGE_DIGEST_ALGORITHM))
+			.executeUpdate();
 	}
 
 	public void removeExpired() {
-		entityManager.createNamedQuery("LoginToken.removeExpired")
-					 .executeUpdate();
+		createNamedQuery("LoginToken.removeExpired")
+			.executeUpdate();
 	}
 
 }

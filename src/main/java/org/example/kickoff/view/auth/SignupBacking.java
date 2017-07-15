@@ -1,12 +1,12 @@
 package org.example.kickoff.view.auth;
 
-import static javax.security.authentication.mechanism.http.AuthenticationParameters.withParams;
+import static javax.security.enterprise.authentication.mechanism.http.AuthenticationParameters.withParams;
 
 import java.io.IOException;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
-import javax.security.identitystore.credential.CallerOnlyCredential;
+import javax.security.enterprise.credential.CallerOnlyCredential;
 
 @Named
 @RequestScoped

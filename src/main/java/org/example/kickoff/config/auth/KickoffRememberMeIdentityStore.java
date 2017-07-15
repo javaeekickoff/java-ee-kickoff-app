@@ -1,20 +1,19 @@
 package org.example.kickoff.config.auth;
 
 import static java.util.logging.Level.WARNING;
-import static javax.security.identitystore.CredentialValidationResult.INVALID_RESULT;
-import static javax.security.identitystore.CredentialValidationResult.Status.VALID;
+import static javax.security.enterprise.identitystore.CredentialValidationResult.INVALID_RESULT;
 import static org.example.kickoff.model.LoginToken.TokenType.REMEMBER_ME;
 import static org.omnifaces.util.Servlets.getRemoteAddr;
 
-import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.security.CallerPrincipal;
-import javax.security.identitystore.CredentialValidationResult;
-import javax.security.identitystore.RememberMeIdentityStore;
-import javax.security.identitystore.credential.RememberMeCredential;
+import javax.security.enterprise.CallerPrincipal;
+import javax.security.enterprise.credential.RememberMeCredential;
+import javax.security.enterprise.identitystore.CredentialValidationResult;
+import javax.security.enterprise.identitystore.RememberMeIdentityStore;
 import javax.servlet.http.HttpServletRequest;
 
 import org.example.kickoff.business.service.LoginTokenService;
@@ -41,7 +40,7 @@ public class KickoffRememberMeIdentityStore implements RememberMeIdentityStore {
 			User user = userService.getByLoginToken(credential.getToken(), REMEMBER_ME);
 
 			if (user != null) {
-				return new CredentialValidationResult(VALID, new CallerPrincipal(user.getEmail()), user.getRolesAsStrings());
+				return new CredentialValidationResult(new CallerPrincipal(user.getEmail()), user.getRolesAsStrings());
 			}
 		}
 		catch (Exception e) {
@@ -52,7 +51,7 @@ public class KickoffRememberMeIdentityStore implements RememberMeIdentityStore {
 	}
 
 	@Override
-	public String generateLoginToken(CallerPrincipal callerPrincipal, List<String> groups) {
+	public String generateLoginToken(CallerPrincipal callerPrincipal, Set<String> groups) {
 		return loginTokenService.generate(callerPrincipal.getName(), getRemoteAddr(request), getDescription(), REMEMBER_ME);
 	}
 

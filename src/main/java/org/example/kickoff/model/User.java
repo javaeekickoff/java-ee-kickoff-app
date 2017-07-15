@@ -1,6 +1,6 @@
 package org.example.kickoff.model;
 
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.FetchType.EAGER;
@@ -177,8 +177,8 @@ public class User extends TimestampedEntity<Long> {
 	}
 
 	@Transient
-	public List<String> getRolesAsStrings() {
-		return getRolesAsStream().map(Role::name).collect(toList());
+	public Set<String> getRolesAsStrings() {
+		return getRolesAsStream().map(Role::name).collect(toSet());
 	}
 
 }

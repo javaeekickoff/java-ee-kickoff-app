@@ -2,15 +2,14 @@ package org.example.kickoff.config.auth;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.security.auth.message.AuthException;
-import javax.security.auth.message.AuthStatus;
-import javax.security.authentication.mechanism.http.HttpAuthenticationMechanism;
-import javax.security.authentication.mechanism.http.HttpMessageContext;
-import javax.security.authentication.mechanism.http.annotation.AutoApplySession;
-import javax.security.authentication.mechanism.http.annotation.LoginToContinue;
-import javax.security.authentication.mechanism.http.annotation.RememberMe;
-import javax.security.identitystore.IdentityStore;
-import javax.security.identitystore.credential.CallerOnlyCredential;
-import javax.security.identitystore.credential.Credential;
+import javax.security.enterprise.AuthenticationStatus;
+import javax.security.enterprise.authentication.mechanism.http.AutoApplySession;
+import javax.security.enterprise.authentication.mechanism.http.HttpAuthenticationMechanism;
+import javax.security.enterprise.authentication.mechanism.http.HttpMessageContext;
+import javax.security.enterprise.authentication.mechanism.http.LoginToContinue;
+import javax.security.enterprise.authentication.mechanism.http.RememberMe;
+import javax.security.enterprise.credential.Credential;
+import javax.security.enterprise.identitystore.IdentityStore;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -22,10 +21,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Arjan Tijms
  */
 @AutoApplySession // For "Is user already logged-in?"
-@RememberMe(
-	cookieMaxAgeSeconds = 60 * 60 * 24 * 14, // 14 days
-	isRememberMeExpression = "httpMessageContext.authParameters.rememberMe" // Workaround for Soteria bug; authParam.rememberMe is ignored when @RememberMe annotation is set.
-)
+@RememberMe(cookieMaxAgeSeconds = 60 * 60 * 24 * 14) // 14 days
 @LoginToContinue(
 	loginPage = "/login?continue=true",
 	errorPage = "",
@@ -38,18 +34,15 @@ public class KickoffFormAuthenticationMechanism implements HttpAuthenticationMec
     private IdentityStore identityStore;
 
 	@Override
-	public AuthStatus validateRequest(HttpServletRequest request, HttpServletResponse response, HttpMessageContext context) throws AuthException {
+	public AuthenticationStatus validateRequest(HttpServletRequest request, HttpServletResponse response, HttpMessageContext context) throws AuthException {
 		Credential credential = context.getAuthParameters().getCredential();
 
 		if (credential != null) {
-            if (context.getAuthParameters().isNoPassword()) {
-            	credential = new CallerOnlyCredential(credential.getCaller());
-            }
-
             return context.notifyContainerAboutLogin(identityStore.validate(credential));
         }
-
-		return context.doNothing();
+		else {
+			return context.doNothing();
+		}
 	}
 
     // Workaround for CDI bug; at least in Weld 2.3.2 default methods are not intercepted.

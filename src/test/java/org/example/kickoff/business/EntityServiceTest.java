@@ -12,7 +12,7 @@ import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.dataset.xml.FlatXmlProducer;
 import org.example.kickoff.arquillian.ArquillianDBUnitTestBase;
 import org.example.kickoff.business.exception.BusinessException;
-import org.example.kickoff.business.service.BaseEntityService;
+import org.example.kickoff.business.service.UserService;
 import org.example.kickoff.business.test.TestEntity;
 import org.example.kickoff.business.test.TestEntityService;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -32,7 +32,7 @@ public class EntityServiceTest extends ArquillianDBUnitTestBase {
 	public static Archive<?> createDeployment() {
 		WebArchive archive = ShrinkWrap.create(WebArchive.class);
 		archive.addClass(ArquillianDBUnitTestBase.class);
-		archive.addPackage(BaseEntityService.class.getPackage());
+		archive.addPackage(UserService.class.getPackage());
 		archive.addPackage(BusinessException.class.getPackage());
 
 		archive.addPackage(TestEntity.class.getPackage());
@@ -72,7 +72,7 @@ public class EntityServiceTest extends ArquillianDBUnitTestBase {
 	public void testSave() {
 		TestEntity testEntity = new TestEntity();
 		testEntity.setName("Test entity 1");
-		Long id = testEntityService.save(testEntity);
+		Long id = testEntityService.persist(testEntity);
 
 		TestEntity retrievedTestEntity = testEntityService.getById(id);
 		assertEquals(testEntity, retrievedTestEntity);

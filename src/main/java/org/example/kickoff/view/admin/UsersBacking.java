@@ -24,7 +24,7 @@ public class UsersBacking implements Serializable {
 
 	@PostConstruct
 	public void init() {
-		users = PagedDataModel.forClass(User.class).withDefaultSortField("created").build();
+		users = PagedDataModel.lazy(userService).build();
 	}
 
 	public void delete(User user) {

@@ -1,7 +1,8 @@
 package org.example.kickoff.view.auth;
 
-import static javax.security.auth.message.AuthStatus.FAILURE;
-import static javax.security.auth.message.AuthStatus.SEND_CONTINUE;
+import static javax.security.enterprise.AuthenticationStatus.SEND_CONTINUE;
+import static javax.security.enterprise.AuthenticationStatus.SEND_FAILURE;
+import static org.omnifaces.util.Faces.getRequest;
 import static org.omnifaces.util.Faces.getResponse;
 import static org.omnifaces.util.Faces.redirect;
 import static org.omnifaces.util.Faces.responseComplete;
@@ -13,9 +14,9 @@ import java.io.IOException;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import javax.security.SecurityContext;
-import javax.security.auth.message.AuthStatus;
-import javax.security.authentication.mechanism.http.AuthenticationParameters;
+import javax.security.enterprise.AuthenticationStatus;
+import javax.security.enterprise.SecurityContext;
+import javax.security.enterprise.authentication.mechanism.http.AuthenticationParameters;
 import javax.validation.constraints.NotNull;
 
 import org.example.kickoff.business.service.UserService;
@@ -51,13 +52,13 @@ public abstract class AuthBacking {
 	}
 
 	protected void authenticate(AuthenticationParameters parameters) throws IOException {
-		AuthStatus status = securityContext.authenticate(getResponse(), parameters);
+		AuthenticationStatus status = securityContext.authenticate(getRequest(), getResponse(), parameters);
 
-		if (status.equals(FAILURE)) {
+		if (status == SEND_FAILURE) {
 			addGlobalError("auth.message.error.failure");
 			validationFailed();
 		}
-		else if (status.equals(SEND_CONTINUE)) {
+		else if (status == SEND_CONTINUE) {
 			responseComplete(); // Prevent JSF from rendering a response so authentication mechanism can continue.
         }
 		else if (activeUser.getGroups().contains(Group.ADMIN)) {
