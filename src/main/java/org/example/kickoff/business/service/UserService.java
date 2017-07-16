@@ -116,12 +116,12 @@ public class UserService extends BaseEntityService<Long, User> {
 	}
 
 	public Optional<User> getByEmail(String email) {
-		return getOptional(createNamedQuery("User.getByEmail")
+		return getOptional(createNamedTypedQuery("User.getByEmail")
 			.setParameter("email", email));
 	}
 
 	public User getByLoginToken(String loginToken, TokenType type) {
-		return getOptionalSingleResult(createNamedQuery("User.getByLoginToken")
+		return getOptionalSingleResult(createNamedTypedQuery("User.getByLoginToken")
 			.setParameter("tokenHash", digest(loginToken, MESSAGE_DIGEST_ALGORITHM))
 			.setParameter("tokenType", type));
 	}
