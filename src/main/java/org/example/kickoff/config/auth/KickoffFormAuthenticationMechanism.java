@@ -22,11 +22,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @AutoApplySession // For "Is user already logged-in?"
 @RememberMe(cookieMaxAgeSeconds = 60 * 60 * 24 * 14) // 14 days
-@LoginToContinue(
-	loginPage = "/login?continue=true",
-	errorPage = "",
-	useForwardToLogin = false
-)
+@LoginToContinue(loginPage = "/login?continue=true", errorPage = "", useForwardToLogin = false)
 @ApplicationScoped
 public class KickoffFormAuthenticationMechanism implements HttpAuthenticationMechanism {
 
@@ -43,14 +39,6 @@ public class KickoffFormAuthenticationMechanism implements HttpAuthenticationMec
 		else {
 			return context.doNothing();
 		}
-	}
-
-    // Workaround for CDI bug; at least in Weld 2.3.2 default methods are not intercepted.
-	// Fixed in Weld 2.4.0 and 3.0.0, which we'll eventually target.
-	// See https://issues.jboss.org/browse/WELD-2093
-	@Override
-	public void cleanSubject(HttpServletRequest request, HttpServletResponse response, HttpMessageContext context) {
-		HttpAuthenticationMechanism.super.cleanSubject(request, response, context);
 	}
 
 }

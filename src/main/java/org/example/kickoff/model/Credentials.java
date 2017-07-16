@@ -1,12 +1,9 @@
 package org.example.kickoff.model;
 
-import static javax.persistence.GenerationType.IDENTITY;
 import static org.hibernate.annotations.CacheConcurrencyStrategy.TRANSACTIONAL;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
@@ -18,28 +15,15 @@ public class Credentials extends BaseEntity<Long> {
 
 	private static final long serialVersionUID = 1L;
 
-	@Id @GeneratedValue(strategy = IDENTITY)
-	private Long id;
-
 	@ManyToOne
 	@Cache(usage = TRANSACTIONAL)
 	private User user;
 
-	@Column(name = "password_hash", length = 32)
+	@Column(length = 32)
 	private @NotNull byte[] passwordHash;
 
 	@Column(length = 40)
 	private @NotNull byte[] salt;
-
-	@Override
-	public Long getId() {
-		return id;
-	}
-
-	@Override
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public User getUser() {
 		return user;

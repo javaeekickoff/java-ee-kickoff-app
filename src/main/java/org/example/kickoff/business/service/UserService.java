@@ -2,7 +2,6 @@ package org.example.kickoff.business.service;
 
 import static org.example.kickoff.model.Group.USER;
 import static org.omnifaces.persistence.JPA.getOptional;
-import static org.omnifaces.persistence.JPA.getOptionalSingleResult;
 import static org.omnifaces.utils.security.MessageDigests.digest;
 
 import java.time.ZonedDateTime;
@@ -46,7 +45,7 @@ public class UserService extends BaseEntityService<Long, User> {
 	private EmailService emailService;
 
 	public void registerUser(User user, String password) {
-		if (getByEmail(user.getEmail()).isPresent()) {
+		if (findByEmail(user.getEmail()).isPresent()) {
 			throw new DuplicateEntityException();
 		}
 
@@ -64,7 +63,7 @@ public class UserService extends BaseEntityService<Long, User> {
 		User existingUser = manage(user);
 
 		if (!user.getEmail().equals(existingUser.getEmail())) { // Email changed.
-			Optional<User> otherUser = getByEmail(user.getEmail());
+			Optional<User> otherUser = findByEmail(user.getEmail());
 
 			if (otherUser.isPresent()) {
 				if (!user.equals(otherUser.get())) {
@@ -91,16 +90,16 @@ public class UserService extends BaseEntityService<Long, User> {
 	}
 
 	public void updatePassword(String loginToken, String password) {
-		User user = getByLoginToken(loginToken, TokenType.RESET_PASSWORD);
+		Optional<User> user = findByLoginToken(loginToken, TokenType.RESET_PASSWORD);
 
-		if (user != null) {
-			updatePassword(user, password);
+		if (user.isPresent()) {
+			updatePassword(user.get(), password);
 			loginTokenService.remove(loginToken);
 		}
 	}
 
 	public void requestResetPassword(String email, String ipAddress, String callbackUrlFormat) {
-		User user = getByEmail(email).orElseThrow(InvalidUsernameException::new);
+		User user = findByEmail(email).orElseThrow(InvalidUsernameException::new);
 		ZonedDateTime expiration = ZonedDateTime.now().plusMinutes(DEFAULT_PASSWORD_RESET_EXPIRATION_TIME_IN_MINUTES);
 		String token = loginTokenService.generate(email, ipAddress, "Reset Password", TokenType.RESET_PASSWORD, expiration.toInstant());
 
@@ -115,19 +114,19 @@ public class UserService extends BaseEntityService<Long, User> {
 		emailService.sendTemplate(emailTemplate, messageParameters);
 	}
 
-	public Optional<User> getByEmail(String email) {
+	public Optional<User> findByEmail(String email) {
 		return getOptional(createNamedTypedQuery("User.getByEmail")
 			.setParameter("email", email));
 	}
 
-	public User getByLoginToken(String loginToken, TokenType type) {
-		return getOptionalSingleResult(createNamedTypedQuery("User.getByLoginToken")
+	public Optional<User> findByLoginToken(String loginToken, TokenType type) {
+		return getOptional(createNamedTypedQuery("User.getByLoginToken")
 			.setParameter("tokenHash", digest(loginToken, MESSAGE_DIGEST_ALGORITHM))
 			.setParameter("tokenType", type));
 	}
 
 	public User getByEmailAndPassword(String email, String password) {
-		User user = getByEmail(email).orElseThrow(InvalidUsernameException::new);
+		User user = findByEmail(email).orElseThrow(InvalidUsernameException::new);
 		Credentials credentials = user.getCredentials();
 
 		if (credentials == null) {
@@ -144,7 +143,7 @@ public class UserService extends BaseEntityService<Long, User> {
 	}
 
 	public User getActiveUser() {
-		return getByEmail(sessionContext.getCallerPrincipal().getName()).orElse(null);
+		return findByEmail(sessionContext.getCallerPrincipal().getName()).orElse(null);
 	}
 
 	private static void setCredentials(User user, String password) {

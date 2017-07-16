@@ -2,7 +2,6 @@ package org.example.kickoff.model;
 
 import static java.time.temporal.ChronoUnit.MONTHS;
 import static javax.persistence.EnumType.STRING;
-import static javax.persistence.GenerationType.IDENTITY;
 import static org.hibernate.annotations.CacheConcurrencyStrategy.TRANSACTIONAL;
 
 import java.time.Instant;
@@ -10,11 +9,8 @@ import java.time.Instant;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
-import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Cache;
 import org.omnifaces.persistence.model.BaseEntity;
@@ -30,9 +26,6 @@ public class LoginToken extends BaseEntity<Long> {
 		RESET_PASSWORD
 	}
 
-	@Id @GeneratedValue(strategy = IDENTITY)
-	private Long id;
-
 	@Column(length = 32, unique = true)
 	private byte[] tokenHash;
 
@@ -42,10 +35,10 @@ public class LoginToken extends BaseEntity<Long> {
 	@Column
 	private Instant expiration;
 
-	@Column
+	@Column(length = 45)
 	private String ipAddress;
 
-	@Column @Size(max = 256)
+	@Column
 	private String description;
 
 	@ManyToOne(optional = false)
@@ -54,16 +47,6 @@ public class LoginToken extends BaseEntity<Long> {
 
 	@Enumerated(STRING)
 	private TokenType type;
-
-	@Override
-	public Long getId() {
-		return id;
-	}
-
-	@Override
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public User getUser() {
 		return user;

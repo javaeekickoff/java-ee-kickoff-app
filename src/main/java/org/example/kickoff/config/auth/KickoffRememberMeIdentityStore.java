@@ -1,12 +1,11 @@
 package org.example.kickoff.config.auth;
 
-import static java.util.logging.Level.WARNING;
 import static javax.security.enterprise.identitystore.CredentialValidationResult.INVALID_RESULT;
 import static org.example.kickoff.model.LoginToken.TokenType.REMEMBER_ME;
 import static org.omnifaces.util.Servlets.getRemoteAddr;
 
+import java.util.Optional;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -23,8 +22,6 @@ import org.example.kickoff.model.User;
 @ApplicationScoped
 public class KickoffRememberMeIdentityStore implements RememberMeIdentityStore {
 
-	private static final Logger logger = Logger.getLogger(KickoffRememberMeIdentityStore.class.getName());
-
 	@Inject
 	private HttpServletRequest request;
 
@@ -36,18 +33,14 @@ public class KickoffRememberMeIdentityStore implements RememberMeIdentityStore {
 
 	@Override
 	public CredentialValidationResult validate(RememberMeCredential credential) {
-		try {
-			User user = userService.getByLoginToken(credential.getToken(), REMEMBER_ME);
+		Optional<User> user = userService.findByLoginToken(credential.getToken(), REMEMBER_ME);
 
-			if (user != null) {
-				return new CredentialValidationResult(new CallerPrincipal(user.getEmail()), user.getRolesAsStrings());
-			}
+		if (user.isPresent()) {
+			return new CredentialValidationResult(new CallerPrincipal(user.get().getEmail()), user.get().getRolesAsStrings());
 		}
-		catch (Exception e) {
-			logger.log(WARNING, "Unable to authenticate user using token.", e);
+		else {
+			return INVALID_RESULT;
 		}
-
-		return INVALID_RESULT;
 	}
 
 	@Override
@@ -57,9 +50,7 @@ public class KickoffRememberMeIdentityStore implements RememberMeIdentityStore {
 
 	@Override
 	public void removeLoginToken(String loginToken) {
-		if (loginToken != null) {
-			loginTokenService.remove(loginToken);
-		}
+		loginTokenService.remove(loginToken);
 	}
 
 	private String getDescription() {

@@ -37,7 +37,7 @@ public class ResetPasswordBacking extends AuthBacking {
 	public void init() throws IOException {
 		super.init();
 
-		if (token != null && userService.getByLoginToken(token, RESET_PASSWORD) == null) {
+		if (token != null && !userService.findByLoginToken(token, RESET_PASSWORD).isPresent()) {
 			addFlashGlobalWarn("reset_password.message.warn.invalid_token");
 			redirect("reset-password");
 		}

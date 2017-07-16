@@ -26,7 +26,7 @@ public class DuplicateEmailValidator extends ValueChangeValidator {
 			return;
 		}
 
-		Optional<User> user = userService.getByEmail((String) value);
+		Optional<User> user = userService.findByEmail((String) value);
 
 		if (user.isPresent()) {
 			throw new ValidatorException(createError("duplicateEmailValidator"));

@@ -13,7 +13,6 @@ import java.util.ResourceBundle;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
-import org.example.kickoff.business.exception.InvalidUsernameException;
 import org.example.kickoff.business.service.UserService;
 import org.example.kickoff.model.User;
 import org.omnifaces.cdi.Startup;
@@ -32,23 +31,19 @@ public class StartupBean {
 	}
 
 	private void setupTestUsers() {
-	 	try {
-			userService.getByEmailAndPassword("admin@kickoff.example.org", "passw0rd");
-		}
-	 	catch (InvalidUsernameException e) {
+		if (!userService.findByEmail("admin@kickoff.example.org").isPresent()) {
 			User user = new User();
-			user.setFullName("Test Admin");
+			user.setFirstName("Test");
+			user.setLastName("Admin");
 			user.setEmail("admin@kickoff.example.org");
 			user.setGroups(asList(ADMIN, USER));
 			userService.registerUser(user, "passw0rd");
 		}
 
-		try {
-			userService.getByEmailAndPassword("user@kickoff.example.org", "passw0rd");
-		}
-		catch (InvalidUsernameException e) {
+		if (!userService.findByEmail("user@kickoff.example.org").isPresent()) {
 			User user = new User();
-			user.setFullName("Test User");
+			user.setFirstName("Test");
+			user.setLastName("User");
 			user.setEmail("user@kickoff.example.org");
 			user.setGroups(asList(USER));
 			userService.registerUser(user, "passw0rd");

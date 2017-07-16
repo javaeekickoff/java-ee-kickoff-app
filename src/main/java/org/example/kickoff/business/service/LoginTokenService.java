@@ -31,7 +31,7 @@ public class LoginTokenService extends BaseEntityService<Long, LoginToken> {
 
 	public String generate(String email, String ipAddress, String description, TokenType tokenType, Instant expiration) {
 		String rawToken = randomUUID().toString();
-		User user = userService.getByEmail(email).orElseThrow(InvalidUsernameException::new);
+		User user = userService.findByEmail(email).orElseThrow(InvalidUsernameException::new);
 
 		LoginToken loginToken = new LoginToken();
 		loginToken.setTokenHash(digest(rawToken, MESSAGE_DIGEST_ALGORITHM));

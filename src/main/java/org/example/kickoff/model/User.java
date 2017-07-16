@@ -5,29 +5,27 @@ import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
-import static javax.persistence.GenerationType.IDENTITY;
 import static org.hibernate.annotations.CacheConcurrencyStrategy.TRANSACTIONAL;
 
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.example.kickoff.model.validator.Email;
 import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.Formula;
 import org.omnifaces.persistence.model.TimestampedEntity;
 
 @Entity
@@ -35,76 +33,36 @@ public class User extends TimestampedEntity<Long> {
 
 	private static final long serialVersionUID = 1L;
 
-	@Id @GeneratedValue(strategy = IDENTITY)
-	private Long id;
-
-	@Column
-	private @NotNull Instant created;
-
-	@Column
-	private @NotNull Instant lastModified;
-
-	@Column(nullable = false, unique = true)
+	@Column(length = 254, nullable = false, unique = true)
 	private @NotNull @Email String email;
 
-	@Column
-	private @NotNull String fullName;
+	@Column(length = 32, nullable = false)
+	private @NotNull @Size(max = 32) String firstName;
+
+	@Column(length = 32, nullable = false)
+	private @NotNull @Size(max = 32) String lastName;
+
+	@Formula("CONCAT(firstName, ' ', lastName)")
+	private String fullName;
 
 	/*
 	 * TODO: implement.
 	 */
-	@Column
+	@Column(nullable = false)
 	private boolean emailVerified = true; // For now.
 
-	/*
-	 * The relation between User and Credentials is actually @OneToOne, but this generated in current Hibernate version
-	 * a lot of spurious queries for the Credentials table, even though this relation is lazy. This hack circumvents
-	 * this by using a list to force that the relation is really lazily-loaded and to prevent a large number of
-	 * additional queries to the database.
-	 */
-	@OneToMany(mappedBy = "user", fetch = LAZY, cascade = ALL, orphanRemoval = true)
-	private final Set<Credentials> credentials = new HashSet<>(1);
+	@OneToOne(fetch = LAZY, cascade = ALL)
+	private Credentials credentials;
 
-	@OneToMany(cascade = ALL, mappedBy = "user", orphanRemoval = true)
+	@OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
 	@Cache(usage = TRANSACTIONAL)
 	private List<LoginToken> loginTokens = new ArrayList<>();
 
-	@Column(name = "group_name")
-	@Enumerated(STRING) @ElementCollection(fetch = EAGER) @CollectionTable(name = "user_group")
-	private List<Group> groups = new ArrayList<>();
+	@ElementCollection(fetch = EAGER)
+	private @Enumerated(STRING) List<Group> groups = new ArrayList<>();
 
 	@Column
 	private Instant lastLogin;
-
-	@Override
-	public Long getId() {
-		return id;
-	}
-
-	@Override
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	@Override
-	public Instant getCreated() {
-		return created;
-	}
-
-	@Override
-	public void setCreated(Instant created) {
-		this.created = created;
-	}
-
-	@Override
-	public Instant getLastModified() {
-		return lastModified;
-	}
-
-	@Override
-	public void setLastModified(Instant lastModified) {
-		this.lastModified = lastModified;
-	}
 
 	public String getEmail() {
 		return email;
@@ -114,12 +72,24 @@ public class User extends TimestampedEntity<Long> {
 		this.email = email;
 	}
 
-	public String getFullName() {
-		return fullName;
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getFullName() {
+		return fullName;
 	}
 
 	public boolean isEmailVerified() {
@@ -131,20 +101,11 @@ public class User extends TimestampedEntity<Long> {
 	}
 
 	public Credentials getCredentials() {
-		return credentials.isEmpty() ? null : credentials.iterator().next();
+		return credentials;
 	}
 
 	public void setCredentials(Credentials credentials) {
-		if (credentials == null) {
-			this.credentials.clear();
-		}
-		else if (this.credentials.isEmpty()) {
-			this.credentials.add(credentials);
-		}
-		else if (!this.credentials.contains(credentials)) {
-			this.credentials.clear();
-			this.credentials.add(credentials);
-		}
+		this.credentials = credentials;
 	}
 
 	public List<LoginToken> getLoginTokens() {

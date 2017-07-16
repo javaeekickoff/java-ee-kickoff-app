@@ -16,10 +16,13 @@
 			<k:table id="usersTable" value="#{usersBacking.users}">
 				<k:column field="id" type="number" />
 				<k:column field="email" />
-				<k:column field="emailVerified" type="boolean" />
-				<k:column field="fullName" />
-				<k:column field="groups" type="list" />
+				<k:column field="emailVerified" type="boolean" visible="false" />
+				<k:column field="firstName" visible="false" />
+				<k:column field="lastName" visible="false" />
+				<k:column field="fullName" exportable="false" />
+				<k:column field="groups" type="list" sortable="false" />
 				<k:column field="created" type="instant" />
+				<k:column field="lastModified" type="instant" visible="false" />
 
 				<p:column headerText="#{i18n['general.actions']}" styleClass="actions">
 					<k:link path="admin/users/edit" value="">

@@ -12,13 +12,10 @@
 		<mapping-file>META-INF/User.xml</mapping-file>
 
 		<properties>
-			<property name="wildfly.jpa.twophasebootstrap" value="false" /> <!-- https://issues.jboss.org/browse/WFLY-2727 -->
-
-			<property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
-			<property name="hibernate.hbm2ddl.auto" value="update" />
-
+			<property name="javax.persistence.schema-generation.database.action" value="drop-and-create" />
 			<property name="hibernate.cache.use_second_level_cache" value="true" />
 			<property name="hibernate.cache.use_query_cache" value="true" />
+			<property name="wildfly.jpa.twophasebootstrap" value="false" /> <!-- https://issues.jboss.org/browse/WFLY-2727 -->
 		</properties>
 	</persistence-unit>
 </persistence>

@@ -2,8 +2,6 @@ package org.example.kickoff.config.auth;
 import static javax.security.enterprise.identitystore.CredentialValidationResult.INVALID_RESULT;
 import static javax.security.enterprise.identitystore.CredentialValidationResult.NOT_VALIDATED_RESULT;
 
-import java.util.function.Supplier;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.security.enterprise.credential.CallerOnlyCredential;
@@ -25,31 +23,31 @@ public class KickoffIdentityStore implements IdentityStore {
 
 	@Override
 	public CredentialValidationResult validate(Credential credential) {
-		if (credential instanceof UsernamePasswordCredential) {
-			return validate(() -> userService.getByEmailAndPassword(
-				((UsernamePasswordCredential) credential).getCaller(), ((UsernamePasswordCredential) credential).getPasswordAsString()));
-		}
+		try {
+			if (credential instanceof UsernamePasswordCredential) {
+				String email = ((UsernamePasswordCredential) credential).getCaller();
+				String password = ((UsernamePasswordCredential) credential).getPasswordAsString();
+				return validate(userService.getByEmailAndPassword(email, password));
+			}
 
-		if (credential instanceof CallerOnlyCredential) {
-			return validate(() -> userService.getByEmail(
-				((CallerOnlyCredential) credential).getCaller()).orElseThrow(InvalidCredentialsException::new));
+			if (credential instanceof CallerOnlyCredential) {
+				String email = ((CallerOnlyCredential) credential).getCaller();
+				return validate(userService.findByEmail(email).orElseThrow(InvalidCredentialsException::new));
+			}
+		}
+		catch (InvalidCredentialsException e) {
+			return INVALID_RESULT;
 		}
 
 		return NOT_VALIDATED_RESULT;
 	}
 
-	private CredentialValidationResult validate(Supplier<User> userSupplier) {
-		try {
-			User user = userSupplier.get();
-			if (!user.isEmailVerified()) {
-				throw new EmailNotVerifiedException();
-			}
+	private CredentialValidationResult validate(User user) {
+		if (!user.isEmailVerified()) {
+			throw new EmailNotVerifiedException();
+		}
 
-			return new CredentialValidationResult(user.getEmail(), user.getRolesAsStrings());
-		}
-		catch (InvalidCredentialsException e) {
-			return INVALID_RESULT;
-		}
+		return new CredentialValidationResult(user.getEmail(), user.getRolesAsStrings());
 	}
 
 }

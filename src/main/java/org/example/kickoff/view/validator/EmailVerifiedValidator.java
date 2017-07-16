@@ -26,7 +26,7 @@ public class EmailVerifiedValidator implements Validator {
 			return;
 		}
 
-		Optional<User> user = userService.getByEmail((String) value);
+		Optional<User> user = userService.findByEmail((String) value);
 
 		if (user.isPresent() && !user.get().isEmailVerified()) {
 			throw new ValidatorException(createError("emailVerifiedValidator"));

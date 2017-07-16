@@ -168,6 +168,17 @@
 	background: #{gray};
 }
 
+.ui-splitbutton-menubutton .ui-icon:after {
+	content: "\f107"; /* fa-angle-down */
+}
+
+
+/* Menus ------------------------------------------------------------------------------------------------------------ */
+
+.ui-menu {
+	background: white;
+}
+
 
 /* Tables ----------------------------------------------------------------------------------------------------------- */
 
@@ -203,13 +214,13 @@
 	font-weight: bold;
 }
 
-.ui-datatable th.ui-filter-column:not(.filterable) .ui-column-filter {
-	display: none;
+/* k:table actions */
+.ui-datatable-actions .ui-datatable-search {
+	float: left;
 }
 
-/* k:table actions */
-.ui-datatable-actions {
-
+.ui-datatable-actions .ui-datatable-export {
+	float: right;
 }
 
 .ui-datatable-actions .ui-inputfield.filter {
@@ -218,10 +229,6 @@
 
 .ui-datatable-actions .ui-button {
 	margin-left: .5em;
-}
-
-.ui-datatable-actions .buttons {
-	float: right;
 }
 
 /* k:column types */
@@ -237,10 +244,14 @@
 	text-align: right;
 }
 
-.ui-datatable td.boolean,
-.ui-datatable td.actions {
+.ui-datatable td.boolean {
 	white-space: nowrap;
 	text-align: center;
+}
+
+.ui-datatable td.actions {
+	white-space: nowrap;
+	text-align: left;
 }
 
 .ui-columntoggler {
