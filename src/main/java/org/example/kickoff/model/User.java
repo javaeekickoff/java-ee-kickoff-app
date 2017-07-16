@@ -11,7 +11,6 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Stream;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -133,13 +132,13 @@ public class User extends TimestampedEntity<Long> {
 	}
 
 	@Transient
-	public Stream<Role> getRolesAsStream() {
-		return groups.stream().flatMap(g -> g.getRoles().stream()).distinct();
+	public Set<Role> getRoles() {
+		return groups.stream().flatMap(g -> g.getRoles().stream()).collect(toSet());
 	}
 
 	@Transient
 	public Set<String> getRolesAsStrings() {
-		return getRolesAsStream().map(Role::name).collect(toSet());
+		return getRoles().stream().map(Role::name).collect(toSet());
 	}
 
 }

@@ -28,7 +28,7 @@
 	</factory>
 
 	<lifecycle>
-		<phase-listener>org.example.kickoff.view.phaselistener.FacesActionLogger</phase-listener>
+		<phase-listener>org.example.kickoff.view.phaselistener.FacesRequestLogger</phase-listener>
 	</lifecycle>
 
 	<render-kit>

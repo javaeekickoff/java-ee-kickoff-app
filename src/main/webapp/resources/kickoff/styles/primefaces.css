@@ -149,6 +149,7 @@
 
 .ui-button.ui-state-default {
 	height: 40px;
+	margin: 0 .5em 0 0;
 	padding: 0 1em;
 	text-transform: uppercase;
 	color: white;
@@ -228,7 +229,11 @@
 }
 
 .ui-datatable-actions .ui-button {
-	margin-left: .5em;
+	margin: 0 0 0 .5em;
+}
+
+.ui-datatable-actions .ui-buttonset {
+	margin: 0;
 }
 
 /* k:column types */

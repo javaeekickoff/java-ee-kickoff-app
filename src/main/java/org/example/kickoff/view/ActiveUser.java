@@ -1,14 +1,15 @@
 package org.example.kickoff.view;
 
-import static java.util.Collections.emptyList;
-
-import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.enterprise.inject.Typed;
 
 import org.example.kickoff.model.Group;
+import org.example.kickoff.model.Role;
 import org.example.kickoff.model.User;
 import org.example.kickoff.model.producer.ActiveUserProducer;
+import org.omnifaces.config.WebXml;
 
 /**
  * This is produced by {@link ActiveUserProducer}.
@@ -17,6 +18,10 @@ import org.example.kickoff.model.producer.ActiveUserProducer;
  */
 @Typed
 public class ActiveUser {
+
+	private Map<String, Boolean> is = new ConcurrentHashMap<>();
+	private Map<String, Boolean> can = new ConcurrentHashMap<>();
+	private Map<String, Boolean> canView = new ConcurrentHashMap<>();
 
 	private User activeUser;
 
@@ -36,16 +41,34 @@ public class ActiveUser {
 		return isPresent() ? activeUser.getId() : null;
 	}
 
-	public List<Group> getGroups() { // For use in backing beans.
-		return isPresent() ? activeUser.getGroups() : emptyList();
+	public boolean hasGroup(Group group) { // For use in backing beans.
+		return isPresent() && activeUser.getGroups().contains(group);
+	}
+
+	public boolean hasRole(Role role) { // For use in backing beans.
+		return isPresent() && activeUser.getRoles().contains(role);
 	}
 
 	public boolean is(String group) { // For use in EL #{activeUser.is('ADMIN')}
-		return getGroups().contains(Group.valueOf(group));
+		return isPresent() && is.computeIfAbsent(group, g -> activeUser.getGroups().stream().map(Group::name).anyMatch(g::equalsIgnoreCase));
 	}
 
 	public boolean can(String role) { // For use in EL #{activeUser.can('VIEW_ADMIN_PAGES')}
-		return isPresent() && activeUser.getRolesAsStream().anyMatch(r -> r.name().equals(role));
+		return isPresent() && can.computeIfAbsent(role, r -> activeUser.getRolesAsStrings().stream().anyMatch(r::equalsIgnoreCase));
+	}
+
+	public boolean canView(String path) { // For use in EL #{activeUser.canView('admin/users')}
+		return canView.computeIfAbsent(path, this::isAccessAllowed);
+	}
+
+	private boolean isAccessAllowed(String path) {
+		String uri = path.startsWith("/") ? path : ("/" + path);
+
+		if (WebXml.INSTANCE.isAccessAllowed(uri, null)) {
+			return true;
+		}
+
+		return isPresent() && activeUser.getRolesAsStrings().stream().anyMatch(r -> WebXml.INSTANCE.isAccessAllowed(uri, r));
 	}
 
 	@Override

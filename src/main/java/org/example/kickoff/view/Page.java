@@ -23,14 +23,19 @@ public class Page {
 	}
 
 	private Page(String path) {
-		try {
-			getResource("/" + path + ".xhtml").toString();
-		}
-		catch (Exception e) {
-			throw new IllegalArgumentException(path, e);
+		this.path = path;
+		String uri = "/" + path;
+
+		while (!uri.isEmpty()) {
+			try {
+				getResource(uri + ".xhtml").toString();
+				break;
+			}
+			catch (Exception ignore) {
+				uri = uri.substring(0, uri.lastIndexOf('/'));
+			}
 		}
 
-		this.path = path;
 		name = path.replaceFirst("WEB\\-INF/", "").replaceAll("\\W+", "_");
 		current = this;
 	}
