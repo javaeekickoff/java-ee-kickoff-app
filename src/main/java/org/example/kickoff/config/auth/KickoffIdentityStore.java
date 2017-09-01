@@ -42,7 +42,7 @@ public class KickoffIdentityStore implements IdentityStore {
 		return NOT_VALIDATED_RESULT;
 	}
 
-	private CredentialValidationResult validate(User user) {
+	private static CredentialValidationResult validate(User user) {
 		if (!user.isEmailVerified()) {
 			throw new EmailNotVerifiedException();
 		}

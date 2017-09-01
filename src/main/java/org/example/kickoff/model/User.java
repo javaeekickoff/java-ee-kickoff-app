@@ -53,7 +53,7 @@ public class User extends TimestampedEntity<Long> {
 	@OneToOne(fetch = LAZY, cascade = ALL)
 	private Credentials credentials;
 
-	@OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "user", fetch = LAZY, cascade = ALL, orphanRemoval = true)
 	@Cache(usage = TRANSACTIONAL)
 	private List<LoginToken> loginTokens = new ArrayList<>();
 
