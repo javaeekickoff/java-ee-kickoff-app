@@ -7,9 +7,13 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.PostConstruct;
+import javax.enterprise.context.Dependent;
 import javax.inject.Named;
 
+import org.omnifaces.config.WebXml;
+
 @Named
+@Dependent
 public class Page {
 
 	private static final Map<String, Page> PAGES = new ConcurrentHashMap<>();
@@ -17,9 +21,10 @@ public class Page {
 	private Page current;
 	private String path;
 	private String name;
+	private boolean home;
 
 	public Page() {
-		// Keep default c'tor alive.
+		// Keep default c'tor alive for CDI.
 	}
 
 	private Page(String path) {
@@ -37,6 +42,7 @@ public class Page {
 		}
 
 		name = path.replaceFirst("WEB\\-INF/", "").replaceAll("\\W+", "_");
+		home = WebXml.INSTANCE.getWelcomeFiles().contains(path);
 		current = this;
 	}
 
@@ -54,12 +60,16 @@ public class Page {
 		return path.equals(current.path);
 	}
 
+	public String getPath() {
+		return current.path;
+	}
+
 	public String getName() {
 		return current.name;
 	}
 
-	public String getPath() {
-		return current.path;
+	public boolean isHome() {
+		return current.home;
 	}
 
 }

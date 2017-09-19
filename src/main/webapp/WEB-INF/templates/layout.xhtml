@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="#{language.code}"
+<html lang="#{activeLocale.languageTag}"
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
@@ -12,17 +12,21 @@
 >
 	<c:set var="dev" value="#{faces.development}" scope="application" />
 
-	<f:view contentType="text/html" locale="#{language.locale}">
+	<f:view contentType="text/html" locale="#{activeLocale.value}">
 		<ui:insert name="metadata" />
 
 		<h:head id="head">
-			<title><ui:insert name="title">#{page.name ne 'home' ? i18n[page.name += '.title'] : ''}</ui:insert>#{page.name ne 'home' ? ' | ' : ''}#{i18n['this.name']}</title>
+			<title><ui:insert name="title">#{page.home ? '' : i18n[page.name += '.title']}</ui:insert>#{page.home ? '' : ' | '}#{i18n['this.name']}</title>
 			<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
 			<meta name="viewport" content="width=device-width,maximum-scale=2" />
+			<link rel="canonical" href="#{activeLocale.canonicalURL}" />
+			<c:forEach items="#{activeLocale.others}" var="otherLocale">
+				<link rel="alternate" hreflang="#{otherLocale.languageTag}" href="#{activeLocale.canonicalURL(otherLocale)}" />
+			</c:forEach>
 			<ui:include src="/WEB-INF/includes/layout/resources-head.xhtml" />
 		</h:head>
 
-		<h:body id="#{page.name}" a:data-unloadmessage="#{i18n['general.unloadmessage']}">
+		<h:body id="page_#{page.name}" a:data-unloadmessage="#{i18n['general.unloadmessage']}">
 			<ui:include src="/WEB-INF/includes/layout/resources-body.xhtml" />
 
 			<noscript>

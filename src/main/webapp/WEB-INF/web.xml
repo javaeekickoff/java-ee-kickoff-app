@@ -86,8 +86,7 @@
 	</servlet-mapping>
 
 
-	<!-- Filters. -->
-	<!-- NOTE: the current alphabetical ordering of filter name in filter mappings is pure conicidence! The ordering of the mappings is really significant! -->
+	<!-- Filters. NOTE: ordering of filter-mapping matters! -->
 
  	<filter>
 		<filter-name>characterEncodingFilter</filter-name>
@@ -102,6 +101,10 @@
 		<filter-class>org.omnifaces.filter.GzipResponseFilter</filter-class>
 	</filter>
 
+	<filter-mapping>
+		<filter-name>localeFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
 	<filter-mapping>
 		<filter-name>characterEncodingFilter</filter-name>
 		<servlet-name>facesServlet</servlet-name>
