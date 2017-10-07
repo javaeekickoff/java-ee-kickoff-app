@@ -207,8 +207,11 @@ body > header nav li li {
 	line-height: 3em;
 }
 
+body > header nav li li a {
+	padding: 0;
+}
+
 body > main {
-	display: block; /* Safari */
 	flex: 1;
 	-ms-flex: 1 0 auto; /* Those must indeed be declared AFTER flex: 1 as those browsers support it but have bugs. */
 	-moz-box-flex: 1 0 0%; 
