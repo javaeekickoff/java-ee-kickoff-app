@@ -120,13 +120,16 @@ var kickoff = function(window, document) {
 	/**
 	 * Setup unload events. 
 	 * - On change of non-stateless inputs in non-stateless forms, mark unsaved changes.
-	 * - On submit of any form in the document, unmark unsaved changes.
+	 * - On submit of any PrimeFaces ajax form in the document, unmark unsaved changes.
+	 * - On submit of any synchronous form in the document, unmark unsaved changes.
 	 * - On window beforeunload, if there are any unsaved changes, show the unload message defined as <body data-unloadmessage>.
 	 * This explicitly uses window.onbeforeunload instead of $(window).on("beforeunload") or window.addEventListener("beforeunload"), 
 	 * so OmmiFaces ViewScoped unload script will continue to work properly.
 	 */
 	$(document).on("change", "form:not(.stateless) :input:not(.stateless):not(.ui-column-filter)", function() {
 		$("body").data("unsavedchanges", true);
+	}).on("pfAjaxComplete", function() {
+		$("body").data("unsavedchanges", false);
 	}); OmniFaces.Util.addSubmitListener(function() {
 		$("body").data("unsavedchanges", false);
 	}); window.onbeforeunload = function() {
