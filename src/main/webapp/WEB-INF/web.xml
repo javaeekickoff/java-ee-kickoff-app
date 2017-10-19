@@ -205,6 +205,9 @@
 		<web-resource-collection>
 			<web-resource-name>User pages</web-resource-name>
 			<url-pattern>/user/*</url-pattern>
+			<url-pattern>/en/user/*</url-pattern>
+			<url-pattern>/nl/user/*</url-pattern>
+			<url-pattern>/de/user/*</url-pattern>
 		</web-resource-collection>
 		<auth-constraint>
 			<role-name>VIEW_USER_PAGES</role-name>
@@ -215,6 +218,9 @@
 		<web-resource-collection>
 			<web-resource-name>Admin pages</web-resource-name>
 			<url-pattern>/admin/*</url-pattern>
+			<url-pattern>/en/admin/*</url-pattern>
+			<url-pattern>/nl/admin/*</url-pattern>
+			<url-pattern>/de/admin/*</url-pattern>
 		</web-resource-collection>
 		<auth-constraint>
 			<role-name>VIEW_ADMIN_PAGES</role-name>
