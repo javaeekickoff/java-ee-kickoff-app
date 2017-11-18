@@ -7,7 +7,7 @@
 >
 	<namespace>http://kickoff.example.org/ui</namespace>
 	<short-name>k</short-name>
-	<composite-library-name>kickoff/composites</composite-library-name> <!-- NOTE: when altered, don't forget to alter ResourceHandlerImplPatch -->
+	<composite-library-name>composites</composite-library-name> <!-- NOTE: when altered, don't forget to alter ResourceHandlerImplPatch -->
 
 	<tag>
 		<description>Renders a development-only div.</description>

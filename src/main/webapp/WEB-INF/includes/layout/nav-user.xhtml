@@ -34,13 +34,13 @@
 		</li>
 		<li>
 			<a href="#{activeLocale.canonicalURL}" title="#{activeLocale.name}" onclick="return false">
-				<h:graphicImage styleClass="flag" library="kickoff" name="flags/#{activeLocale.languageTag}.svg" width="24" height="18" />
+				<h:graphicImage styleClass="flag" name="flags/#{activeLocale.languageTag}.svg" width="24" height="18" />
 			</a>
 			<ul>
 				<c:forEach items="#{activeLocale.others}" var="otherLocale">
 					<li>
 						<a href="#{activeLocale.canonicalURL(otherLocale)}" title="#{otherLocale.name}">
-							<h:graphicImage styleClass="flag" library="kickoff" name="flags/#{otherLocale.languageTag}.svg" width="24" height="18" />
+							<h:graphicImage styleClass="flag" name="flags/#{otherLocale.languageTag}.svg" width="24" height="18" />
 						</a>
 					</li>
 				</c:forEach>

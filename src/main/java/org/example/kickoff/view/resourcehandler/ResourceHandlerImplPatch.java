@@ -11,11 +11,11 @@ import org.omnifaces.util.Faces;
 
 /**
  * Patches Mojarra bug of unnecessarily logging as below when it's about to locate a tagfile.
- * "WARNING JSF1064: Unable to find or serve resource from library, kickoff/composites"
+ * "WARNING JSF1064: Unable to find or serve resource from library, composites"
  */
 public class ResourceHandlerImplPatch extends DefaultResourceHandler {
 
-	private static final String COMPOSITE_LIBRARY_NAME = "kickoff/composites";
+	private static final String COMPOSITE_LIBRARY_NAME = "composites";
 
 	public ResourceHandlerImplPatch(ResourceHandler wrapped) {
 		super(wrapped);
