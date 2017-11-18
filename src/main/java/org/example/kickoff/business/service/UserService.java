@@ -1,7 +1,7 @@
 package org.example.kickoff.business.service;
 
 import static org.example.kickoff.model.Group.USER;
-import static org.omnifaces.persistence.JPA.getOptional;
+import static org.omnifaces.persistence.JPA.getOptionalSingleResult;
 import static org.omnifaces.utils.security.MessageDigests.digest;
 
 import java.time.ZonedDateTime;
@@ -115,12 +115,12 @@ public class UserService extends BaseEntityService<Long, User> {
 	}
 
 	public Optional<User> findByEmail(String email) {
-		return getOptional(createNamedTypedQuery("User.getByEmail")
+		return getOptionalSingleResult(createNamedTypedQuery("User.getByEmail")
 			.setParameter("email", email));
 	}
 
 	public Optional<User> findByLoginToken(String loginToken, TokenType type) {
-		return getOptional(createNamedTypedQuery("User.getByLoginToken")
+		return getOptionalSingleResult(createNamedTypedQuery("User.getByLoginToken")
 			.setParameter("tokenHash", digest(loginToken, MESSAGE_DIGEST_ALGORITHM))
 			.setParameter("tokenType", type));
 	}

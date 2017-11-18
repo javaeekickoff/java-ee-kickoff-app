@@ -1,7 +1,6 @@
 package org.example.kickoff.config.auth;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.security.auth.message.AuthException;
 import javax.security.enterprise.AuthenticationStatus;
 import javax.security.enterprise.authentication.mechanism.http.AutoApplySession;
 import javax.security.enterprise.authentication.mechanism.http.HttpAuthenticationMechanism;
@@ -21,8 +20,13 @@ import javax.servlet.http.HttpServletResponse;
  * @author Arjan Tijms
  */
 @AutoApplySession // For "Is user already logged-in?"
-@RememberMe(isRememberMeExpression = "httpMessageContext.authParameters.rememberMe", cookieMaxAgeSeconds = 60 * 60 * 24 * 14) // 14 days
-@LoginToContinue(loginPage = "/login?continue=true", errorPage = "", useForwardToLogin = false)
+@RememberMe(
+		cookieSecureOnly=false, // Remove this when login is served over HTTPS.
+		cookieMaxAgeSeconds = 60 * 60 * 24 * 14) // 14 days.
+@LoginToContinue(
+		loginPage = "/login?continue=true",
+		errorPage = "",
+		useForwardToLogin = false)
 @ApplicationScoped
 public class KickoffFormAuthenticationMechanism implements HttpAuthenticationMechanism {
 
@@ -30,7 +34,7 @@ public class KickoffFormAuthenticationMechanism implements HttpAuthenticationMec
     private IdentityStore identityStore;
 
 	@Override
-	public AuthenticationStatus validateRequest(HttpServletRequest request, HttpServletResponse response, HttpMessageContext context) throws AuthException {
+	public AuthenticationStatus validateRequest(HttpServletRequest request, HttpServletResponse response, HttpMessageContext context) {
 		Credential credential = context.getAuthParameters().getCredential();
 
 		if (credential != null) {
