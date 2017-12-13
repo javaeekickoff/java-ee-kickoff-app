@@ -7,7 +7,7 @@
 	</comment>
 
 	<entry key="className">org.h2.jdbcx.JdbcDataSource</entry>
-	<entry key="url">jdbc:h2:mem:test</entry>
+	<entry key="url">jdbc:h2:mem:kickoff;DB_CLOSE_DELAY=-1</entry>
 	<entry key="user">sa</entry>
 	<entry key="password">sa</entry>
 </properties>
