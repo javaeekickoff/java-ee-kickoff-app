@@ -1,5 +1,7 @@
 package org.example.kickoff.view.admin;
 
+import static org.omnifaces.util.Messages.addGlobalWarn;
+
 import java.io.Serializable;
 
 import javax.annotation.PostConstruct;
@@ -28,7 +30,8 @@ public class UsersBacking implements Serializable {
 	}
 
 	public void delete(User user) {
-		userService.delete(user);
+		// userService.delete(user);
+		addGlobalWarn("This is just a demo, we won't actually delete users for now.");
 	}
 
 	public PagedDataModel<User> getUsers() {
