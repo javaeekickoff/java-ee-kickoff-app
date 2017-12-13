@@ -25,14 +25,12 @@
 				<k:column field="lastModified" type="instant" visible="false" />
 
 				<p:column headerText="#{i18n['general.actions']}" styleClass="actions">
-					<k:link path="admin/users/edit" value="">
-						<i class="fa fa-pencil" />
+					<k:link path="admin/users/edit" value=""><i class="fa fa-pencil" />
 						<f:param name="id" value="#{item.id}" />
 					</k:link>
 					<p:commandLink id="delete" rendered="#{item.id gt 1}"
 						onclick="if(!confirm('Are you sure to delete user with ID #{user.id}?'))return false" 
-						action="#{usersBacking.delete(item)}" update="@form">
-						<i class="fa fa-trash" />
+						action="#{usersBacking.delete(item)}" update="@form"><i class="fa fa-trash" />
 					</p:commandLink>
 				</p:column>
 			</k:table>
