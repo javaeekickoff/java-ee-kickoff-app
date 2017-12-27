@@ -28,29 +28,23 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-		<test.wildfly.version>10.1.0.Final</test.wildfly.version>
+		<test.wildfly.version>11.0.0.Final</test.wildfly.version>
 	</properties>
 
 	<dependencies>
 
-		<!-- Server specific dependencies (we target WildFly 10.1 as of now). -->
+		<!-- Server specific dependencies (we target WildFly 11.0 as of now). -->
 		<!-- For correct API sources in Eclipse debugger, those need to be declared BEFORE javaee-api! -->
 		<dependency>
-			<groupId>com.sun.faces</groupId>
-			<artifactId>jsf-api</artifactId>
-			<version>2.2.13</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.faces</groupId>
-			<artifactId>jsf-impl</artifactId>
-			<version>2.2.13</version>
+			<groupId>org.glassfish</groupId>
+			<artifactId>javax.faces</artifactId>
+			<version>2.3.3</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
-			<version>5.0.7.Final</version>
+			<version>5.1.10.Final</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -76,7 +70,7 @@
 		<dependency>
 			<groupId>org.omnifaces</groupId>
 			<artifactId>omnifaces</artifactId>
-			<version>2.6.6</version>
+			<version>3.0-RC2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.omnifaces</groupId>
@@ -91,12 +85,12 @@
 		<dependency>
 			<groupId>org.omnifaces</groupId>
 			<artifactId>omnipersistence</artifactId>
-			<version>0.4</version>
+			<version>0.5</version>
 		</dependency>
 		<dependency>
 			<groupId>org.omnifaces</groupId>
 			<artifactId>optimusfaces</artifactId>
-			<version>0.5</version>
+			<version>0.6</version>
 		</dependency>
 		<dependency>
 			<groupId>org.primefaces</groupId>
@@ -111,7 +105,7 @@
 		<dependency>
 			<groupId>org.infinispan</groupId>
 			<artifactId>infinispan-core</artifactId>
-			<version>9.1.1.Final</version>
+			<version>9.1.3.Final</version>
 		</dependency>
 
 		<!-- Test dependencies.	-->
@@ -146,7 +140,7 @@
 			<dependency>
 				<groupId>org.jboss.arquillian</groupId>
 				<artifactId>arquillian-bom</artifactId>
-				<version>1.1.13.Final</version>
+				<version>1.2.0.Final</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
