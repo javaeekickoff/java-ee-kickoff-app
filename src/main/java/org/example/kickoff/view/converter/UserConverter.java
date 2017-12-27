@@ -11,36 +11,31 @@ import org.example.kickoff.business.service.UserService;
 import org.example.kickoff.model.User;
 
 @FacesConverter(forClass=User.class)
-public class UserConverter implements Converter {
+public class UserConverter implements Converter<User> {
 
 	@Inject
 	private UserService userService;
 
 	@Override
-	public String getAsString(FacesContext context, UIComponent component, Object modelValue) {
-		if (modelValue == null) {
+	public String getAsString(FacesContext context, UIComponent component, User user) {
+		if (user == null) {
 			return "";
 		}
 
-		if (modelValue instanceof User) {
-			return ((User) modelValue).getId().toString();
-		}
-		else {
-			throw new ConverterException(modelValue + " is not an User");
-		}
+		return user.getId().toString();
 	}
 
 	@Override
-	public Object getAsObject(FacesContext context, UIComponent component, String submittedValue) {
-		if (submittedValue == null) {
+	public User getAsObject(FacesContext context, UIComponent component, String id) {
+		if (id == null) {
 			return null;
 		}
 
 		try {
-			return userService.getById(Long.valueOf(submittedValue));
+			return userService.getById(Long.valueOf(id));
 		}
 		catch (NumberFormatException e) {
-			throw new ConverterException(submittedValue + " is not a valid User ID", e);
+			throw new ConverterException(id + " is not a valid User ID", e);
 		}
 	}
 

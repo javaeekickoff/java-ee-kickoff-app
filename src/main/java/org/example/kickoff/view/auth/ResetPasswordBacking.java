@@ -8,7 +8,6 @@ import static org.omnifaces.util.Messages.addFlashGlobalInfo;
 import static org.omnifaces.util.Messages.addFlashGlobalWarn;
 import static org.omnifaces.util.Messages.addGlobalInfo;
 
-import java.io.IOException;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
@@ -34,7 +33,7 @@ public class ResetPasswordBacking extends AuthBacking {
 
 	@Override
 	@PostConstruct
-	public void init() throws IOException {
+	public void init() {
 		super.init();
 
 		if (token != null && !userService.findByLoginToken(token, RESET_PASSWORD).isPresent()) {
@@ -57,7 +56,7 @@ public class ResetPasswordBacking extends AuthBacking {
 		addGlobalInfo("reset_password.message.info.email_sent"); // For security, show success message regardless of outcome.
 	}
 
-	public void saveNewPassword() throws IOException {
+	public void saveNewPassword() {
 		userService.updatePassword(token, password);
 		addFlashGlobalInfo("reset_password.message.info.password_changed");
 		redirect("user/profile");

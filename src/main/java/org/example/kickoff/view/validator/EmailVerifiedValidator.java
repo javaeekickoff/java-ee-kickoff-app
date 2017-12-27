@@ -15,18 +15,18 @@ import org.example.kickoff.business.service.UserService;
 import org.example.kickoff.model.User;
 
 @FacesValidator("emailVerifiedValidator")
-public class EmailVerifiedValidator implements Validator {
+public class EmailVerifiedValidator implements Validator<String> {
 
 	@Inject
 	private UserService userService;
 
 	@Override
-	public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
-		if (value == null) {
+	public void validate(FacesContext context, UIComponent component, String email) throws ValidatorException {
+		if (email == null) {
 			return;
 		}
 
-		Optional<User> user = userService.findByEmail((String) value);
+		Optional<User> user = userService.findByEmail(email);
 
 		if (user.isPresent() && !user.get().isEmailVerified()) {
 			throw new ValidatorException(createError("emailVerifiedValidator"));

@@ -2,8 +2,6 @@ package org.example.kickoff.view.admin.users;
 
 import static org.omnifaces.util.Faces.redirect;
 
-import java.io.IOException;
-
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -22,7 +20,7 @@ public class EditUserBacking {
 	@Inject
 	private UserService userService;
 
-	public void save() throws IOException {
+	public void save() {
 		userService.update(user);
 		redirect("admin/users");
 	}
