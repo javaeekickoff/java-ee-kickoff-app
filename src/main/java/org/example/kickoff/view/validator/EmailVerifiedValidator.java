@@ -14,7 +14,7 @@ import javax.inject.Inject;
 import org.example.kickoff.business.service.UserService;
 import org.example.kickoff.model.User;
 
-@FacesValidator("emailVerifiedValidator")
+@FacesValidator(value="emailVerifiedValidator", managed=true)
 public class EmailVerifiedValidator implements Validator<String> {
 
 	@Inject

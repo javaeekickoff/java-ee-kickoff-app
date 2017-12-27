@@ -11,6 +11,7 @@ import static org.omnifaces.utils.Lang.isEmpty;
 import java.util.ResourceBundle;
 
 import javax.annotation.PostConstruct;
+import javax.faces.annotation.FacesConfig;
 import javax.inject.Inject;
 
 import org.example.kickoff.business.service.UserService;
@@ -19,6 +20,7 @@ import org.omnifaces.cdi.Startup;
 import org.omnifaces.util.Messages;
 
 @Startup
+@FacesConfig
 public class StartupBean {
 
 	@Inject

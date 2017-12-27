@@ -10,7 +10,7 @@ import javax.inject.Inject;
 import org.example.kickoff.business.service.UserService;
 import org.example.kickoff.model.User;
 
-@FacesConverter(forClass=User.class)
+@FacesConverter(forClass=User.class, managed=true)
 public class UserConverter implements Converter<User> {
 
 	@Inject
