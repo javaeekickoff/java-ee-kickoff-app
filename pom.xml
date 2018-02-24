@@ -33,18 +33,18 @@
 
 	<dependencies>
 
-		<!-- Server specific dependencies (we target WildFly 11.0 as of now). -->
+		<!-- Server specific dependencies (we target WildFly 11.0 modded with Mojarra 2.3.3 as of now). -->
 		<!-- For correct API sources in Eclipse debugger, those need to be declared BEFORE javaee-api! -->
 		<dependency>
 			<groupId>org.glassfish</groupId>
 			<artifactId>javax.faces</artifactId>
-			<version>2.3.3</version>
+			<version>2.3.3</version> <!-- Use the exact version as provided by target server! -->
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
-			<version>5.1.10.Final</version>
+			<version>5.1.10.Final</version> <!-- Use the exact version as provided by target server! -->
 			<scope>provided</scope>
 		</dependency>
 
@@ -52,7 +52,7 @@
 		<dependency>
 			<groupId>javax</groupId>
 			<artifactId>javaee-api</artifactId>
-			<version>7.0</version>
+			<version>7.0</version> <!-- Use 8.0 when targeting a Java EE 8 server. -->
 			<scope>provided</scope>
 		</dependency>
 
@@ -60,7 +60,7 @@
 		<dependency>
 			<groupId>org.glassfish.soteria</groupId>
 			<artifactId>javax.security.enterprise</artifactId>
-			<version>1.0</version>
+			<version>1.0</version> <!-- Remove this dependency when targeting a Java EE 8 server. -->
 		</dependency>
 		<dependency>
 			<groupId>org.omnifaces</groupId>
@@ -70,7 +70,7 @@
 		<dependency>
 			<groupId>org.omnifaces</groupId>
 			<artifactId>omnifaces</artifactId>
-			<version>3.0-RC2</version>
+			<version>3.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.omnifaces</groupId>
