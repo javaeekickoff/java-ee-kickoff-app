@@ -11,6 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Cache;
 import org.omnifaces.persistence.model.BaseEntity;
@@ -20,26 +22,30 @@ public class LoginToken extends BaseEntity<Long> {
 
 	private static final long serialVersionUID = 1L;
 
+	private static final int HASH_LENGTH = 32;
+	public static final int IP_ADDRESS_MAXLENGTH = 45;
+	public static final int DESCRIPTION_MAXLENGTH = 255;
+
 	public enum TokenType {
 		REMEMBER_ME,
 		API,
 		RESET_PASSWORD
 	}
 
-	@Column(length = 32, unique = true)
-	private byte[] tokenHash;
+	@Column(length = HASH_LENGTH, nullable = false, unique = true)
+	private @NotNull byte[] tokenHash;
 
-	@Column
-	private Instant created;
+	@Column(nullable = false)
+	private @NotNull Instant created;
 
-	@Column
-	private Instant expiration;
+	@Column(nullable = false)
+	private @NotNull Instant expiration;
 
-	@Column(length = 45)
-	private String ipAddress;
+	@Column(length = IP_ADDRESS_MAXLENGTH, nullable = false)
+	private @NotNull @Size(max = IP_ADDRESS_MAXLENGTH) String ipAddress;
 
-	@Column
-	private String description;
+	@Column(length = DESCRIPTION_MAXLENGTH)
+	private @Size(max = DESCRIPTION_MAXLENGTH) String description;
 
 	@ManyToOne(optional = false)
 	@Cache(usage = TRANSACTIONAL)
