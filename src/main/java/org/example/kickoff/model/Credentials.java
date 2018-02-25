@@ -1,6 +1,10 @@
 package org.example.kickoff.model;
 
 import static org.hibernate.annotations.CacheConcurrencyStrategy.TRANSACTIONAL;
+import static org.omnifaces.utils.security.MessageDigests.digest;
+
+import java.util.Arrays;
+import java.util.concurrent.ThreadLocalRandom;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,38 +19,35 @@ public class Credentials extends BaseEntity<Long> {
 
 	private static final long serialVersionUID = 1L;
 
-	@ManyToOne
-	@Cache(usage = TRANSACTIONAL)
-	private User user;
+	private static final int HASH_LENGTH = 32;
+	private static final int SALT_LENGTH = 40;
 
-	@Column(length = 32)
+	@ManyToOne(optional = false)
+	@Cache(usage = TRANSACTIONAL)
+	private @NotNull User user;
+
+	@Column(length = HASH_LENGTH, nullable = false)
 	private @NotNull byte[] passwordHash;
 
-	@Column(length = 40)
-	private @NotNull byte[] salt;
-
-	public User getUser() {
-		return user;
-	}
+	@Column(length = SALT_LENGTH, nullable = false)
+	private @NotNull byte[] salt = new byte[SALT_LENGTH];
 
 	public void setUser(User user) {
+		user.setCredentials(this);
 		this.user = user;
 	}
 
-	public byte[] getPasswordHash() {
-		return passwordHash;
+	public void setPassword(String password) {
+		ThreadLocalRandom.current().nextBytes(salt);
+		passwordHash = hash(password);
 	}
 
-	public void setPasswordHash(byte[] passwordHash) {
-		this.passwordHash = passwordHash;
+	public boolean isValid(String password) {
+		return Arrays.equals(passwordHash, hash(password));
 	}
 
-	public byte[] getSalt() {
-		return salt;
-	}
-
-	public void setSalt(byte[] salt) {
-		this.salt = salt;
+	private byte[] hash(String password) {
+		return digest(password, salt, "SHA-256");
 	}
 
 }
