@@ -9,6 +9,7 @@ import static org.hibernate.annotations.CacheConcurrencyStrategy.TRANSACTIONAL;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -61,7 +62,7 @@ public class User extends TimestampedEntity<Long> {
 	private List<LoginToken> loginTokens = new ArrayList<>();
 
 	@ElementCollection(fetch = EAGER)
-	private @Enumerated(STRING) List<Group> groups = new ArrayList<>();
+	private @Enumerated(STRING) Set<Group> groups = new HashSet<>();
 
 	@Column
 	private Instant lastLogin;
@@ -114,16 +115,8 @@ public class User extends TimestampedEntity<Long> {
 		return loginTokens;
 	}
 
-	public void setLoginTokens(List<LoginToken> loginTokens) {
-		this.loginTokens = loginTokens;
-	}
-
-	public List<Group> getGroups() {
+	public Set<Group> getGroups() {
 		return groups;
-	}
-
-	public void setGroups(List<Group> groups) {
-		this.groups = groups;
 	}
 
 	public Instant getLastLogin() {

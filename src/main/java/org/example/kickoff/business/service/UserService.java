@@ -1,5 +1,6 @@
 package org.example.kickoff.business.service;
 
+import static java.util.Arrays.asList;
 import static org.example.kickoff.model.Group.USER;
 import static org.omnifaces.persistence.JPA.getOptionalSingleResult;
 import static org.omnifaces.utils.security.MessageDigests.digest;
@@ -20,8 +21,10 @@ import org.example.kickoff.business.email.EmailTemplate;
 import org.example.kickoff.business.email.EmailUser;
 import org.example.kickoff.business.exception.DuplicateEntityException;
 import org.example.kickoff.business.exception.InvalidPasswordException;
+import org.example.kickoff.business.exception.InvalidTokenException;
 import org.example.kickoff.business.exception.InvalidUsernameException;
 import org.example.kickoff.model.Credentials;
+import org.example.kickoff.model.Group;
 import org.example.kickoff.model.LoginToken.TokenType;
 import org.example.kickoff.model.User;
 import org.omnifaces.persistence.service.BaseEntityService;
@@ -40,15 +43,13 @@ public class UserService extends BaseEntityService<Long, User> {
 	@Inject
 	private EmailService emailService;
 
-	public void registerUser(User user, String password) {
+	public void register(User user, String password, Group... additionalGroups) {
 		if (findByEmail(user.getEmail()).isPresent()) {
 			throw new DuplicateEntityException();
 		}
 
-		if (!user.getGroups().contains(USER)) {
-			user.getGroups().add(USER);
-		}
-
+		user.getGroups().add(USER);
+		user.getGroups().addAll(asList(additionalGroups));
 		persist(user);
 	    setPassword(user, password);
 	}
@@ -120,14 +121,22 @@ public class UserService extends BaseEntityService<Long, User> {
 			.setParameter("tokenType", type));
 	}
 
+	public User getByEmail(String email) {
+		return findByEmail(email).orElseThrow(InvalidUsernameException::new);
+	}
+
 	public User getByEmailAndPassword(String email, String password) {
-	    User user = findByEmail(email).orElseThrow(InvalidUsernameException::new);
+	    User user = getByEmail(email);
 
 	    if (!user.getCredentials().isValid(password)) {
 	        throw new InvalidPasswordException();
 	    }
 
 	    return user;
+	}
+
+	public User getByLoginToken(String loginToken, TokenType type) {
+		return findByLoginToken(loginToken, type).orElseThrow(InvalidTokenException::new);
 	}
 
 	public User getActiveUser() {

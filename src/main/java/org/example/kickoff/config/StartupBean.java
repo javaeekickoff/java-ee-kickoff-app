@@ -1,10 +1,8 @@
 package org.example.kickoff.config;
 
 import static java.text.MessageFormat.format;
-import static java.util.Arrays.asList;
 import static java.util.ResourceBundle.getBundle;
 import static org.example.kickoff.model.Group.ADMIN;
-import static org.example.kickoff.model.Group.USER;
 import static org.omnifaces.util.Faces.getLocale;
 import static org.omnifaces.utils.Lang.isEmpty;
 
@@ -38,8 +36,7 @@ public class StartupBean {
 			user.setFirstName("Test");
 			user.setLastName("Admin");
 			user.setEmail("admin@kickoff.example.org");
-			user.setGroups(asList(ADMIN, USER));
-			userService.registerUser(user, "passw0rd");
+			userService.register(user, "passw0rd", ADMIN);
 		}
 
 		if (!userService.findByEmail("user@kickoff.example.org").isPresent()) {
@@ -47,8 +44,7 @@ public class StartupBean {
 			user.setFirstName("Test");
 			user.setLastName("User");
 			user.setEmail("user@kickoff.example.org");
-			user.setGroups(asList(USER));
-			userService.registerUser(user, "passw0rd");
+			userService.register(user, "passw0rd");
 		}
 	}
 

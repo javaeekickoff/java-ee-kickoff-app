@@ -1,6 +1,9 @@
 package org.example.kickoff.config.auth;
 import static javax.security.enterprise.identitystore.CredentialValidationResult.INVALID_RESULT;
 import static javax.security.enterprise.identitystore.CredentialValidationResult.NOT_VALIDATED_RESULT;
+import static org.example.kickoff.model.Group.USER;
+
+import java.util.function.Supplier;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -11,7 +14,8 @@ import javax.security.enterprise.identitystore.CredentialValidationResult;
 import javax.security.enterprise.identitystore.IdentityStore;
 
 import org.example.kickoff.business.exception.EmailNotVerifiedException;
-import org.example.kickoff.business.exception.InvalidCredentialsException;
+import org.example.kickoff.business.exception.InvalidGroupException;
+import org.example.kickoff.business.exception.CredentialsException;
 import org.example.kickoff.business.service.UserService;
 import org.example.kickoff.model.User;
 
@@ -23,31 +27,42 @@ public class KickoffIdentityStore implements IdentityStore {
 
 	@Override
 	public CredentialValidationResult validate(Credential credential) {
-		try {
-			if (credential instanceof UsernamePasswordCredential) {
-				String email = ((UsernamePasswordCredential) credential).getCaller();
-				String password = ((UsernamePasswordCredential) credential).getPasswordAsString();
-				return validate(userService.getByEmailAndPassword(email, password));
-			}
+		Supplier<User> userSupplier = null;
 
-			if (credential instanceof CallerOnlyCredential) {
-				String email = ((CallerOnlyCredential) credential).getCaller();
-				return validate(userService.findByEmail(email).orElseThrow(InvalidCredentialsException::new));
-			}
+		if (credential instanceof UsernamePasswordCredential) {
+			String email = ((UsernamePasswordCredential) credential).getCaller();
+			String password = ((UsernamePasswordCredential) credential).getPasswordAsString();
+			userSupplier = () -> userService.getByEmailAndPassword(email, password);
 		}
-		catch (InvalidCredentialsException e) {
-			return INVALID_RESULT;
+		else if (credential instanceof CallerOnlyCredential) {
+			String email = ((CallerOnlyCredential) credential).getCaller();
+			userSupplier = () -> userService.getByEmail(email);
 		}
 
-		return NOT_VALIDATED_RESULT;
+		return validate(userSupplier);
 	}
 
-	private static CredentialValidationResult validate(User user) {
-		if (!user.isEmailVerified()) {
-			throw new EmailNotVerifiedException();
+	static CredentialValidationResult validate(Supplier<User> userSupplier) {
+		if (userSupplier == null) {
+			return NOT_VALIDATED_RESULT;
 		}
 
-		return new CredentialValidationResult(user.getEmail(), user.getRolesAsStrings());
+		try {
+			User user = userSupplier.get();
+
+			if (!user.getGroups().contains(USER)) {
+				throw new InvalidGroupException();
+			}
+
+			if (!user.isEmailVerified()) {
+				throw new EmailNotVerifiedException();
+			}
+
+			return new CredentialValidationResult(new KickoffCallerPrincipal(user), user.getRolesAsStrings());
+		}
+		catch (CredentialsException e) {
+			return INVALID_RESULT;
+		}
 	}
 
 }

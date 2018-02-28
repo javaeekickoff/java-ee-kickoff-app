@@ -29,7 +29,7 @@ public class ProfileBacking {
 
 	@PostConstruct
 	public void init() {
-		user = userService.getById(activeUser.getId());
+		user = activeUser.get();
 	}
 
 	public void save() {
