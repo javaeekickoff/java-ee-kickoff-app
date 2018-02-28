@@ -1,15 +1,14 @@
 package org.example.kickoff.business.service;
 
+import static java.util.Arrays.asList;
 import static org.example.kickoff.model.Group.USER;
 import static org.omnifaces.persistence.JPA.getOptionalSingleResult;
 import static org.omnifaces.utils.security.MessageDigests.digest;
 
 import java.time.ZonedDateTime;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Resource;
@@ -22,8 +21,10 @@ import org.example.kickoff.business.email.EmailTemplate;
 import org.example.kickoff.business.email.EmailUser;
 import org.example.kickoff.business.exception.DuplicateEntityException;
 import org.example.kickoff.business.exception.InvalidPasswordException;
+import org.example.kickoff.business.exception.InvalidTokenException;
 import org.example.kickoff.business.exception.InvalidUsernameException;
 import org.example.kickoff.model.Credentials;
+import org.example.kickoff.model.Group;
 import org.example.kickoff.model.LoginToken.TokenType;
 import org.example.kickoff.model.User;
 import org.omnifaces.persistence.service.BaseEntityService;
@@ -31,9 +32,7 @@ import org.omnifaces.persistence.service.BaseEntityService;
 @Stateless
 public class UserService extends BaseEntityService<Long, User> {
 
-	private static final int DEFAULT_SALT_LENGTH = 40;
 	private static final long DEFAULT_PASSWORD_RESET_EXPIRATION_TIME_IN_MINUTES = TimeUnit.HOURS.toMinutes(1);
-	private static final String MESSAGE_DIGEST_ALGORITHM = "SHA-256";
 
 	@Resource
 	private SessionContext sessionContext;
@@ -44,18 +43,15 @@ public class UserService extends BaseEntityService<Long, User> {
 	@Inject
 	private EmailService emailService;
 
-	public void registerUser(User user, String password) {
+	public void register(User user, String password, Group... additionalGroups) {
 		if (findByEmail(user.getEmail()).isPresent()) {
 			throw new DuplicateEntityException();
 		}
 
-		setCredentials(user, password);
-
-		if (!user.getGroups().contains(USER)) {
-			user.getGroups().add(USER);
-		}
-
-		super.save(user);
+		user.getGroups().add(USER);
+		user.getGroups().addAll(asList(additionalGroups));
+		persist(user);
+	    setPassword(user, password);
 	}
 
 	@Override
@@ -85,7 +81,7 @@ public class UserService extends BaseEntityService<Long, User> {
 
 	public void updatePassword(User user, String password) {
 		User existingUser = manage(user);
-		setCredentials(existingUser, password);
+		setPassword(existingUser, password);
 		super.update(existingUser);
 	}
 
@@ -121,51 +117,42 @@ public class UserService extends BaseEntityService<Long, User> {
 
 	public Optional<User> findByLoginToken(String loginToken, TokenType type) {
 		return getOptionalSingleResult(createNamedTypedQuery("User.getByLoginToken")
-			.setParameter("tokenHash", digest(loginToken, MESSAGE_DIGEST_ALGORITHM))
+			.setParameter("tokenHash", digest(loginToken, "SHA-256"))
 			.setParameter("tokenType", type));
 	}
 
+	public User getByEmail(String email) {
+		return findByEmail(email).orElseThrow(InvalidUsernameException::new);
+	}
+
 	public User getByEmailAndPassword(String email, String password) {
-		User user = findByEmail(email).orElseThrow(InvalidUsernameException::new);
-		Credentials credentials = user.getCredentials();
+	    User user = getByEmail(email);
 
-		if (credentials == null) {
-			throw new InvalidUsernameException();
-		}
+	    if (!user.getCredentials().isValid(password)) {
+	        throw new InvalidPasswordException();
+	    }
 
-		byte[] passwordHash = digest(password, credentials.getSalt(), MESSAGE_DIGEST_ALGORITHM);
+	    return user;
+	}
 
-		if (!Arrays.equals(passwordHash, credentials.getPasswordHash())) {
-			throw new InvalidPasswordException();
-		}
-
-		return user;
+	public User getByLoginToken(String loginToken, TokenType type) {
+		return findByLoginToken(loginToken, type).orElseThrow(InvalidTokenException::new);
 	}
 
 	public User getActiveUser() {
 		return findByEmail(sessionContext.getCallerPrincipal().getName()).orElse(null);
 	}
 
-	private static void setCredentials(User user, String password) {
-		byte[] salt = generateSalt(DEFAULT_SALT_LENGTH);
-		byte[] passwordHash = digest(password, salt, MESSAGE_DIGEST_ALGORITHM);
-
-		Credentials credentials = user.getCredentials();
+	public void setPassword(User user, String password) {
+		User managedUser = manage(user);
+		Credentials credentials = managedUser.getCredentials();
 
 		if (credentials == null) {
 			credentials = new Credentials();
-			credentials.setUser(user);
-			user.setCredentials(credentials);
+			credentials.setUser(managedUser);
 		}
 
-		credentials.setPasswordHash(passwordHash);
-		credentials.setSalt(salt);
-	}
-
-	private static byte[] generateSalt(int saltLength) {
-		byte[] salt = new byte[saltLength];
-		ThreadLocalRandom.current().nextBytes(salt);
-		return salt;
+		credentials.setPassword(password);
 	}
 
 }

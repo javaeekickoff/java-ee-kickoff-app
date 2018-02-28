@@ -13,7 +13,7 @@ import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.dataset.xml.FlatXmlProducer;
 import org.example.kickoff.arquillian.ArquillianDBUnitTestBase;
 import org.example.kickoff.business.exception.BusinessException;
-import org.example.kickoff.business.exception.InvalidCredentialsException;
+import org.example.kickoff.business.exception.CredentialsException;
 import org.example.kickoff.business.service.UserService;
 import org.example.kickoff.model.User;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -65,7 +65,7 @@ public class UserServiceTest extends ArquillianDBUnitTestBase {
 		User user = new User();
 		user.setEmail("test2@test.test");
 
-		userService.registerUser(user, "TeSt");
+		userService.register(user, "TeSt");
 
 		assertNotNull(user.getCredentials());
 		assertNotNull(user.getId());
@@ -86,7 +86,7 @@ public class UserServiceTest extends ArquillianDBUnitTestBase {
 			userService.getByEmailAndPassword("Test1", "wrong_password");
 			fail();
 		}
-		catch (InvalidCredentialsException e) {
+		catch (CredentialsException e) {
 			// Exception should be thrown here
 		}
 
@@ -94,7 +94,7 @@ public class UserServiceTest extends ArquillianDBUnitTestBase {
 			userService.getByEmailAndPassword("non_existant_username", "password");
 			fail();
 		}
-		catch (InvalidCredentialsException e) {
+		catch (CredentialsException e) {
 			// Exception should be thrown here
 		}
 	}

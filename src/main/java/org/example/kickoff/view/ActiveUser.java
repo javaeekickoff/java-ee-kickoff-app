@@ -1,23 +1,24 @@
 package org.example.kickoff.view;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.enterprise.inject.Typed;
+import javax.enterprise.context.SessionScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.security.enterprise.SecurityContext;
 
+import org.example.kickoff.config.auth.KickoffCallerPrincipal;
 import org.example.kickoff.model.Group;
 import org.example.kickoff.model.Role;
 import org.example.kickoff.model.User;
-import org.example.kickoff.model.producer.ActiveUserProducer;
-import org.omnifaces.config.WebXml;
 
-/**
- * This is produced by {@link ActiveUserProducer}.
- * This is available in EL by #{activeUser}.
- * This is available in backing beans by {@code @Inject}.
- */
-@Typed
-public class ActiveUser {
+@Named
+@SessionScoped
+public class ActiveUser implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	private Map<String, Boolean> is = new ConcurrentHashMap<>();
 	private Map<String, Boolean> can = new ConcurrentHashMap<>();
@@ -25,19 +26,25 @@ public class ActiveUser {
 
 	private User activeUser;
 
-	public ActiveUser() {
-		// C'tor for proxy.
+	@Inject
+	private SecurityContext securityContext;
+
+	public User get() { // For use in backing beans.
+		if (activeUser == null) {
+			activeUser = securityContext
+				.getPrincipalsByType(KickoffCallerPrincipal.class).stream()
+				.map(KickoffCallerPrincipal::getUser)
+				.findAny().orElse(null);
+		}
+
+		return activeUser;
 	}
 
-	public ActiveUser(User user) { // Used by ActiveUserProducer.
-		activeUser = user;
+	public boolean isPresent() { // For use in both backing beans and EL #{activeUser.present}
+		return get() != null;
 	}
 
-	public boolean isPresent() { // For use in both backing beans and EL.
-		return activeUser != null;
-	}
-
-	public Long getId() { // For use in backing beans in order to get concrete User.
+	public Long getId() { // For use in both backing beans and EL #{activeUser.id}
 		return isPresent() ? activeUser.getId() : null;
 	}
 
@@ -54,21 +61,11 @@ public class ActiveUser {
 	}
 
 	public boolean can(String role) { // For use in EL #{activeUser.can('VIEW_ADMIN_PAGES')}
-		return isPresent() && can.computeIfAbsent(role, r -> activeUser.getRolesAsStrings().stream().anyMatch(r::equalsIgnoreCase));
+		return isPresent() && can.computeIfAbsent(role, r -> activeUser.getRoles().stream().map(Role::name).anyMatch(r::equalsIgnoreCase));
 	}
 
 	public boolean canView(String path) { // For use in EL #{activeUser.canView('admin/users')}
-		return canView.computeIfAbsent(path, this::isAccessAllowed);
-	}
-
-	private boolean isAccessAllowed(String path) {
-		String uri = path.startsWith("/") ? path : ("/" + path);
-
-		if (WebXml.INSTANCE.isAccessAllowed(uri, null)) {
-			return true;
-		}
-
-		return isPresent() && activeUser.getRolesAsStrings().stream().anyMatch(r -> WebXml.INSTANCE.isAccessAllowed(uri, r));
+		return canView.computeIfAbsent(path, p -> securityContext.hasAccessToWebResource(p.startsWith("/") ? p : ("/" + p), "GET"));
 	}
 
 	@Override

@@ -9,6 +9,7 @@ import static org.hibernate.annotations.CacheConcurrencyStrategy.TRANSACTIONAL;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -32,14 +33,17 @@ public class User extends TimestampedEntity<Long> {
 
 	private static final long serialVersionUID = 1L;
 
-	@Column(length = 254, nullable = false, unique = true)
-	private @NotNull @Email String email;
+	public static final int EMAIL_MAXLENGTH = 254;
+	public static final int NAME_MAXLENGTH = 32;
 
-	@Column(length = 32, nullable = false)
-	private @NotNull @Size(max = 32) String firstName;
+	@Column(length = EMAIL_MAXLENGTH, nullable = false, unique = true)
+	private @NotNull @Size(max = EMAIL_MAXLENGTH) @Email String email;
 
-	@Column(length = 32, nullable = false)
-	private @NotNull @Size(max = 32) String lastName;
+	@Column(length = NAME_MAXLENGTH, nullable = false)
+	private @NotNull @Size(max = NAME_MAXLENGTH) String firstName;
+
+	@Column(length = NAME_MAXLENGTH, nullable = false)
+	private @NotNull @Size(max = NAME_MAXLENGTH) String lastName;
 
 	@Formula("CONCAT(firstName, ' ', lastName)")
 	private String fullName;
@@ -58,7 +62,7 @@ public class User extends TimestampedEntity<Long> {
 	private List<LoginToken> loginTokens = new ArrayList<>();
 
 	@ElementCollection(fetch = EAGER)
-	private @Enumerated(STRING) List<Group> groups = new ArrayList<>();
+	private @Enumerated(STRING) Set<Group> groups = new HashSet<>();
 
 	@Column
 	private Instant lastLogin;
@@ -111,16 +115,8 @@ public class User extends TimestampedEntity<Long> {
 		return loginTokens;
 	}
 
-	public void setLoginTokens(List<LoginToken> loginTokens) {
-		this.loginTokens = loginTokens;
-	}
-
-	public List<Group> getGroups() {
+	public Set<Group> getGroups() {
 		return groups;
-	}
-
-	public void setGroups(List<Group> groups) {
-		this.groups = groups;
 	}
 
 	public Instant getLastLogin() {
