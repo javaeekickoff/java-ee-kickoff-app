@@ -5,7 +5,7 @@ Basic project template to kickoff a new Java EE web application. Live demo is av
 
 ## Usage
 
-Clone the branch matching your target environment into a new project. There are currently two branches available.
+Clone the branch matching your target environment into a new project. There are currently three branches available.
 
 - [Java EE 8 with JSF 2.3](https://github.com/javaeekickoff/java-ee-kickoff-app/tree/javaee8-jsf23)
 - [Java EE 7 with JSF 2.3](https://github.com/javaeekickoff/java-ee-kickoff-app/tree/javaee7-jsf23)
