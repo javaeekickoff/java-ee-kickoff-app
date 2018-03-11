@@ -30,7 +30,7 @@
 	</factory>
 
 	<lifecycle>
-		<phase-listener>org.example.kickoff.view.phaselistener.FacesRequestLogger</phase-listener>
+		<phase-listener>org.omnifaces.eventlistener.FacesRequestLogger</phase-listener>
 	</lifecycle>
 
 	<render-kit>
