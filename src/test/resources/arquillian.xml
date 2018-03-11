@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<arquillian
+	xmlns="http://jboss.org/schema/arquillian"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://jboss.org/schema/arquillian http://jboss.org/schema/arquillian/arquillian_1_0.xsd"
+>
+	<container qualifier="wildfly-managed" default="true">
+		<configuration>
+			<property name="serverConfig">standalone-ee8.xml</property> <!-- Required by WildFly 12 in order to run in "Java EE 8 mode". -->
+		</configuration>
+	</container>
+	<extension qualifier="webdriver">
+		<property name="browser">htmlUnit</property>
+	</extension>
+</arquillian>

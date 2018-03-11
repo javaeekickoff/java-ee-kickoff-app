@@ -7,7 +7,7 @@
 	xmlns:k="http://kickoff.example.org/ui"
 >
 	<ul>
-		<li>
+		<li id="nav-user">
 			<c:choose>
 				<c:when test="#{not activeUser.present}">
 					<k:link path="login" />
@@ -25,14 +25,14 @@
 						</c:if>
 						<li>
 							<k:form id="logoutForm" fieldset="false">
-								<h:commandLink value="#{i18n['general.logout']}" action="#{logoutBacking.logout}" />
+								<h:commandLink id="logout" value="#{i18n['general.logout']}" action="#{logoutBacking.logout}" />
 							</k:form>
 						</li>
 					</ul>
 				</c:otherwise>
 			</c:choose>
 		</li>
-		<li>
+		<li id="nav-locale">
 			<a href="#{activeLocale.canonicalURL}" title="#{activeLocale.name}" onclick="return false">
 				<h:graphicImage styleClass="flag" name="flags/#{activeLocale.languageTag}.svg" width="24" height="18" />
 			</a>

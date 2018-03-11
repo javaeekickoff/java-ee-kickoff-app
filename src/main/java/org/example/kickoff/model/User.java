@@ -54,7 +54,7 @@ public class User extends TimestampedEntity<Long> {
 	@Column(nullable = false)
 	private boolean emailVerified = true; // For now.
 
-	@OneToOne(fetch = LAZY, cascade = ALL)
+	@OneToOne(mappedBy = "user", fetch = LAZY, cascade = ALL)
 	private Credentials credentials;
 
 	@OneToMany(mappedBy = "user", fetch = LAZY, cascade = ALL, orphanRemoval = true)

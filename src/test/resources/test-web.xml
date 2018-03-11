@@ -1,10 +1,169 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+	This is a copy of web.xml with data source and several settings adjusted for UT and IT.
+ -->
 <web-app
 	xmlns="http://xmlns.jcp.org/xml/ns/javaee"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
 	version="3.1"
 >
+	<display-name>Kickoff Example</display-name>
+
+
+	<!-- Standard JSF settings. -->
+
+	<context-param>
+		<param-name>javax.faces.FACELETS_BUFFER_SIZE</param-name>
+		<param-value>65535</param-value> <!-- 64KB -->
+	</context-param>
+	<context-param>
+		<param-name>javax.faces.FACELETS_REFRESH_PERIOD</param-name>
+		<param-value>0</param-value> <!-- TODO: parameterize this. -->
+	</context-param>
+	<context-param>
+		<param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
+		<param-value>true</param-value>
+	</context-param>
+	<context-param>
+		<param-name>javax.faces.INTERPRET_EMPTY_STRING_SUBMITTED_VALUES_AS_NULL</param-name>
+		<param-value>true</param-value>
+	</context-param>
+	<context-param>
+		<param-name>javax.faces.PROJECT_STAGE</param-name>
+		<param-value>Development</param-value> <!-- TODO: parameterize this. -->
+	</context-param>
+	<context-param>
+		<param-name>javax.faces.SERIALIZE_SERVER_STATE</param-name>
+		<param-value>true</param-value>
+	</context-param>
+
+
+	<!-- Mojarra/RI specific settings. -->
+
+	<context-param>
+		<param-name>com.sun.faces.defaultResourceMaxAge</param-name>
+		<param-value>4838400000</param-value> <!-- 8 weeks in millis. -->
+	</context-param>
+	<context-param>
+		<param-name>com.sun.faces.enableViewStateIdRendering</param-name>
+		<param-value>false</param-value> <!-- Prevent duplicate javax.faces.ViewState element IDs. -->
+	</context-param>
+
+
+	<!-- OmniFaces specific settings. -->
+
+	<context-param>
+		<param-name>org.omnifaces.FACES_VIEWS_SCAN_PATHS</param-name>
+		<param-value>/*.xhtml</param-value> <!-- Enable extensionless URLs on entire webapp. -->
+	</context-param>
+
+
+	<!-- PrimeFaces specific settings. -->
+
+	<context-param>
+		<param-name>primefaces.FONT_AWESOME</param-name>
+		<param-value>true</param-value> <!-- Enable referencing Font Awesome icons in CSS. -->
+	</context-param>
+	<context-param>
+		<param-name>primefaces.SUBMIT</param-name>
+		<param-value>partial</param-value> <!-- Make partialSubmit="true" the default behavior. -->
+	</context-param>
+	<context-param>
+		<param-name>primefaces.TRANSFORM_METADATA</param-name>
+		<param-value>true</param-value> <!-- Renders bean validation metadata (@NotNull/@Size/@Min/@Max) as HTML element attributes. -->
+	</context-param>
+
+
+	<!-- Servlets. -->
+
+	<servlet>
+		<servlet-name>facesServlet</servlet-name>
+		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>facesServlet</servlet-name>
+		<url-pattern>*.xhtml</url-pattern>
+	</servlet-mapping>
+
+
+	<!-- Filters. NOTE: ordering of filter-mapping matters! -->
+
+ 	<filter>
+		<filter-name>characterEncodingFilter</filter-name>
+		<filter-class>org.omnifaces.filter.CharacterEncodingFilter</filter-class>
+	</filter>
+	<filter>
+		<filter-name>facesExceptionFilter</filter-name>
+		<filter-class>org.omnifaces.filter.FacesExceptionFilter</filter-class>
+	</filter>
+	<filter>
+		<filter-name>gzipResponseFilter</filter-name>
+		<filter-class>org.omnifaces.filter.GzipResponseFilter</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>localeFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>characterEncodingFilter</filter-name>
+		<servlet-name>facesServlet</servlet-name>
+	</filter-mapping>
+ 	<filter-mapping>
+		<filter-name>facesExceptionFilter</filter-name>
+		<servlet-name>facesServlet</servlet-name>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>gzipResponseFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>ERROR</dispatcher>
+	</filter-mapping>
+
+
+	<!-- Session configuration. -->
+
+	<session-config>
+		<cookie-config>
+			<http-only>true</http-only> <!-- Prevent client side scripting from accessing/manipulating session cookie. -->
+		</cookie-config>
+		<tracking-mode>COOKIE</tracking-mode> <!-- This disables URL rewriting. -->
+	</session-config>
+
+
+	<!-- Welcome files and error pages. -->
+
+	<welcome-file-list>
+		<welcome-file>home</welcome-file> <!-- Eclipse may warn that this file cannot be found, but we actually use extensionless mapping. -->
+	</welcome-file-list>
+
+	<error-page>
+		<error-code>400</error-code>
+		<location>/WEB-INF/errorpages/400.xhtml</location>
+	</error-page>
+	<error-page>
+		<error-code>403</error-code>
+		<location>/WEB-INF/errorpages/404.xhtml</location> <!-- We don't want to leak restricted pages, so 404 instead of 403. -->
+	</error-page>
+	<error-page>
+		<error-code>404</error-code>
+		<location>/WEB-INF/errorpages/404.xhtml</location>
+	</error-page>
+	<error-page>
+		<error-code>500</error-code>
+		<location>/WEB-INF/errorpages/500.xhtml</location>
+	</error-page>
+	<error-page>
+		<exception-type>javax.faces.application.ViewExpiredException</exception-type>
+		<location>/WEB-INF/errorpages/expired.xhtml</location>
+	</error-page>
+
+
+	<!-- Resources -->
+
 	<data-source>
 		<name>java:app/kickoff/TestDataSource</name>
 		<class-name>org.h2.jdbcx.JdbcDataSource</class-name>
@@ -18,4 +177,91 @@
 		<min-pool-size>5</min-pool-size>
 		<max-statements>0</max-statements>
 	</data-source>
+
+
+	<!-- Security constraints and roles. -->
+
+	<security-constraint>
+		<display-name>Restrict direct access to the /resources folder.</display-name> <!-- We could have used javax.faces.WEBAPP_RESOURCES_DIRECTORY, but this doesn't cover resources from JARs. -->
+		<web-resource-collection>
+			<web-resource-name>The /resources folder.</web-resource-name>
+			<url-pattern>/resources/*</url-pattern>
+		</web-resource-collection>
+		<auth-constraint />
+	</security-constraint>
+
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>User pages</web-resource-name>
+			<url-pattern>/user/*</url-pattern>
+			<url-pattern>/en/user/*</url-pattern>
+			<url-pattern>/nl/user/*</url-pattern>
+			<url-pattern>/de/user/*</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>VIEW_USER_PAGES</role-name>
+		</auth-constraint>
+	</security-constraint>
+
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>Admin pages</web-resource-name>
+			<url-pattern>/admin/*</url-pattern>
+			<url-pattern>/en/admin/*</url-pattern>
+			<url-pattern>/nl/admin/*</url-pattern>
+			<url-pattern>/de/admin/*</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>VIEW_ADMIN_PAGES</role-name>
+		</auth-constraint>
+	</security-constraint>
+
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>OAuth authorization</web-resource-name>
+			<url-pattern>/oauth/*</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>ACCESS_API</role-name>
+		</auth-constraint>
+	</security-constraint>
+
+	<security-role>
+		<role-name>VIEW_USER_PAGES</role-name>
+	</security-role>
+	<security-role>
+		<role-name>VIEW_ADMIN_PAGES</role-name>
+	</security-role>
+	<security-role>
+		<role-name>ACCESS_API</role-name>
+	</security-role>
+
+
+	<!-- New mime mappings not already defined by server. -->
+
+	<mime-mapping>
+		<extension>otf</extension>
+		<mime-type>application/x-font-opentype</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>ttf</extension>
+		<mime-type>application/x-font-truetype</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>woff</extension>
+		<mime-type>application/font-woff</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>woff2</extension>
+		<mime-type>application/font-woff2</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>eot</extension>
+		<mime-type>application/vnd.ms-fontobject</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>svg</extension>
+		<mime-type>image/svg+xml</mime-type>
+	</mime-mapping>
+
 </web-app>
