@@ -14,14 +14,14 @@ import javax.servlet.http.HttpServletResponse;
 
 
 /**
- * Authentication mechanism that authenticates according to the Servlet spec defined FORM
- * authentication mechanism. See Servlet spec for further details.
+ * Authentication mechanism that authenticates according to the Servlet spec defined FORM authentication mechanism.
+ * See Servlet spec for further details.
  *
  * @author Arjan Tijms
  */
 @AutoApplySession // For "Is user already logged-in?"
 @RememberMe(
-		cookieSecureOnly=false, // Remove this when login is served over HTTPS.
+		cookieSecureOnly = false, // Remove this when login is served over HTTPS.
 		cookieMaxAgeSeconds = 60 * 60 * 24 * 14) // 14 days.
 @LoginToContinue(
 		loginPage = "/login?continue=true",
@@ -43,14 +43,6 @@ public class KickoffFormAuthenticationMechanism implements HttpAuthenticationMec
 		else {
 			return context.doNothing();
 		}
-	}
-
-    // Workaround for CDI bug; default methods are not intercepted.
-	// Fixed in Weld 2.4.0 and 3.0.0, which we'll eventually target.
-	// See https://issues.jboss.org/browse/WELD-2093
-	@Override
-	public void cleanSubject(HttpServletRequest request, HttpServletResponse response, HttpMessageContext httpMessageContext) {
-		HttpAuthenticationMechanism.super.cleanSubject(request, response, httpMessageContext);
 	}
 
 }

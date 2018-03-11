@@ -1,6 +1,5 @@
 package org.example.kickoff.business;
 
-import static org.jboss.shrinkwrap.api.asset.EmptyAsset.INSTANCE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
@@ -12,8 +11,7 @@ import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.dataset.xml.FlatXmlProducer;
 import org.example.kickoff.arquillian.ArquillianDBUnitTestBase;
-import org.example.kickoff.business.exception.BusinessException;
-import org.example.kickoff.business.exception.InvalidCredentialsException;
+import org.example.kickoff.business.exception.CredentialsException;
 import org.example.kickoff.business.service.UserService;
 import org.example.kickoff.model.User;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -21,7 +19,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.resolver.api.maven.Maven;
+import org.jboss.shrinkwrap.resolver.api.maven.archive.importer.MavenImporter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.xml.sax.InputSource;
@@ -31,20 +29,14 @@ public class UserServiceTest extends ArquillianDBUnitTestBase {
 
 	@Deployment
 	public static Archive<?> createDeployment() {
-		WebArchive archive = ShrinkWrap.create(WebArchive.class);
-		archive.addClass(ArquillianDBUnitTestBase.class);
-		archive.addPackage(UserService.class.getPackage());
-		archive.addPackage(User.class.getPackage());
-		archive.addPackage(BusinessException.class.getPackage());
-
-		archive.setWebXML("test-web.xml");
-		archive.addAsWebInfResource(INSTANCE, "beans.xml");
-		archive.addAsResource("test-persistence.xml", "META-INF/persistence.xml");
-		archive.addAsResource("META-INF/User.xml");
-		archive.addAsResource("dbunit/UserServiceTest.xml");
-		archive.addAsLibraries(Maven.resolver().loadPomFromFile("pom.xml").importRuntimeDependencies().resolve().withTransitivity().asFile());
-
-		return archive;
+		return ShrinkWrap.create(MavenImporter.class)
+			.loadPomFromFile("pom.xml")
+			.importBuildOutput()
+			.as(WebArchive.class)
+			.addAsWebInfResource("test-web.xml", "web.xml")
+			.addAsResource("test-persistence.xml", "META-INF/persistence.xml")
+			.addClass(ArquillianDBUnitTestBase.class)
+			.addAsResource("dbunit/UserServiceTest.xml");
 	}
 
 	@EJB
@@ -64,8 +56,10 @@ public class UserServiceTest extends ArquillianDBUnitTestBase {
 	public void testRegisterUser() {
 		User user = new User();
 		user.setEmail("test2@test.test");
+		user.setFirstName("test2");
+		user.setLastName("test");
 
-		userService.registerUser(user, "TeSt");
+		userService.register(user, "TeSt");
 
 		assertNotNull(user.getCredentials());
 		assertNotNull(user.getId());
@@ -86,7 +80,7 @@ public class UserServiceTest extends ArquillianDBUnitTestBase {
 			userService.getByEmailAndPassword("Test1", "wrong_password");
 			fail();
 		}
-		catch (InvalidCredentialsException e) {
+		catch (CredentialsException e) {
 			// Exception should be thrown here
 		}
 
@@ -94,7 +88,7 @@ public class UserServiceTest extends ArquillianDBUnitTestBase {
 			userService.getByEmailAndPassword("non_existant_username", "password");
 			fail();
 		}
-		catch (InvalidCredentialsException e) {
+		catch (CredentialsException e) {
 			// Exception should be thrown here
 		}
 	}
