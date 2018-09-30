@@ -15,10 +15,10 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Cache;
-import org.omnifaces.persistence.model.BaseEntity;
+import org.omnifaces.persistence.model.GeneratedIdEntity;
 
 @Entity
-public class LoginToken extends BaseEntity<Long> {
+public class LoginToken extends GeneratedIdEntity<Long> {
 
 	private static final long serialVersionUID = 1L;
 

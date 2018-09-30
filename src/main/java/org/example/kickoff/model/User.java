@@ -119,6 +119,10 @@ public class User extends TimestampedEntity<Long> {
 		return groups;
 	}
 
+	public void setGroups(Set<Group> groups) {
+		this.groups = groups;
+	}
+
 	public Instant getLastLogin() {
 		return lastLogin;
 	}
