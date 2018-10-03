@@ -8,7 +8,7 @@ import javax.security.enterprise.authentication.mechanism.http.HttpMessageContex
 import javax.security.enterprise.authentication.mechanism.http.LoginToContinue;
 import javax.security.enterprise.authentication.mechanism.http.RememberMe;
 import javax.security.enterprise.credential.Credential;
-import javax.security.enterprise.identitystore.IdentityStore;
+import javax.security.enterprise.identitystore.IdentityStoreHandler;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -31,14 +31,14 @@ import javax.servlet.http.HttpServletResponse;
 public class KickoffFormAuthenticationMechanism implements HttpAuthenticationMechanism {
 
     @Inject
-    private IdentityStore identityStore;
+    private IdentityStoreHandler identityStoreHandler;
 
 	@Override
 	public AuthenticationStatus validateRequest(HttpServletRequest request, HttpServletResponse response, HttpMessageContext context) {
 		Credential credential = context.getAuthParameters().getCredential();
 
 		if (credential != null) {
-            return context.notifyContainerAboutLogin(identityStore.validate(credential));
+            return context.notifyContainerAboutLogin(identityStoreHandler.validate(credential));
         }
 		else {
 			return context.doNothing();
