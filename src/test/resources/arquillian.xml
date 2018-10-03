@@ -6,6 +6,13 @@
 >
 	<container qualifier="wildfly-managed" default="true">
 	</container>
+
+	<container qualifier="payara">
+		<configuration>
+			<property name="domain">production</property>
+		</configuration>
+	</container>
+	
 	<extension qualifier="webdriver">
 		<property name="browser">htmlUnit</property>
 	</extension>
