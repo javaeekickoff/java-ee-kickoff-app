@@ -23,6 +23,27 @@
 		<developerConnection>scm:git:git@github.com:javaeekickoff/java-ee-kickoff-app.git</developerConnection>
 	</scm>
 
+    <repositories>
+        <!-- Try Maven central first, not last, which happens when omitted here -->
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </repository>
+
+        <repository>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <id>ossrh</id>
+            <name>Sonatype snapshots</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </repository>
+    </repositories>
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -65,11 +86,6 @@
 		<!-- Runtime dependencies. -->
 		<dependency>
 			<groupId>org.omnifaces</groupId>
-			<artifactId>omnisecurity-cdi-auth-events-undertow</artifactId>
-			<version>10.0.0.Final-u1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.omnifaces</groupId>
 			<artifactId>omnifaces</artifactId>
 			<version>3.3-SNAPSHOT</version>
 		</dependency>
@@ -86,7 +102,7 @@
 		<dependency>
 			<groupId>org.omnifaces</groupId>
 			<artifactId>omnipersistence</artifactId>
-			<version>0.8</version>
+			<version>0.9-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.omnifaces</groupId>
