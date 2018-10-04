@@ -16,10 +16,18 @@
 
 		<properties>
 			<property name="javax.persistence.schema-generation.database.action" value="drop-and-create" />
+			
+			<!-- Hibernate specific options -->
 			<property name="hibernate.show_sql" value="true" />
 			<property name="hibernate.cache.use_second_level_cache" value="false" />
 			<property name="hibernate.cache.use_query_cache" value="false" />
 			<property name="wildfly.jpa.twophasebootstrap" value="false" /> <!-- https://issues.jboss.org/browse/WFLY-2727 -->
+			
+			<!-- EclipseLink specific options -->
+			<property name="eclipselink.weaving" value="static" />
+			<property name="eclipselink.logging.level.sql" value="FINEST" />
+			<property name="eclipselink.logging.level" value="FINEST" />
+			<property name="eclipselink.logging.level.cache" value="FINEST" />
 		</properties>
 	</persistence-unit>
 </persistence>
