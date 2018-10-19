@@ -244,7 +244,7 @@
 			<description>Data model must be an instance of PagedDataModel.</description>
 			<name>value</name>
 			<required>true</required>
-			<type>org.example.kickoff.view.PagedDataModel</type>
+			<type>org.omnifaces.optimusfaces.model.PagedDataModel</type>
 		</attribute>
 	</tag>
 
