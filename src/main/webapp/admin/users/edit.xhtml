@@ -20,6 +20,7 @@
 			<k:input id="groups" type="checkboxes" value="#{editUserBacking.user.groups}" required="true">
 				<f:selectItems value="#{Group}" />
 				<f:converter converterId="omnifaces.GenericEnumConverter" />
+				<f:attribute name="collectionType" value="java.util.HashSet" />
 			</k:input>
 
 			<k:buttons>
