@@ -28,23 +28,23 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-		<test.wildfly.version>12.0.0.Final</test.wildfly.version>
+		<test.wildfly.version>14.0.1.Final</test.wildfly.version>
 	</properties>
 
 	<dependencies>
 
-		<!-- Server specific dependencies (we target WildFly 12.0 with Mojarra 2.3.3 as of now). -->
+		<!-- Server specific dependencies (we target WildFly 14.0.1 with Mojarra 2.3.5 as of now). -->
 		<!-- For correct API sources in Eclipse debugger, those need to be declared BEFORE javaee-api! -->
 		<dependency>
 			<groupId>org.glassfish</groupId>
 			<artifactId>javax.faces</artifactId>
-			<version>2.3.3</version> <!-- Use the exact version as provided by target server! -->
+			<version>2.3.5</version> <!-- Use the exact version as provided by target server! -->
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
-			<version>5.1.10.Final</version> <!-- Use the exact version as provided by target server! -->
+			<version>5.3.6.Final</version> <!-- Use the exact version as provided by target server! -->
 			<scope>provided</scope>
 			<exclusions>
 				<exclusion> <!-- Conflicts with graphene-webdriver. -->
@@ -64,19 +64,9 @@
 
 		<!-- Runtime dependencies. -->
 		<dependency>
-			<groupId>org.glassfish.soteria</groupId>
-			<artifactId>javax.security.enterprise</artifactId>
-			<version>1.0</version> <!-- Remove this dependency when targeting a Java EE 8 server. -->
-		</dependency>
-		<dependency>
-			<groupId>org.omnifaces</groupId>
-			<artifactId>omnisecurity-cdi-auth-events-undertow</artifactId>
-			<version>10.0.0.Final-u1</version>
-		</dependency>
-		<dependency>
 			<groupId>org.omnifaces</groupId>
 			<artifactId>omnifaces</artifactId>
-			<version>3.0</version>
+			<version>3.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.omnifaces</groupId>
@@ -86,17 +76,17 @@
 		<dependency>
 			<groupId>org.omnifaces</groupId>
 			<artifactId>omniutils</artifactId>
-			<version>0.6</version>
+			<version>0.10</version>
 		</dependency>
 		<dependency>
 			<groupId>org.omnifaces</groupId>
 			<artifactId>omnipersistence</artifactId>
-			<version>0.5</version>
+			<version>0.9</version>
 		</dependency>
 		<dependency>
 			<groupId>org.omnifaces</groupId>
 			<artifactId>optimusfaces</artifactId>
-			<version>0.6</version>
+			<version>0.9</version>
 		</dependency>
 		<dependency>
 			<groupId>org.primefaces</groupId>
@@ -106,12 +96,7 @@
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
-			<version>1.4.196</version>
-		</dependency>
-		<dependency>
-			<groupId>org.infinispan</groupId>
-			<artifactId>infinispan-core</artifactId>
-			<version>9.2.0.Final</version>
+			<version>1.4.197</version>
 		</dependency>
 
 		<!-- Test dependencies.	-->
@@ -206,7 +191,7 @@
 				<dependency>
 					<groupId>org.wildfly.arquillian</groupId>
 					<artifactId>wildfly-arquillian-container-managed</artifactId>
-					<version>2.1.0.Final</version>
+					<version>2.1.1.Final</version>
 					<scope>test</scope>
 				</dependency>
 			</dependencies>

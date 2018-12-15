@@ -12,10 +12,10 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Cache;
-import org.omnifaces.persistence.model.BaseEntity;
+import org.omnifaces.persistence.model.GeneratedIdEntity;
 
 @Entity
-public class Credentials extends BaseEntity<Long> {
+public class Credentials extends GeneratedIdEntity<Long> {
 
 	private static final long serialVersionUID = 1L;
 

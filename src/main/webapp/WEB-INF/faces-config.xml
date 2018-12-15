@@ -2,8 +2,8 @@
 <faces-config
 	xmlns="http://xmlns.jcp.org/xml/ns/javaee"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_3.xsd"
-	version="2.3"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd"
+	version="2.2"
 >
 	<application>
 		<locale-config>
@@ -30,7 +30,7 @@
 	</factory>
 
 	<lifecycle>
-		<phase-listener>org.omnifaces.eventlistener.FacesRequestLogger</phase-listener>
+		<phase-listener>org.example.kickoff.view.phaselistener.FacesRequestLoggerPatch</phase-listener>
 	</lifecycle>
 
 	<render-kit>
