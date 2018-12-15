@@ -11,8 +11,10 @@ import org.example.kickoff.view.ActiveLocale;
 
 public class LocaleAwareViewHandler extends ViewHandlerWrapper {
 
+	private ViewHandler wrapped;
+
 	public LocaleAwareViewHandler(ViewHandler wrapped) {
-		super(wrapped);
+		this.wrapped = wrapped;
 	}
 
 	@Override
@@ -23,4 +25,8 @@ public class LocaleAwareViewHandler extends ViewHandlerWrapper {
 		return contextPath + localePath + uri;
 	}
 
+	@Override
+	public ViewHandler getWrapped() {
+		return wrapped;
+	}
 }

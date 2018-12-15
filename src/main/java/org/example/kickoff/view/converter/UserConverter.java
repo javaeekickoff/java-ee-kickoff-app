@@ -10,32 +10,37 @@ import javax.inject.Inject;
 import org.example.kickoff.business.service.UserService;
 import org.example.kickoff.model.User;
 
-@FacesConverter(forClass=User.class, managed=true)
-public class UserConverter implements Converter<User> {
+@FacesConverter(forClass=User.class)
+public class UserConverter implements Converter {
 
 	@Inject
 	private UserService userService;
 
 	@Override
-	public String getAsString(FacesContext context, UIComponent component, User user) {
-		if (user == null) {
+	public String getAsString(FacesContext context, UIComponent component, Object modelValue) {
+		if (modelValue == null) {
 			return "";
 		}
 
-		return user.getId().toString();
+		if (modelValue instanceof User) {
+			return ((User) modelValue).getId().toString();
+		}
+		else {
+			throw new ConverterException(modelValue + " is not an User");
+		}
 	}
 
 	@Override
-	public User getAsObject(FacesContext context, UIComponent component, String id) {
-		if (id == null) {
+	public Object getAsObject(FacesContext context, UIComponent component, String submittedValue) {
+		if (submittedValue == null) {
 			return null;
 		}
 
 		try {
-			return userService.getById(Long.valueOf(id));
+			return userService.getById(Long.valueOf(submittedValue));
 		}
 		catch (NumberFormatException e) {
-			throw new ConverterException(id + " is not a valid User ID", e);
+			throw new ConverterException(submittedValue + " is not a valid User ID", e);
 		}
 	}
 
