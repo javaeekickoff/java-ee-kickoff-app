@@ -5,8 +5,10 @@ import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 import static java.util.stream.Collectors.toList;
 import static javax.faces.event.PhaseId.ANY_PHASE;
+import static javax.faces.event.PhaseId.RENDER_RESPONSE;
 import static javax.faces.event.PhaseId.RESTORE_VIEW;
 import static javax.faces.render.ResponseStateManager.VIEW_STATE_PARAM;
+import static org.omnifaces.cdi.viewscope.ViewScopeManager.isUnloadRequest;
 import static org.omnifaces.util.Components.getActionExpressionsAndListeners;
 import static org.omnifaces.util.Components.getCurrentActionSource;
 import static org.omnifaces.util.FacesLocal.getRemoteAddr;
@@ -17,7 +19,6 @@ import static org.omnifaces.util.FacesLocal.getRequestParameter;
 import static org.omnifaces.util.FacesLocal.getRequestParameterValuesMap;
 import static org.omnifaces.util.FacesLocal.getRequestURIWithQueryString;
 import static org.omnifaces.util.FacesLocal.getSessionId;
-import static org.omnifaces.util.FacesLocal.isRenderResponse;
 import static org.omnifaces.util.FacesLocal.setRequestAttribute;
 import static org.omnifaces.utils.Lang.coalesce;
 
@@ -62,7 +63,7 @@ public class FacesRequestLogger extends DefaultPhaseListener {
 		FacesContext context = event.getFacesContext();
 		getPhaseTimer(context).stop(event.getPhaseId());
 
-		if (!(isRenderResponse(context) || context.getResponseComplete())) {
+		if (!(event.getPhaseId() == RENDER_RESPONSE || context.getResponseComplete()) || !logger.isLoggable(INFO)) {
 			return;
 		}
 
@@ -86,12 +87,14 @@ public class FacesRequestLogger extends DefaultPhaseListener {
 		userDetails.put("ip", getRemoteAddr(context));
 		userDetails.put("login", getRemoteUser(context));
 		userDetails.put("session", getSessionId(context));
-		userDetails.put("viewState", getRequestParameter(context, VIEW_STATE_PARAM));
+		if (!context.getApplication().getStateManager().isSavingStateInClient(context)) {
+			userDetails.put("viewState", getRequestParameter(context, VIEW_STATE_PARAM));
+		}
 		return userDetails;
 	}
 
 	private static Map<String, Object> getActionDetails(FacesContext context) {
-		UIComponent actionSource = getCurrentActionSource();
+		UIComponent actionSource = isUnloadRequest(context) ? null : getCurrentActionSource();
 		Map<String, Object> actionDetails = new LinkedHashMap<>();
 		actionDetails.put("source", actionSource != null ? actionSource.getClientId(context) : null);
 		actionDetails.put("event", coalesce(getRequestParameter(context, "javax.faces.behavior.event"), getRequestParameter(context, "omnifaces.event")));
