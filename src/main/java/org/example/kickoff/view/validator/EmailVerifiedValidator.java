@@ -14,19 +14,19 @@ import javax.inject.Inject;
 import org.example.kickoff.business.service.UserService;
 import org.example.kickoff.model.User;
 
-@FacesValidator(value="emailVerifiedValidator", managed=true)
-public class EmailVerifiedValidator implements Validator<String> {
+@FacesValidator("emailVerifiedValidator")
+public class EmailVerifiedValidator implements Validator {
 
 	@Inject
 	private UserService userService;
 
 	@Override
-	public void validate(FacesContext context, UIComponent component, String email) throws ValidatorException {
-		if (email == null) {
+	public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
+		if (value == null) {
 			return;
 		}
 
-		Optional<User> user = userService.findByEmail(email);
+		Optional<User> user = userService.findByEmail((String) value);
 
 		if (user.isPresent() && !user.get().isEmailVerified()) {
 			throw new ValidatorException(createError("emailVerifiedValidator"));

@@ -64,7 +64,9 @@
 							<p>The source code of this project is hosted on <a href="https://github.com/javaeekickoff/java-ee-kickoff-app" target="_blank">GitHub</a>.</p>
 						</section>
 					</ui:insert>
-					<p:messages id="messages" autoUpdate="true" closable="true" redisplay="false" /> <!-- Note: auto-updates only on PrimeFaces ajax requests, not on JSF/OmniFaces ajax requests! -->
+					<p:messages id="messages" closable="true" redisplay="false">
+						<p:autoUpdate /> <!-- Note: auto-updates only on PrimeFaces ajax requests, not on JSF/OmniFaces ajax requests! -->
+					</p:messages>
 				</article>
 				<div id="overlay" class="ui-widget-overlay" />
 			</main>

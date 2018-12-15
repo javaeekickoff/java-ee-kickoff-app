@@ -12,6 +12,8 @@ import static org.omnifaces.util.Faces.validationFailed;
 import static org.omnifaces.util.Messages.addFlashGlobalWarn;
 import static org.omnifaces.util.Messages.addGlobalError;
 
+import java.io.IOException;
+
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.security.enterprise.AuthenticationStatus;
@@ -50,7 +52,7 @@ public abstract class AuthBacking {
 		}
 	}
 
-	protected void authenticate(AuthenticationParameters parameters) {
+	protected void authenticate(AuthenticationParameters parameters) throws IOException {
 		AuthenticationStatus status = securityContext.authenticate(getRequest(), getResponse(), parameters);
 
 		if (status == SEND_FAILURE) {
