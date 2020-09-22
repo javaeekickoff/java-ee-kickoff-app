@@ -1,7 +1,7 @@
 [java-ee-kickoff-app](http://javaeekickoff.omnifaces.org/) [![Build Status](https://travis-ci.org/javaeekickoff/java-ee-kickoff-app.svg?branch=master)](https://travis-ci.org/javaeekickoff/java-ee-kickoff-app)
 ===================
 
-Basic project template to kickoff a new Java EE web application. Live demo is available at [javaeekickoff.omnifaces.org](http://javaeekickoff.omnifaces.org/) (currently running [WildFly](http://wildfly.org/) 13.0.0 with [Mojarra](https://github.com/javaserverfaces/mojarra/blob/master/README.md) 2.3.4).
+Basic project template to kickoff a new Java EE web application.
 
 ## Usage
 
