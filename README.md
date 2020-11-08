@@ -1,4 +1,4 @@
-[java-ee-kickoff-app](http://javaeekickoff.omnifaces.org/) [![Build Status](https://travis-ci.org/javaeekickoff/java-ee-kickoff-app.svg?branch=master)](https://travis-ci.org/javaeekickoff/java-ee-kickoff-app)
+[java-ee-kickoff-app](http://javaeekickoff.omnifaces.org/) [![Build Status](https://travis-ci.org/javaeekickoff/java-ee-kickoff-app.svg?branch=master)](https://travis-ci.org/javaeekickoff/java-ee-kickoff-app) [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fjavaeekickoff%2Fjava-ee-kickoff-app&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=PAGE+VIEWS&edge_flat=false)](https://hits.seeyoufarm.com)
 ===================
 
 Basic project template to kickoff a new Java EE web application.
