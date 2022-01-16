@@ -29,6 +29,7 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<test.wildfly.version>14.0.1.Final</test.wildfly.version>
+		<closeTestReports>true</closeTestReports>
 	</properties>
 
 	<dependencies>
@@ -232,6 +233,7 @@
 								<jboss.home>${project.build.directory}/wildfly-${test.wildfly.version}</jboss.home>
 								<java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
 							</systemPropertyVariables>
+							<disableXmlReport>${closeTestReports}</disableXmlReport>
 						</configuration>
 					</plugin>
 					<plugin>
