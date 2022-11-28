@@ -23,7 +23,7 @@
 		<maven.compiler.target>11</maven.compiler.target>
 		
 		<test.wildfly.version>27.0.0.Final</test.wildfly.version>
-		<glassfish.version>7.0.0-SNAPSHOT</glassfish.version>
+		<glassfish.version>7.0.0-M10</glassfish.version>
 	</properties>
 
 	<dependencyManagement>
