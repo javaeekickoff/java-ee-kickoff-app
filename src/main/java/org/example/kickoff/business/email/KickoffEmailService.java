@@ -2,7 +2,7 @@ package org.example.kickoff.business.email;
 
 import java.util.Map;
 
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 
 @Stateless
 public class KickoffEmailService extends EmailService {

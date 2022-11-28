@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;

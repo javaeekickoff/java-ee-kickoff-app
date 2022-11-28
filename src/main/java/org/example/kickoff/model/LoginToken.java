@@ -1,21 +1,19 @@
 package org.example.kickoff.model;
 
+import static jakarta.persistence.EnumType.STRING;
 import static java.time.temporal.ChronoUnit.MONTHS;
-import static javax.persistence.EnumType.STRING;
-import static org.hibernate.annotations.CacheConcurrencyStrategy.TRANSACTIONAL;
 
 import java.time.Instant;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-import javax.persistence.ManyToOne;
-import javax.persistence.PrePersist;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import org.hibernate.annotations.Cache;
 import org.omnifaces.persistence.model.GeneratedIdEntity;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
 public class LoginToken extends GeneratedIdEntity<Long> {
@@ -48,7 +46,6 @@ public class LoginToken extends GeneratedIdEntity<Long> {
 	private @Size(max = DESCRIPTION_MAXLENGTH) String description;
 
 	@ManyToOne(optional = false)
-	@Cache(usage = TRANSACTIONAL)
 	private User user;
 
 	@Enumerated(STRING)

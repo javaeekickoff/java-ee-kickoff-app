@@ -4,9 +4,9 @@ import static org.omnifaces.util.Messages.addGlobalWarn;
 
 import java.io.Serializable;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.annotation.PostConstruct;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import org.example.kickoff.business.service.UserService;
 import org.example.kickoff.model.User;

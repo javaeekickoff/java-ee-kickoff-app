@@ -1,7 +1,7 @@
 package org.example.kickoff.view.auth;
 
-import static javax.security.enterprise.AuthenticationStatus.SEND_CONTINUE;
-import static javax.security.enterprise.AuthenticationStatus.SEND_FAILURE;
+import static jakarta.security.enterprise.AuthenticationStatus.SEND_CONTINUE;
+import static jakarta.security.enterprise.AuthenticationStatus.SEND_FAILURE;
 import static org.example.kickoff.model.Group.ADMIN;
 import static org.example.kickoff.model.Group.USER;
 import static org.omnifaces.util.Faces.getRequest;
@@ -14,12 +14,12 @@ import static org.omnifaces.util.Messages.addGlobalError;
 
 import java.io.IOException;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.security.enterprise.AuthenticationStatus;
-import javax.security.enterprise.SecurityContext;
-import javax.security.enterprise.authentication.mechanism.http.AuthenticationParameters;
-import javax.validation.constraints.NotNull;
+import jakarta.annotation.PostConstruct;
+import jakarta.inject.Inject;
+import jakarta.security.enterprise.AuthenticationStatus;
+import jakarta.security.enterprise.SecurityContext;
+import jakarta.security.enterprise.authentication.mechanism.http.AuthenticationParameters;
+import jakarta.validation.constraints.NotNull;
 
 import org.example.kickoff.business.service.UserService;
 import org.example.kickoff.model.User;

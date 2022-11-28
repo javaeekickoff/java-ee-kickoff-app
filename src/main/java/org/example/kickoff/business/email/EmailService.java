@@ -9,12 +9,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-
 import org.example.kickoff.business.email.EmailTemplate.EmailTemplatePart;
 import org.example.kickoff.business.exception.SystemException;
 import org.omnifaces.cdi.settings.ApplicationSetting;
+
+import jakarta.annotation.PostConstruct;
+import jakarta.inject.Inject;
 
 public abstract class EmailService  {
 

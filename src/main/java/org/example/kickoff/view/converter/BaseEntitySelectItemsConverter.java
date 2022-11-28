@@ -2,9 +2,9 @@ package org.example.kickoff.view.converter;
 
 import java.util.Objects;
 
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
-import javax.faces.convert.FacesConverter;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.convert.FacesConverter;
 
 import org.omnifaces.converter.SelectItemsConverter;
 import org.omnifaces.persistence.model.BaseEntity;

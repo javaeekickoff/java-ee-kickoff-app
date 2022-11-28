@@ -1,8 +1,9 @@
 package org.example.kickoff.config.auth;
 
-import javax.security.enterprise.CallerPrincipal;
-
 import org.example.kickoff.model.User;
+import org.example.kickoff.view.ActiveUser;
+
+import jakarta.security.enterprise.CallerPrincipal;
 
 /**
  * @see KickoffIdentityStore
@@ -10,7 +11,8 @@ import org.example.kickoff.model.User;
  */
 public class KickoffCallerPrincipal extends CallerPrincipal {
 
-	private final User user;
+	private static final long serialVersionUID = 1L;
+    private final User user;
 
 	public KickoffCallerPrincipal(User user) {
 		super(user.getEmail());

@@ -14,27 +14,27 @@
 	<!-- Standard JSF settings. -->
 
 	<context-param>
-		<param-name>javax.faces.FACELETS_BUFFER_SIZE</param-name>
+		<param-name>jakarta.faces.FACELETS_BUFFER_SIZE</param-name>
 		<param-value>65535</param-value> <!-- 64KB -->
 	</context-param>
 	<context-param>
-		<param-name>javax.faces.FACELETS_REFRESH_PERIOD</param-name>
+		<param-name>jakarta.faces.FACELETS_REFRESH_PERIOD</param-name>
 		<param-value>0</param-value> <!-- TODO: parameterize this. -->
 	</context-param>
 	<context-param>
-		<param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
+		<param-name>jakarta.faces.FACELETS_SKIP_COMMENTS</param-name>
 		<param-value>true</param-value>
 	</context-param>
 	<context-param>
-		<param-name>javax.faces.INTERPRET_EMPTY_STRING_SUBMITTED_VALUES_AS_NULL</param-name>
+		<param-name>jakarta.faces.INTERPRET_EMPTY_STRING_SUBMITTED_VALUES_AS_NULL</param-name>
 		<param-value>true</param-value>
 	</context-param>
 	<context-param>
-		<param-name>javax.faces.PROJECT_STAGE</param-name>
+		<param-name>jakarta.faces.PROJECT_STAGE</param-name>
 		<param-value>Development</param-value> <!-- TODO: parameterize this. -->
 	</context-param>
 	<context-param>
-		<param-name>javax.faces.SERIALIZE_SERVER_STATE</param-name>
+		<param-name>jakarta.faces.SERIALIZE_SERVER_STATE</param-name>
 		<param-value>true</param-value>
 	</context-param>
 
@@ -47,7 +47,7 @@
 	</context-param>
 	<context-param>
 		<param-name>com.sun.faces.enableViewStateIdRendering</param-name>
-		<param-value>false</param-value> <!-- Prevent duplicate javax.faces.ViewState element IDs. -->
+		<param-value>false</param-value> <!-- Prevent duplicate jakarta.faces.ViewState element IDs. -->
 	</context-param>
 
 
@@ -79,7 +79,7 @@
 
 	<servlet>
 		<servlet-name>facesServlet</servlet-name>
-		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+		<servlet-class>jakarta.faces.webapp.FacesServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
@@ -157,7 +157,7 @@
 		<location>/WEB-INF/errorpages/500.xhtml</location>
 	</error-page>
 	<error-page>
-		<exception-type>javax.faces.application.ViewExpiredException</exception-type>
+		<exception-type>jakarta.faces.application.ViewExpiredException</exception-type>
 		<location>/WEB-INF/errorpages/expired.xhtml</location>
 	</error-page>
 
@@ -182,7 +182,7 @@
 	<!-- Security constraints and roles. -->
 
 	<security-constraint>
-		<display-name>Restrict direct access to the /resources folder.</display-name> <!-- We could have used javax.faces.WEBAPP_RESOURCES_DIRECTORY, but this doesn't cover resources from JARs. -->
+		<display-name>Restrict direct access to the /resources folder.</display-name> <!-- We could have used jakarta.faces.WEBAPP_RESOURCES_DIRECTORY, but this doesn't cover resources from JARs. -->
 		<web-resource-collection>
 			<web-resource-name>The /resources folder.</web-resource-name>
 			<url-pattern>/resources/*</url-pattern>

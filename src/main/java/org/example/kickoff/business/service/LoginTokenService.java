@@ -7,8 +7,8 @@ import static org.omnifaces.utils.security.MessageDigests.digest;
 
 import java.time.Instant;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
 
 import org.example.kickoff.business.exception.InvalidUsernameException;
 import org.example.kickoff.model.LoginToken;

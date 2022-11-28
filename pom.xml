@@ -19,9 +19,11 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
-		<test.wildfly.version>14.0.1.Final</test.wildfly.version>
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
+		
+		<test.wildfly.version>27.0.0.Final</test.wildfly.version>
+		<glassfish.version>7.0.0-SNAPSHOT</glassfish.version>
 	</properties>
 
 	<dependencyManagement>
@@ -31,14 +33,14 @@
 			<dependency>
 				<groupId>org.jboss.arquillian</groupId>
 				<artifactId>arquillian-bom</artifactId>
-				<version>1.4.0.Final</version>
+				<version>1.7.0.Alpha13</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.jboss.arquillian.extension</groupId>
 				<artifactId>arquillian-drone-bom</artifactId>
-				<version>2.5.0</version>
+				<version>3.0.0-alpha.6</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -46,67 +48,45 @@
 	</dependencyManagement>
 	<dependencies>
 
-		<!-- Server specific dependencies (we target WildFly 14.0.1 with Mojarra 2.3.5 as of now). -->
-		<!-- For correct API sources in Eclipse debugger, those need to be declared BEFORE javaee-api! -->
-		<dependency>
-			<groupId>org.glassfish</groupId>
-			<artifactId>javax.faces</artifactId>
-			<version>2.3.5</version>
-			<!-- Use the exact version as provided by target server! -->
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-core</artifactId>
-			<version>5.3.6.Final</version>
-			<!-- Use the exact version as provided by target server! -->
-			<scope>provided</scope>
-			<exclusions>
-				<exclusion><!-- Conflicts with graphene-webdriver. -->
-					<groupId>dom4j</groupId>
-					<artifactId>dom4j</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
-		<!-- Target Java EE 8 server. -->
-		<dependency>
-			<groupId>javax</groupId>
-			<artifactId>javaee-api</artifactId>
-			<version>8.0</version>
-			<scope>provided</scope>
-		</dependency>
+		<!-- Target Jakarta EE 10 server. -->
+        <dependency>
+            <groupId>jakarta.platform</groupId>
+            <artifactId>jakarta.jakartaee-api</artifactId>
+            <version>10.0.0</version>
+            <scope>provided</scope>
+        </dependency>
 
 		<!-- Runtime dependencies. -->
 		<dependency>
 			<groupId>org.omnifaces</groupId>
 			<artifactId>omnifaces</artifactId>
-			<version>3.2</version>
+			<version>4.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.omnifaces</groupId>
 			<artifactId>omnisettings</artifactId>
-			<version>0.1</version>
+			<version>0.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.omnifaces</groupId>
 			<artifactId>omniutils</artifactId>
-			<version>0.10</version>
+			<version>0.13</version>
 		</dependency>
 		<dependency>
 			<groupId>org.omnifaces</groupId>
 			<artifactId>omnipersistence</artifactId>
-			<version>0.9</version>
+			<version>0.20.J1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.omnifaces</groupId>
 			<artifactId>optimusfaces</artifactId>
-			<version>0.9</version>
+			<version>0.16.J1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.primefaces</groupId>
 			<artifactId>primefaces</artifactId>
-			<version>6.2</version>
+			<version>12.0.0</version>
+			<classifier>jakarta</classifier>
 		</dependency>
 		<dependency>
 			<groupId>com.h2database</groupId>
@@ -118,13 +98,13 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.13.1</version>
+			<version>4.13.2</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.dbunit</groupId>
 			<artifactId>dbunit</artifactId>
-			<version>2.5.4</version>
+			<version>2.7.3</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -146,7 +126,7 @@
 		<dependency>
 			<groupId>org.jboss.arquillian.graphene</groupId>
 			<artifactId>graphene-webdriver</artifactId>
-			<version>2.3.2</version>
+			<version>2.5.4</version>
 			<type>pom</type>
 			<scope>test</scope>
 		</dependency>
@@ -165,7 +145,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>3.1.0</version>
                 <executions>
                     <execution>
                         <id>enforce-maven</id>
@@ -183,10 +163,25 @@
                 </executions>
             </plugin>
             
+            <!-- Restricts the Java version to 11 -->
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.10.1</version>
+                <configuration>
+                    <release>11</release>
+                    <compilerArgument>-Xlint:unchecked</compilerArgument>
+                </configuration>
+            </plugin>
+            
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.3.2</version>
+            </plugin>
+            
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-archetype-plugin</artifactId>
-				<version>3.0.1</version>
+				<version>3.2.1</version>
 				<configuration>
 					<propertyFile>archetype.properties</propertyFile>
 					<archetypeFilteredExtensions>java,xml,xhtml</archetypeFilteredExtensions>
@@ -196,18 +191,86 @@
 	</build>
 
 	<profiles>
+	
+	   <profile>
+            <id>glassfish</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            
+            <properties>
+                <server.suspend>glassfish.suspend</server.suspend>
+            </properties>
+
+            <dependencies>
+                <dependency>
+                    <groupId>org.omnifaces.arquillian</groupId>
+                    <artifactId>glassfish-client-ee9</artifactId>
+                    <version>1.2</version>
+                </dependency>
+
+                <!-- The actual Arquillian connector -->
+                <dependency>
+                    <groupId>org.omnifaces.arquillian</groupId>
+                    <artifactId>arquillian-glassfish-server-managed</artifactId>
+                    <version>1.2</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>unpack</id>
+                                <phase>process-test-classes</phase>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${session.executionRootDirectory}/target</outputDirectory>
+                                    <markersDirectory>${session.executionRootDirectory}/target/dependency-maven-plugin-markers</markersDirectory>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.glassfish.main.distributions</groupId>
+                                            <artifactId>glassfish</artifactId>
+                                            <version>${glassfish.version}</version>
+                                            <type>zip</type>
+                                            <overWrite>false</overWrite>
+                                            <outputDirectory>${session.executionRootDirectory}/target</outputDirectory>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>3.0.0-M7</version>
+                        <configuration>
+                            <systemPropertyVariables>
+                                <glassfish.home>${session.executionRootDirectory}/target/glassfish7</glassfish.home>
+                            </systemPropertyVariables>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+	
 
 		<!-- WildFly integration test profile: mvn verify -P wildfly -->
 		<profile>
 			<id>wildfly</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
+			
 			<dependencies>
 				<dependency>
 					<groupId>org.wildfly.arquillian</groupId>
 					<artifactId>wildfly-arquillian-container-managed</artifactId>
-					<version>2.1.1.Final</version>
+					<version>5.0.0.Alpha6</version>
 					<scope>test</scope>
 				</dependency>
 			</dependencies>
@@ -216,7 +279,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-dependency-plugin</artifactId>
-						<version>3.0.2</version>
+						<version>3.3.0</version>
 						<executions>
 							<execution>
 								<phase>process-test-classes</phase>
@@ -242,18 +305,17 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-surefire-plugin</artifactId>
-						<version>2.20.1</version>
+						<version>3.0.0-M7</version>
 						<configuration>
 							<systemPropertyVariables>
 								<jboss.home>${project.build.directory}/wildfly-${test.wildfly.version}</jboss.home>
-								<java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
 							</systemPropertyVariables>
 						</configuration>
 					</plugin>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-failsafe-plugin</artifactId>
-						<version>2.20.1</version>
+						<version>3.0.0-M7</version>
 						<executions>
 							<execution>
 								<goals>
@@ -265,7 +327,6 @@
 						<configuration>
 							<systemPropertyVariables>
 								<jboss.home>${project.build.directory}/wildfly-${test.wildfly.version}</jboss.home>
-								<java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
 							</systemPropertyVariables>
 						</configuration>
 					</plugin>

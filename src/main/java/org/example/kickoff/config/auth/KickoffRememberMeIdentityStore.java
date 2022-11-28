@@ -4,13 +4,13 @@ import static org.example.kickoff.model.LoginToken.TokenType.REMEMBER_ME;
 import static org.omnifaces.util.Servlets.getRemoteAddr;
 
 import java.util.Set;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.security.enterprise.CallerPrincipal;
-import javax.security.enterprise.credential.RememberMeCredential;
-import javax.security.enterprise.identitystore.CredentialValidationResult;
-import javax.security.enterprise.identitystore.RememberMeIdentityStore;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.security.enterprise.CallerPrincipal;
+import jakarta.security.enterprise.credential.RememberMeCredential;
+import jakarta.security.enterprise.identitystore.CredentialValidationResult;
+import jakarta.security.enterprise.identitystore.RememberMeIdentityStore;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.example.kickoff.business.service.LoginTokenService;
 import org.example.kickoff.business.service.UserService;

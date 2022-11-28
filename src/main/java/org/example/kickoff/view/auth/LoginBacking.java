@@ -1,13 +1,13 @@
 package org.example.kickoff.view.auth;
 
-import static javax.security.enterprise.authentication.mechanism.http.AuthenticationParameters.withParams;
+import static jakarta.security.enterprise.authentication.mechanism.http.AuthenticationParameters.withParams;
 
 import java.io.IOException;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.security.enterprise.credential.UsernamePasswordCredential;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.security.enterprise.credential.UsernamePasswordCredential;
 
 import org.omnifaces.cdi.Param;
 

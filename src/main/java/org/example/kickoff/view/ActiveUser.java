@@ -4,10 +4,10 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.enterprise.context.SessionScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.security.enterprise.SecurityContext;
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.security.enterprise.SecurityContext;
 
 import org.example.kickoff.config.auth.KickoffCallerPrincipal;
 import org.example.kickoff.model.Group;

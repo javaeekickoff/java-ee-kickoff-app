@@ -2,9 +2,9 @@ package org.example.kickoff.view.resourcehandler;
 
 import java.net.MalformedURLException;
 
-import javax.faces.FacesException;
-import javax.faces.application.Resource;
-import javax.faces.application.ResourceHandler;
+import jakarta.faces.FacesException;
+import jakarta.faces.application.Resource;
+import jakarta.faces.application.ResourceHandler;
 
 import org.omnifaces.resourcehandler.DefaultResourceHandler;
 import org.omnifaces.util.Faces;

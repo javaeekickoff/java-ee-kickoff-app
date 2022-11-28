@@ -2,11 +2,11 @@ package org.example.kickoff.view.user;
 
 import static org.omnifaces.util.Messages.addGlobalInfo;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.validation.constraints.NotNull;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.validation.constraints.NotNull;
 
 import org.example.kickoff.business.service.UserService;
 import org.example.kickoff.model.User;

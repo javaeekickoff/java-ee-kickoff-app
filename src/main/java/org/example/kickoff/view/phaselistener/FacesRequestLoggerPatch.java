@@ -1,6 +1,6 @@
 package org.example.kickoff.view.phaselistener;
 
-import static javax.faces.component.behavior.ClientBehaviorContext.BEHAVIOR_EVENT_PARAM_NAME;
+import static jakarta.faces.component.behavior.ClientBehaviorContext.BEHAVIOR_EVENT_PARAM_NAME;
 import static org.omnifaces.cdi.viewscope.ViewScopeManager.isUnloadRequest;
 import static org.omnifaces.config.OmniFaces.OMNIFACES_EVENT_PARAM_NAME;
 import static org.omnifaces.util.Components.getActionExpressionsAndListeners;
@@ -11,8 +11,8 @@ import static org.omnifaces.util.Utils.coalesce;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.context.FacesContext;
 
 import org.omnifaces.eventlistener.FacesRequestLogger;
 

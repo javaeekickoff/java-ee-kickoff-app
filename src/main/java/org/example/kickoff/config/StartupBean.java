@@ -8,8 +8,8 @@ import static org.omnifaces.utils.Lang.isEmpty;
 
 import java.util.ResourceBundle;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
+import jakarta.annotation.PostConstruct;
+import jakarta.inject.Inject;
 
 import org.example.kickoff.business.service.UserService;
 import org.example.kickoff.model.User;

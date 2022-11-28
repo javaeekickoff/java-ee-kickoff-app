@@ -36,8 +36,8 @@
 	<render-kit>
 	    <renderer>
 	    	<description>Disable PrimeFaces HeadRenderer as per http://stackoverflow.com/q/32352869/157882</description>
-	        <component-family>javax.faces.Output</component-family>
-	        <renderer-type>javax.faces.Head</renderer-type>
+	        <component-family>jakarta.faces.Output</component-family>
+	        <renderer-type>jakarta.faces.Head</renderer-type>
 	        <renderer-class>com.sun.faces.renderkit.html_basic.HeadRenderer</renderer-class>
 	    </renderer>
 	</render-kit>

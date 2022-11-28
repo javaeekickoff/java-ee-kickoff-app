@@ -16,15 +16,15 @@ import java.time.Year;
 import java.time.YearMonth;
 import java.util.List;
 
-import javax.faces.component.FacesComponent;
-import javax.faces.component.NamingContainer;
-import javax.faces.component.UIInput;
-import javax.faces.component.UINamingContainer;
-import javax.faces.context.FacesContext;
-import javax.faces.convert.ConverterException;
-
 import org.omnifaces.util.State;
 import org.primefaces.component.selectonemenu.SelectOneMenu;
+
+import jakarta.faces.component.FacesComponent;
+import jakarta.faces.component.NamingContainer;
+import jakarta.faces.component.UIInput;
+import jakarta.faces.component.UINamingContainer;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.convert.ConverterException;
 
 @FacesComponent("inputLocalDate")
 public class InputLocalDate extends UIInput implements NamingContainer {
@@ -55,7 +55,7 @@ public class InputLocalDate extends UIInput implements NamingContainer {
 	}
 
 	/**
-	 * Invoked when JSF renders the input field.
+	 * Invoked when Faces renders the input field.
 	 */
 	@Override
 	public void encodeBegin(FacesContext context) throws IOException {

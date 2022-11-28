@@ -4,9 +4,9 @@ import static org.omnifaces.util.Faces.redirect;
 
 import java.io.IOException;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import org.example.kickoff.business.service.UserService;
 import org.example.kickoff.model.User;

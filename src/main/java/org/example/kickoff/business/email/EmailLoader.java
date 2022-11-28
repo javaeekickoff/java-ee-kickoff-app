@@ -1,16 +1,16 @@
 package org.example.kickoff.business.email;
 
-import static javax.ejb.ConcurrencyManagementType.BEAN;
+import static jakarta.ejb.ConcurrencyManagementType.BEAN;
 import static org.omnifaces.utils.properties.PropertiesUtils.loadPropertiesFromClasspath;
 
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.ejb.ConcurrencyManagement;
-import javax.ejb.Singleton;
-import javax.ejb.Startup;
-import javax.enterprise.inject.Produces;
-import javax.inject.Named;
+import jakarta.annotation.PostConstruct;
+import jakarta.ejb.ConcurrencyManagement;
+import jakarta.ejb.Singleton;
+import jakarta.ejb.Startup;
+import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Named;
 
 @Startup
 @Singleton

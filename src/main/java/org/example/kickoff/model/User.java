@@ -1,11 +1,10 @@
 package org.example.kickoff.model;
 
+import static jakarta.persistence.CascadeType.ALL;
+import static jakarta.persistence.EnumType.STRING;
+import static jakarta.persistence.FetchType.EAGER;
+import static jakarta.persistence.FetchType.LAZY;
 import static java.util.stream.Collectors.toSet;
-import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.EnumType.STRING;
-import static javax.persistence.FetchType.EAGER;
-import static javax.persistence.FetchType.LAZY;
-import static org.hibernate.annotations.CacheConcurrencyStrategy.TRANSACTIONAL;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -13,20 +12,18 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Transient;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
 import org.example.kickoff.model.validator.Email;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.Formula;
 import org.omnifaces.persistence.model.TimestampedEntity;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Transient;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
 public class User extends TimestampedEntity<Long> {
@@ -45,7 +42,6 @@ public class User extends TimestampedEntity<Long> {
 	@Column(length = NAME_MAXLENGTH, nullable = false)
 	private @NotNull @Size(max = NAME_MAXLENGTH) String lastName;
 
-	@Formula("CONCAT(firstName, ' ', lastName)")
 	private String fullName;
 
 	/*
@@ -58,7 +54,6 @@ public class User extends TimestampedEntity<Long> {
 	private Credentials credentials;
 
 	@OneToMany(mappedBy = "user", fetch = LAZY, cascade = ALL, orphanRemoval = true)
-	@Cache(usage = TRANSACTIONAL)
 	private List<LoginToken> loginTokens = new ArrayList<>();
 
 	@ElementCollection(fetch = EAGER)

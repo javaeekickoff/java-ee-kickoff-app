@@ -6,9 +6,9 @@ import static org.omnifaces.util.Messages.addFlashGlobalWarn;
 
 import java.io.IOException;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Named;
-import javax.servlet.ServletException;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Named;
+import jakarta.servlet.ServletException;
 
 import org.omnifaces.util.Faces;
 

@@ -3,10 +3,10 @@
 	This is a copy of persistence.xml with data source and several settings adjusted for UT and IT.
  -->
 <persistence
-	xmlns="http://xmlns.jcp.org/xml/ns/persistence"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
-	version="2.1"
+    xmlns="https://jakarta.ee/xml/ns/persistence"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
+    version="3.0"
 >
 	<persistence-unit name="kickoff">
 		<jta-data-source>java:app/kickoff/TestDataSource</jta-data-source>

@@ -1,6 +1,6 @@
 package org.example.kickoff.business.exception;
 
-import javax.ejb.ApplicationException;
+import jakarta.ejb.ApplicationException;
 
 @ApplicationException(rollback = true)
 public abstract class BusinessException extends RuntimeException {

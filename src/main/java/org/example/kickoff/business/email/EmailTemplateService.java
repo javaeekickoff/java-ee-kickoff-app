@@ -2,8 +2,8 @@ package org.example.kickoff.business.email;
 
 import java.util.Map;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
 
 import org.example.kickoff.business.email.EmailTemplate.EmailTemplatePart;
 import org.omnifaces.utils.text.NameBasedMessageFormat;

@@ -3,9 +3,9 @@ package org.example.kickoff.view.viewhandler;
 import static org.omnifaces.util.Beans.getReference;
 import static org.omnifaces.util.FacesLocal.getRequestContextPath;
 
-import javax.faces.application.ViewHandler;
-import javax.faces.application.ViewHandlerWrapper;
-import javax.faces.context.FacesContext;
+import jakarta.faces.application.ViewHandler;
+import jakarta.faces.application.ViewHandlerWrapper;
+import jakarta.faces.context.FacesContext;
 
 import org.example.kickoff.view.ActiveLocale;
 

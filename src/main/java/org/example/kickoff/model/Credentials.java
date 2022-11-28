@@ -1,18 +1,16 @@
 package org.example.kickoff.model;
 
-import static org.hibernate.annotations.CacheConcurrencyStrategy.TRANSACTIONAL;
 import static org.omnifaces.utils.security.MessageDigests.digest;
 
 import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.annotations.Cache;
 import org.omnifaces.persistence.model.GeneratedIdEntity;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Credentials extends GeneratedIdEntity<Long> {
@@ -23,7 +21,6 @@ public class Credentials extends GeneratedIdEntity<Long> {
 	private static final int SALT_LENGTH = 40;
 
 	@ManyToOne(optional = false)
-	@Cache(usage = TRANSACTIONAL)
 	private @NotNull User user;
 
 	@Column(length = HASH_LENGTH, nullable = false)

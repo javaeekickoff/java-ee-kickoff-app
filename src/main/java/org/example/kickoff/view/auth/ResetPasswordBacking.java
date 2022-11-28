@@ -11,10 +11,10 @@ import static org.omnifaces.util.Messages.addGlobalInfo;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import org.example.kickoff.business.service.UserService;
 import org.omnifaces.cdi.Param;

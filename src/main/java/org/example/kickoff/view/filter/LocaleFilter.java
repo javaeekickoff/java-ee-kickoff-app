@@ -5,13 +5,13 @@ import static org.example.kickoff.view.ActiveLocale.COOKIE_MAX_AGE_IN_DAYS;
 import static org.example.kickoff.view.ActiveLocale.COOKIE_NAME;
 import static org.omnifaces.util.Servlets.addResponseCookie;
 import java.io.IOException;
-import javax.inject.Inject;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebFilter;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.inject.Inject;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebFilter;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import org.example.kickoff.view.ActiveLocale;
 import org.omnifaces.filter.HttpFilter;
@@ -50,7 +50,7 @@ public class LocaleFilter extends HttpFilter {
 	}
 
 	private static boolean isFacesEvent(HttpServletRequest request) {
-		return request.getParameter("javax.faces.behavior.event") != null || request.getParameter("omnifaces.event") != null;
+		return request.getParameter("jakarta.faces.behavior.event") != null || request.getParameter("omnifaces.event") != null;
 	}
 
 }

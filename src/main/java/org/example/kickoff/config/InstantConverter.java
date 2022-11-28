@@ -2,8 +2,8 @@ package org.example.kickoff.config;
 import java.time.Instant;
 import java.util.Date;
 
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
 
 /**
  * Converts the JDK 8 / JSR 310 <code>Instant</code> type to <code>Date</code> for

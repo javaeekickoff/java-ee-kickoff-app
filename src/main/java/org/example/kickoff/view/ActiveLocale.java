@@ -15,15 +15,16 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.servlet.http.HttpServletRequest;
 
 import org.example.kickoff.view.filter.LocaleFilter;
 import org.example.kickoff.view.viewhandler.LocaleAwareViewHandler;
 import org.omnifaces.config.FacesConfigXml;
+
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * @see LocaleFilter
@@ -36,7 +37,7 @@ public class ActiveLocale {
 	public static final String COOKIE_NAME = "locale";
 	public static final int COOKIE_MAX_AGE_IN_DAYS = 30;
 
-	private static final Locale DEFAULT_LOCALE = FacesConfigXml.INSTANCE.getSupportedLocales().get(0);
+	private static final Locale DEFAULT_LOCALE = FacesConfigXml.instance().getSupportedLocales().get(0);
 	private static final LinkedHashMap<Locale, ActiveLocale> SUPPORTED_LOCALES = collectSupportedLocales();
 
 	private Locale locale;
@@ -126,7 +127,7 @@ public class ActiveLocale {
 	}
 
 	private static LinkedHashMap<Locale, ActiveLocale> collectSupportedLocales() {
-		LinkedHashMap<Locale, ActiveLocale> supportedLocales = FacesConfigXml.INSTANCE.getSupportedLocales().stream()
+		LinkedHashMap<Locale, ActiveLocale> supportedLocales = FacesConfigXml.instance().getSupportedLocales().stream()
 			.collect(toMap(identity(), ActiveLocale::new, (l, r) -> l, LinkedHashMap::new));
 		supportedLocales.values()
 			.forEach(supportedLocale -> supportedLocale.others = supportedLocales.values().stream().filter(l -> !l.equals(supportedLocale))

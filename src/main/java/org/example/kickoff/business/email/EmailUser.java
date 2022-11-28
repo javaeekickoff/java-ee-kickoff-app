@@ -1,6 +1,6 @@
 package org.example.kickoff.business.email;
 
-import javax.mail.internet.InternetAddress;
+import jakarta.mail.internet.InternetAddress;
 
 import org.example.kickoff.model.User;
 

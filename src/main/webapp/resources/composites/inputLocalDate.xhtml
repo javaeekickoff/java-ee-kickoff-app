@@ -3,13 +3,13 @@
 -->
 <ui:component
 	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="jakarta.faces.core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
 	xmlns:cc="http://xmlns.jcp.org/jsf/composite"
-	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
-	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
-	xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
+	xmlns:a="jakarta.faces.passthrough"
+	xmlns:c="jakarta.tags.core"
+	xmlns:fn="jakarta.tags.functions"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:o="http://omnifaces.org/ui"
 	xmlns:of="http://omnifaces.org/functions"
@@ -42,14 +42,14 @@
 			<div class="ui-helper-clearfix">
 				<div class="field day">
 					<h:outputLabel id="day_l" for="day" value="#{cc.resourceBundleMap.day}" />
-					<p:selectOneMenu id="day" binding="#{cc.day}" styleClass="#{cc.attrs.inputStyleClass}" label="#{cc.resourceBundleMap.day}" converter="javax.faces.Integer">
+					<p:selectOneMenu id="day" binding="#{cc.day}" styleClass="#{cc.attrs.inputStyleClass}" label="#{cc.resourceBundleMap.day}" converter="jakarta.faces.Integer">
 						<f:selectItem itemValue="#{null}" itemDisabled="#{true}" />
 						<f:selectItems value="#{cc.days}" />
 					</p:selectOneMenu>
 				</div>
 				<div class="field month">
 					<h:outputLabel id="month_l" for="month" value="#{cc.resourceBundleMap.month}" />
-					<p:selectOneMenu id="month" binding="#{cc.month}" styleClass="#{cc.attrs.inputStyleClass}" label="#{cc.resourceBundleMap.month}" converter="javax.faces.Integer">
+					<p:selectOneMenu id="month" binding="#{cc.month}" styleClass="#{cc.attrs.inputStyleClass}" label="#{cc.resourceBundleMap.month}" converter="jakarta.faces.Integer">
 						<f:selectItem itemValue="#{null}" itemDisabled="#{true}" />
 						<f:selectItems value="#{cc.months}" var="m" itemLabel="#{of:getMonth(m)}" />
 						<p:ajax process="day month" delay="200" listener="#{cc.updateDaysIfNecessary}" />
@@ -57,7 +57,7 @@
 				</div>
 				<div class="field year">
 					<h:outputLabel id="year_l" for="year" value="#{cc.resourceBundleMap.year}" />
-					<p:selectOneMenu id="year" binding="#{cc.year}" styleClass="#{cc.attrs.inputStyleClass}" label="#{cc.resourceBundleMap.year}" converter="javax.faces.Integer">
+					<p:selectOneMenu id="year" binding="#{cc.year}" styleClass="#{cc.attrs.inputStyleClass}" label="#{cc.resourceBundleMap.year}" converter="jakarta.faces.Integer">
 						<f:selectItem itemValue="#{null}" itemDisabled="#{true}" />
 						<f:selectItems value="#{cc.years}" />
 						<p:ajax process="month year" delay="200" listener="#{cc.updateMonthsIfNecessary}" />

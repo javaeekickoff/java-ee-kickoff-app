@@ -6,11 +6,11 @@ import static org.omnifaces.util.Faces.getViewId;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.Dependent;
-import javax.inject.Named;
-
 import org.omnifaces.config.WebXml;
+
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Named;
 
 @Named
 @Dependent
@@ -42,7 +42,7 @@ public class Page {
 		}
 
 		name = path.replaceFirst("WEB\\-INF/", "").replaceAll("\\W+", "_");
-		home = WebXml.INSTANCE.getWelcomeFiles().contains(path);
+		home = WebXml.instance().getWelcomeFiles().contains(path);
 		current = this;
 	}
 
