@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project
-	xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<prerequisites>
-		<maven>3.0.0</maven>
-	</prerequisites>
 
 	<groupId>org.example.kickoff</groupId>
 	<artifactId>java-ee-kickoff-app</artifactId>
@@ -31,6 +24,26 @@
 		<test.wildfly.version>14.0.1.Final</test.wildfly.version>
 	</properties>
 
+	<dependencyManagement>
+		<dependencies>
+
+			<!-- Test dependencies.	-->
+			<dependency>
+				<groupId>org.jboss.arquillian</groupId>
+				<artifactId>arquillian-bom</artifactId>
+				<version>1.4.0.Final</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.arquillian.extension</groupId>
+				<artifactId>arquillian-drone-bom</artifactId>
+				<version>2.5.0</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	<dependencies>
 
 		<!-- Server specific dependencies (we target WildFly 14.0.1 with Mojarra 2.3.5 as of now). -->
@@ -38,16 +51,18 @@
 		<dependency>
 			<groupId>org.glassfish</groupId>
 			<artifactId>javax.faces</artifactId>
-			<version>2.3.5</version> <!-- Use the exact version as provided by target server! -->
+			<version>2.3.5</version>
+			<!-- Use the exact version as provided by target server! -->
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
-			<version>5.3.6.Final</version> <!-- Use the exact version as provided by target server! -->
+			<version>5.3.6.Final</version>
+			<!-- Use the exact version as provided by target server! -->
 			<scope>provided</scope>
 			<exclusions>
-				<exclusion> <!-- Conflicts with graphene-webdriver. -->
+				<exclusion><!-- Conflicts with graphene-webdriver. -->
 					<groupId>dom4j</groupId>
 					<artifactId>dom4j</artifactId>
 				</exclusion>
@@ -143,30 +158,31 @@
 		</dependency>
 	</dependencies>
 
-	<dependencyManagement>
-		<dependencies>
-
-			<!-- Test dependencies.	-->
-			<dependency>
-				<groupId>org.jboss.arquillian</groupId>
-				<artifactId>arquillian-bom</artifactId>
-				<version>1.4.0.Final</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.jboss.arquillian.extension</groupId>
-				<artifactId>arquillian-drone-bom</artifactId>
-				<version>2.5.0</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
-
 	<build>
 		<finalName>${project.artifactId}</finalName>
 		<plugins>
+		    <!-- Sets minimal Maven version -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>enforce-maven</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireMavenVersion>
+                                    <version>3.6.0</version>
+                                </requireMavenVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-archetype-plugin</artifactId>
