@@ -65,7 +65,7 @@
 		<dependency>
 			<groupId>org.omnifaces</groupId>
 			<artifactId>omnisettings</artifactId>
-			<version>0.2-SNAPSHOT</version>
+			<version>0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.omnifaces</groupId>
