@@ -23,7 +23,7 @@
 		<maven.compiler.target>11</maven.compiler.target>
 		
 		<test.wildfly.version>27.0.0.Final</test.wildfly.version>
-		<glassfish.version>7.0.0-M10</glassfish.version>
+		<test.glassfish.version>7.0.0-M10</test.glassfish.version>
 	</properties>
 
 	<dependencyManagement>
@@ -248,7 +248,7 @@
                                         <artifactItem>
                                             <groupId>org.glassfish.main.distributions</groupId>
                                             <artifactId>glassfish</artifactId>
-                                            <version>${glassfish.version}</version>
+                                            <version>${test.glassfish.version}</version>
                                             <type>zip</type>
                                             <overWrite>false</overWrite>
                                             <outputDirectory>${session.executionRootDirectory}/target</outputDirectory>
