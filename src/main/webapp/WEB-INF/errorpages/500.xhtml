@@ -12,12 +12,12 @@
 			<section>
 				<h2>Detail <small>(only shown during development mode)</small></h2>
 				<ul>
-					<li>Exception: <code>#{requestScope['javax.servlet.error.message']}</code></li>
+					<li>Exception: <code>#{requestScope['jakarta.servlet.error.message']}</code></li>
 					<li>Request URI: <code><a href="#{fromURL}">#{fromURL}</a></code></li>
 					<li>Ajax request: <code>#{facesContext.partialViewContext.ajaxRequest ? 'Yes' : 'No'}</code></li>
 					<li>User agent: <code>#{header['user-agent']}</code></li>
 				</ul>
-				<pre><code>#{of:printStackTrace(requestScope['javax.servlet.error.exception'])}</code></pre>
+				<pre><code>#{of:printStackTrace(requestScope['jakarta.servlet.error.exception'])}</code></pre>
 			</section>
 		</c:if>
 	</ui:define>

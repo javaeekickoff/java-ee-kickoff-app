@@ -176,7 +176,7 @@
 			<description>The p:autoComplete method in case type attribute is set to 'autocomplete'.</description>
 			<name>completeMethod</name>
 			<required>false</required>
-			<type>javax.el.MethodExpression</type>
+			<type>jakarta.el.MethodExpression</type>
 		</attribute>
 		
 		<!-- Messages -->
@@ -220,7 +220,7 @@
 			<description>The POST action method of the button. This is ignored when 'path' attribute is specified.</description>
 			<name>action</name>
 			<required>false</required>
-			<type>javax.el.MethodExpression</type>
+			<type>jakarta.el.MethodExpression</type>
 		</attribute>
 		<attribute>
 			<description>Whether or not to use ajax. Defaults to true. Applies only when 'action' is specified.</description>
