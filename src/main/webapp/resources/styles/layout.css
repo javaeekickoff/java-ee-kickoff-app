@@ -77,12 +77,13 @@ body small {
 	font-weight: 300;
 }
 
-body i.fa {
-	width: 1.25em;
-	height: 1.25em;
-	font-size: 1.25em;
-	line-height: 1.25em;
+body i.pi {
+	width: 1em;
+	height: 1em;
+	font-size: 1em;
+	line-height: 1em;
 	text-align: center;
+	margin: .1875em;
 }
 
 body img {
