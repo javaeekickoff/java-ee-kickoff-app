@@ -129,6 +129,12 @@
 			<version>2.5.4</version>
 			<type>pom</type>
 			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>xml-apis</groupId>
+					<artifactId>xml-apis</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
