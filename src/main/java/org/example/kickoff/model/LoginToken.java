@@ -5,8 +5,6 @@ import static java.time.temporal.ChronoUnit.MONTHS;
 
 import java.time.Instant;
 
-import org.omnifaces.persistence.model.GeneratedIdEntity;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
@@ -14,6 +12,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+
+import org.omnifaces.persistence.model.GeneratedIdEntity;
 
 @Entity
 public class LoginToken extends GeneratedIdEntity<Long> {
@@ -46,17 +46,17 @@ public class LoginToken extends GeneratedIdEntity<Long> {
 	private @Size(max = DESCRIPTION_MAXLENGTH) String description;
 
 	@ManyToOne(optional = false)
-	private User user;
+	private Person person;
 
 	@Enumerated(STRING)
 	private TokenType type;
 
-	public User getUser() {
-		return user;
+	public Person getPerson() {
+		return person;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setPerson(Person person) {
+		this.person = person;
 	}
 
 	public byte[] getTokenHash() {

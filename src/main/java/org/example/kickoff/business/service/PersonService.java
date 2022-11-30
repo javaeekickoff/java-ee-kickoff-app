@@ -26,11 +26,11 @@ import org.example.kickoff.business.exception.InvalidUsernameException;
 import org.example.kickoff.model.Credentials;
 import org.example.kickoff.model.Group;
 import org.example.kickoff.model.LoginToken.TokenType;
-import org.example.kickoff.model.User;
+import org.example.kickoff.model.Person;
 import org.omnifaces.persistence.service.BaseEntityService;
 
 @Stateless
-public class UserService extends BaseEntityService<Long, User> {
+public class PersonService extends BaseEntityService<Long, Person> {
 
 	private static final long DEFAULT_PASSWORD_RESET_EXPIRATION_TIME_IN_MINUTES = TimeUnit.HOURS.toMinutes(1);
 
@@ -43,64 +43,64 @@ public class UserService extends BaseEntityService<Long, User> {
 	@Inject
 	private EmailService emailService;
 
-	public void register(User user, String password, Group... additionalGroups) {
-		if (findByEmail(user.getEmail()).isPresent()) {
+	public void register(Person person, String password, Group... additionalGroups) {
+		if (findByEmail(person.getEmail()).isPresent()) {
 			throw new DuplicateEntityException();
 		}
 
-		user.getGroups().add(USER);
-		user.getGroups().addAll(asList(additionalGroups));
-		persist(user);
-	    setPassword(user, password);
+		person.getGroups().add(USER);
+		person.getGroups().addAll(asList(additionalGroups));
+		persist(person);
+	    setPassword(person, password);
 	}
 
 	@Override
-	public User update(User user) {
-		User existingUser = manage(user);
+	public Person update(Person person) {
+		Person existingPerson = manage(person);
 
-		if (!user.getEmail().equals(existingUser.getEmail())) { // Email changed.
-			Optional<User> otherUser = findByEmail(user.getEmail());
+		if (!person.getEmail().equals(existingPerson.getEmail())) { // Email changed.
+			Optional<Person> otherPerson = findByEmail(person.getEmail());
 
-			if (otherUser.isPresent()) {
-				if (!user.equals(otherUser.get())) {
+			if (otherPerson.isPresent()) {
+				if (!person.equals(otherPerson.get())) {
 					throw new DuplicateEntityException();
 				}
 				else {
 					// Since email verification status can be updated asynchronous, the DB status is leading.
-					// Set the current user to whatever is already in the DB.
-					user.setEmailVerified(otherUser.get().isEmailVerified());
+					// Set the current person to whatever is already in the DB.
+					person.setEmailVerified(otherPerson.get().isEmailVerified());
 				}
 			}
 			else {
-				user.setEmailVerified(false);
+				person.setEmailVerified(false);
 			}
 		}
 
-		return super.update(user);
+		return super.update(person);
 	}
 
-	public void updatePassword(User user, String password) {
-		User existingUser = manage(user);
-		setPassword(existingUser, password);
-		super.update(existingUser);
+	public void updatePassword(Person person, String password) {
+		Person existingPerson = manage(person);
+		setPassword(existingPerson, password);
+		super.update(existingPerson);
 	}
 
 	public void updatePassword(String loginToken, String password) {
-		Optional<User> user = findByLoginToken(loginToken, TokenType.RESET_PASSWORD);
+		Optional<Person> person = findByLoginToken(loginToken, TokenType.RESET_PASSWORD);
 
-		if (user.isPresent()) {
-			updatePassword(user.get(), password);
+		if (person.isPresent()) {
+			updatePassword(person.get(), password);
 			loginTokenService.remove(loginToken);
 		}
 	}
 
 	public void requestResetPassword(String email, String ipAddress, String callbackUrlFormat) {
-		User user = findByEmail(email).orElseThrow(InvalidUsernameException::new);
+		Person person = findByEmail(email).orElseThrow(InvalidUsernameException::new);
 		ZonedDateTime expiration = ZonedDateTime.now().plusMinutes(DEFAULT_PASSWORD_RESET_EXPIRATION_TIME_IN_MINUTES);
 		String token = loginTokenService.generate(email, ipAddress, "Reset Password", TokenType.RESET_PASSWORD, expiration.toInstant());
 
 		EmailTemplate emailTemplate = new EmailTemplate("resetPassword")
-			.setToUser(new EmailUser(user))
+			.setToUser(new EmailUser(person))
 			.setCallToActionURL(String.format(callbackUrlFormat, token));
 
 		Map<String, Object> messageParameters = new HashMap<>();
@@ -110,46 +110,46 @@ public class UserService extends BaseEntityService<Long, User> {
 		emailService.sendTemplate(emailTemplate, messageParameters);
 	}
 
-	public Optional<User> findByEmail(String email) {
-		return getOptionalSingleResult(createNamedTypedQuery("User.getByEmail")
+	public Optional<Person> findByEmail(String email) {
+		return getOptionalSingleResult(createNamedTypedQuery("Person.getByEmail")
 			.setParameter("email", email));
 	}
 
-	public Optional<User> findByLoginToken(String loginToken, TokenType type) {
-		return getOptionalSingleResult(createNamedTypedQuery("User.getByLoginToken")
+	public Optional<Person> findByLoginToken(String loginToken, TokenType type) {
+		return getOptionalSingleResult(createNamedTypedQuery("Person.getByLoginToken")
 			.setParameter("tokenHash", digest(loginToken, "SHA-256"))
 			.setParameter("tokenType", type));
 	}
 
-	public User getByEmail(String email) {
+	public Person getByEmail(String email) {
 		return findByEmail(email).orElseThrow(InvalidUsernameException::new);
 	}
 
-	public User getByEmailAndPassword(String email, String password) {
-	    User user = getByEmail(email);
+	public Person getByEmailAndPassword(String email, String password) {
+	    Person person = getByEmail(email);
 
-	    if (!user.getCredentials().isValid(password)) {
+	    if (!person.getCredentials().isValid(password)) {
 	        throw new InvalidPasswordException();
 	    }
 
-	    return user;
+	    return person;
 	}
 
-	public User getByLoginToken(String loginToken, TokenType type) {
+	public Person getByLoginToken(String loginToken, TokenType type) {
 		return findByLoginToken(loginToken, type).orElseThrow(InvalidTokenException::new);
 	}
 
-	public User getActiveUser() {
+	public Person getActivePerson() {
 		return findByEmail(sessionContext.getCallerPrincipal().getName()).orElse(null);
 	}
 
-	public void setPassword(User user, String password) {
-		User managedUser = manage(user);
-		Credentials credentials = managedUser.getCredentials();
+	public void setPassword(Person person, String password) {
+		Person managedPerson = manage(person);
+		Credentials credentials = managedPerson.getCredentials();
 
 		if (credentials == null) {
 			credentials = new Credentials();
-			credentials.setUser(managedUser);
+			credentials.setPerson(managedPerson);
 		}
 
 		credentials.setPassword(password);

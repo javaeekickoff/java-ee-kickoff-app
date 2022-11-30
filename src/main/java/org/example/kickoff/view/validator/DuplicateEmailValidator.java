@@ -10,25 +10,25 @@ import jakarta.faces.validator.FacesValidator;
 import jakarta.faces.validator.ValidatorException;
 import jakarta.inject.Inject;
 
-import org.example.kickoff.business.service.UserService;
-import org.example.kickoff.model.User;
+import org.example.kickoff.business.service.PersonService;
+import org.example.kickoff.model.Person;
 import org.omnifaces.validator.ValueChangeValidator;
 
 @FacesValidator("duplicateEmailValidator")
-public class DuplicateEmailValidator extends ValueChangeValidator {
+public class DuplicateEmailValidator extends ValueChangeValidator<String> {
 
 	@Inject
-	private UserService userService;
+	private PersonService personService;
 
 	@Override
-	public void validateChangedObject(FacesContext context, UIComponent component, Object value) throws ValidatorException {
+	public void validateChangedObject(FacesContext context, UIComponent component, String value) throws ValidatorException {
 		if (value == null) {
 			return;
 		}
 
-		Optional<User> user = userService.findByEmail((String) value);
+		Optional<Person> optionalPerson = personService.findByEmail(value);
 
-		if (user.isPresent()) {
+		if (optionalPerson.isPresent()) {
 			throw new ValidatorException(createError("duplicateEmailValidator"));
 		}
 	}

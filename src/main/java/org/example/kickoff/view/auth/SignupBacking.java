@@ -13,8 +13,8 @@ import jakarta.security.enterprise.credential.CallerOnlyCredential;
 public class SignupBacking extends AuthBacking {
 
 	public void signup() throws IOException {
-		userService.register(user, password);
-		authenticate(withParams().credential(new CallerOnlyCredential(user.getEmail())));
+		personService.register(person, password);
+		authenticate(withParams().credential(new CallerOnlyCredential(person.getEmail())));
 	}
 
 }

@@ -7,14 +7,14 @@ import jakarta.faces.convert.ConverterException;
 import jakarta.faces.convert.FacesConverter;
 import jakarta.inject.Inject;
 
-import org.example.kickoff.business.service.UserService;
-import org.example.kickoff.model.User;
+import org.example.kickoff.business.service.PersonService;
+import org.example.kickoff.model.Person;
 
-@FacesConverter(forClass=User.class)
-public class UserConverter implements Converter {
+@FacesConverter(forClass=Person.class)
+public class PersonConverter implements Converter {
 
 	@Inject
-	private UserService userService;
+	private PersonService personService;
 
 	@Override
 	public String getAsString(FacesContext context, UIComponent component, Object modelValue) {
@@ -22,11 +22,11 @@ public class UserConverter implements Converter {
 			return "";
 		}
 
-		if (modelValue instanceof User) {
-			return ((User) modelValue).getId().toString();
+		if (modelValue instanceof Person) {
+			return ((Person) modelValue).getId().toString();
 		}
 		else {
-			throw new ConverterException(modelValue + " is not an User");
+			throw new ConverterException(modelValue + " is not a Person");
 		}
 	}
 
@@ -37,10 +37,10 @@ public class UserConverter implements Converter {
 		}
 
 		try {
-			return userService.getById(Long.valueOf(submittedValue));
+			return personService.getById(Long.valueOf(submittedValue));
 		}
 		catch (NumberFormatException e) {
-			throw new ConverterException(submittedValue + " is not a valid User ID", e);
+			throw new ConverterException(submittedValue + " is not a valid Person ID", e);
 		}
 	}
 

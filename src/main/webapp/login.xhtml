@@ -17,7 +17,7 @@
 				<br/>Test password: <code>passw0rd</code>
 			</k:dev>
 
-			<k:input id="email" type="email" value="#{loginBacking.user.email}">
+			<k:input id="email" type="email" value="#{loginBacking.person.email}">
 				<f:validator validatorId="emailVerifiedValidator" />
 			</k:input>
 			<k:input id="password" type="password" value="#{loginBacking.password}">
@@ -35,7 +35,7 @@
 				<o:outputFormat value="#{i18n['login.paragraph.signup']}" escape="false">
 					<o:param>
 						<k:link path="signup">
-							<f:param name="email" value="#{loginBacking.user.email}" disable="#{empty loginBacking.user.email}" />
+							<f:param name="email" value="#{loginBacking.person.email}" disable="#{empty loginBacking.person.email}" />
 						</k:link>
 					</o:param>
 				</o:outputFormat>

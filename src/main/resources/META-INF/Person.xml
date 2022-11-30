@@ -5,27 +5,27 @@
     xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence/orm https://jakarta.ee/xml/ns/persistence/orm/orm_3_1.xsd"
     version="3.1"
 >
-	<named-query name="User.getByEmail">
+	<named-query name="Person.getByEmail">
 		<query>
 			SELECT
-				_user
+				_person
 			FROM
-				User _user					
+				Person _person					
 			WHERE
-				_user.email = :email
+				_person.email = :email
 		</query>
 	</named-query>
 
-	<named-query name="User.getByLoginToken">
+	<named-query name="Person.getByLoginToken">
 		<query>
 			SELECT
-				_user
+				_person
 			FROM
-				User _user
+				Person _person
 					JOIN
-				_user.loginTokens _loginToken
+				_person.loginTokens _loginToken
 					JOIN FETCH
-				_user.loginTokens
+				_person.loginTokens
 			WHERE
 				_loginToken.tokenHash = :tokenHash AND
 				_loginToken.type = :tokenType AND

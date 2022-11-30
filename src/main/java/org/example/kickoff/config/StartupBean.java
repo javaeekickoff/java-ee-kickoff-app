@@ -11,8 +11,8 @@ import java.util.ResourceBundle;
 import jakarta.annotation.PostConstruct;
 import jakarta.inject.Inject;
 
-import org.example.kickoff.business.service.UserService;
-import org.example.kickoff.model.User;
+import org.example.kickoff.business.service.PersonService;
+import org.example.kickoff.model.Person;
 import org.omnifaces.cdi.Startup;
 import org.omnifaces.util.Messages;
 
@@ -20,29 +20,29 @@ import org.omnifaces.util.Messages;
 public class StartupBean {
 
 	@Inject
-	private UserService userService;
+	private PersonService personService;
 
 	@PostConstruct
 	public void init() {
-		setupTestUsers();
+		setupTestPersons();
 		configureMessageResolver();
 	}
 
-	private void setupTestUsers() {
-		if (!userService.findByEmail("admin@kickoff.example.org").isPresent()) {
-			User user = new User();
-			user.setFirstName("Test");
-			user.setLastName("Admin");
-			user.setEmail("admin@kickoff.example.org");
-			userService.register(user, "passw0rd", ADMIN);
+	private void setupTestPersons() {
+		if (!personService.findByEmail("admin@kickoff.example.org").isPresent()) {
+			Person person = new Person();
+			person.setFirstName("Test");
+			person.setLastName("Admin");
+			person.setEmail("admin@kickoff.example.org");
+			personService.register(person, "passw0rd", ADMIN);
 		}
 
-		if (!userService.findByEmail("user@kickoff.example.org").isPresent()) {
-			User user = new User();
-			user.setFirstName("Test");
-			user.setLastName("User");
-			user.setEmail("user@kickoff.example.org");
-			userService.register(user, "passw0rd");
+		if (!personService.findByEmail("user@kickoff.example.org").isPresent()) {
+			Person person = new Person();
+			person.setFirstName("Test");
+			person.setLastName("User");
+			person.setEmail("person@kickoff.example.org");
+			personService.register(person, "passw0rd");
 		}
 	}
 

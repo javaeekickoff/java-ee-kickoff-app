@@ -20,7 +20,7 @@ public class LoginBacking extends AuthBacking {
 
 	public void login() throws IOException {
 		authenticate(withParams()
-			.credential(new UsernamePasswordCredential(user.getEmail(), password))
+			.credential(new UsernamePasswordCredential(person.getEmail(), password))
 			.newAuthentication(!loginToContinue)
 			.rememberMe(rememberMe));
 	}

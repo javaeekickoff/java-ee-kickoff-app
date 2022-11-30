@@ -4,6 +4,7 @@ import static org.example.kickoff.model.LoginToken.TokenType.REMEMBER_ME;
 import static org.omnifaces.util.Servlets.getRemoteAddr;
 
 import java.util.Set;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.security.enterprise.CallerPrincipal;
@@ -13,7 +14,7 @@ import jakarta.security.enterprise.identitystore.RememberMeIdentityStore;
 import jakarta.servlet.http.HttpServletRequest;
 
 import org.example.kickoff.business.service.LoginTokenService;
-import org.example.kickoff.business.service.UserService;
+import org.example.kickoff.business.service.PersonService;
 
 @ApplicationScoped
 public class KickoffRememberMeIdentityStore implements RememberMeIdentityStore {
@@ -22,14 +23,14 @@ public class KickoffRememberMeIdentityStore implements RememberMeIdentityStore {
 	private HttpServletRequest request;
 
 	@Inject
-	private UserService userService;
+	private PersonService personService;
 
 	@Inject
 	private LoginTokenService loginTokenService;
 
 	@Override
 	public CredentialValidationResult validate(RememberMeCredential credential) {
-		return KickoffIdentityStore.validate(() -> userService.getByLoginToken(credential.getToken(), REMEMBER_ME));
+		return KickoffIdentityStore.validate(() -> personService.getByLoginToken(credential.getToken(), REMEMBER_ME));
 	}
 
 	@Override

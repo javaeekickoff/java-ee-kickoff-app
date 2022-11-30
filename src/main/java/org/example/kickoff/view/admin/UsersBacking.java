@@ -8,8 +8,8 @@ import jakarta.annotation.PostConstruct;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
-import org.example.kickoff.business.service.UserService;
-import org.example.kickoff.model.User;
+import org.example.kickoff.business.service.PersonService;
+import org.example.kickoff.model.Person;
 import org.omnifaces.cdi.ViewScoped;
 import org.omnifaces.optimusfaces.model.PagedDataModel;
 
@@ -19,23 +19,23 @@ public class UsersBacking implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private PagedDataModel<User> users;
+	private PagedDataModel<Person> model;
 
 	@Inject
-	private UserService userService;
+	private PersonService personService;
 
 	@PostConstruct
 	public void init() {
-		users = PagedDataModel.lazy(userService).build();
+		model = PagedDataModel.lazy(personService).build();
 	}
 
-	public void delete(User user) {
-		// userService.delete(user);
+	public void delete(Person person) {
+		// personService.delete(person);
 		addGlobalWarn("This is just a demo, we won't actually delete users for now.");
 	}
 
-	public PagedDataModel<User> getUsers() {
-		return users;
+	public PagedDataModel<Person> getModel() {
+		return model;
 	}
 
 }

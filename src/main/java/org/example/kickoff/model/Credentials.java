@@ -5,12 +5,12 @@ import static org.omnifaces.utils.security.MessageDigests.digest;
 import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
-import org.omnifaces.persistence.model.GeneratedIdEntity;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotNull;
+
+import org.omnifaces.persistence.model.GeneratedIdEntity;
 
 @Entity
 public class Credentials extends GeneratedIdEntity<Long> {
@@ -21,7 +21,7 @@ public class Credentials extends GeneratedIdEntity<Long> {
 	private static final int SALT_LENGTH = 40;
 
 	@ManyToOne(optional = false)
-	private @NotNull User user;
+	private @NotNull Person person;
 
 	@Column(length = HASH_LENGTH, nullable = false)
 	private @NotNull byte[] passwordHash;
@@ -29,9 +29,9 @@ public class Credentials extends GeneratedIdEntity<Long> {
 	@Column(length = SALT_LENGTH, nullable = false)
 	private @NotNull byte[] salt = new byte[SALT_LENGTH];
 
-	public void setUser(User user) {
-		user.setCredentials(this);
-		this.user = user;
+	public void setPerson(Person person) {
+		person.setCredentials(this);
+		this.person = person;
 	}
 
 	public void setPassword(String password) {

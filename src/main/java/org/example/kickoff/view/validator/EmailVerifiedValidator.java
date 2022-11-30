@@ -11,24 +11,24 @@ import jakarta.faces.validator.Validator;
 import jakarta.faces.validator.ValidatorException;
 import jakarta.inject.Inject;
 
-import org.example.kickoff.business.service.UserService;
-import org.example.kickoff.model.User;
+import org.example.kickoff.business.service.PersonService;
+import org.example.kickoff.model.Person;
 
 @FacesValidator("emailVerifiedValidator")
-public class EmailVerifiedValidator implements Validator {
+public class EmailVerifiedValidator implements Validator<String> {
 
 	@Inject
-	private UserService userService;
+	private PersonService personService;
 
 	@Override
-	public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
+	public void validate(FacesContext context, UIComponent component, String value) throws ValidatorException {
 		if (value == null) {
 			return;
 		}
 
-		Optional<User> user = userService.findByEmail((String) value);
+		Optional<Person> optionalPerson = personService.findByEmail(value);
 
-		if (user.isPresent() && !user.get().isEmailVerified()) {
+		if (optionalPerson.isPresent() && !optionalPerson.get().isEmailVerified()) {
 			throw new ValidatorException(createError("emailVerifiedValidator"));
 		}
 	}

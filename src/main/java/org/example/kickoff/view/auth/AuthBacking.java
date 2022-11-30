@@ -21,19 +21,19 @@ import jakarta.security.enterprise.SecurityContext;
 import jakarta.security.enterprise.authentication.mechanism.http.AuthenticationParameters;
 import jakarta.validation.constraints.NotNull;
 
-import org.example.kickoff.business.service.UserService;
-import org.example.kickoff.model.User;
+import org.example.kickoff.business.service.PersonService;
+import org.example.kickoff.model.Person;
 import org.example.kickoff.model.validator.Password;
 import org.example.kickoff.view.ActiveUser;
 
 public abstract class AuthBacking {
 
-	protected User user;
+	protected Person person;
 	protected @NotNull @Password String password;
 	protected boolean rememberMe;
 
 	@Inject
-	protected UserService userService;
+	protected PersonService personService;
 
 	@Inject
 	private SecurityContext securityContext;
@@ -48,7 +48,7 @@ public abstract class AuthBacking {
 			redirect("user/profile");
 		}
 		else {
-			user = new User();
+			person = new Person();
 		}
 	}
 
@@ -73,8 +73,8 @@ public abstract class AuthBacking {
 		}
 	}
 
-	public User getUser() {
-		return user;
+	public Person getPerson() {
+		return person;
 	}
 
 	public String getPassword() {

@@ -14,10 +14,10 @@
 		<o:importConstants type="org.example.kickoff.model.Group" />
 
 		<k:form id="editUserForm">
-			<k:input id="firstName" value="#{editUserBacking.user.firstName}" />
-			<k:input id="lastName" value="#{editUserBacking.user.lastName}" />
-			<k:input id="email" type="email" value="#{editUserBacking.user.email}" />
-			<k:input id="groups" type="checkboxes" value="#{editUserBacking.user.groups}" required="true">
+			<k:input id="firstName" value="#{editUserBacking.person.firstName}" />
+			<k:input id="lastName" value="#{editUserBacking.person.lastName}" />
+			<k:input id="email" type="email" value="#{editUserBacking.person.email}" />
+			<k:input id="groups" type="checkboxes" value="#{editUserBacking.person.groups}" required="true">
 				<f:selectItems value="#{Group}" />
 				<f:converter converterId="omnifaces.GenericEnumConverter" />
 				<f:attribute name="collectionType" value="java.util.HashSet" />

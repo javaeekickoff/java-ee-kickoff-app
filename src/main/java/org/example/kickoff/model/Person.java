@@ -12,9 +12,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.example.kickoff.model.validator.Email;
-import org.omnifaces.persistence.model.TimestampedEntity;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
@@ -25,8 +22,11 @@ import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import org.example.kickoff.model.validator.Email;
+import org.omnifaces.persistence.model.TimestampedEntity;
+
 @Entity
-public class User extends TimestampedEntity<Long> {
+public class Person extends TimestampedEntity<Long> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -50,10 +50,10 @@ public class User extends TimestampedEntity<Long> {
 	@Column(nullable = false)
 	private boolean emailVerified = true; // For now.
 
-	@OneToOne(mappedBy = "user", fetch = LAZY, cascade = ALL)
+	@OneToOne(mappedBy = "person", fetch = LAZY, cascade = ALL)
 	private Credentials credentials;
 
-	@OneToMany(mappedBy = "user", fetch = LAZY, cascade = ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "person", fetch = LAZY, cascade = ALL, orphanRemoval = true)
 	private List<LoginToken> loginTokens = new ArrayList<>();
 
 	@ElementCollection(fetch = EAGER)

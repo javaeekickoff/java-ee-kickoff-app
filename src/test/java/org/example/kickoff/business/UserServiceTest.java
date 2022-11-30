@@ -12,8 +12,8 @@ import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.dataset.xml.FlatXmlProducer;
 import org.example.kickoff.arquillian.ArquillianDBUnitTestBase;
 import org.example.kickoff.business.exception.CredentialsException;
-import org.example.kickoff.business.service.UserService;
-import org.example.kickoff.model.User;
+import org.example.kickoff.business.service.PersonService;
+import org.example.kickoff.model.Person;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
@@ -40,7 +40,7 @@ public class UserServiceTest extends ArquillianDBUnitTestBase {
 	}
 
 	@EJB
-	private UserService userService;
+	private PersonService personService;
 
 	@Override
 	protected String getLookupName() {
@@ -54,30 +54,30 @@ public class UserServiceTest extends ArquillianDBUnitTestBase {
 
 	@Test
 	public void testRegisterUser() {
-		User user = new User();
-		user.setEmail("test2@test.test");
-		user.setFirstName("test2");
-		user.setLastName("test");
+		Person person = new Person();
+		person.setEmail("test2@test.test");
+		person.setFirstName("test2");
+		person.setLastName("test");
 
-		userService.register(user, "TeSt");
+		personService.register(person, "TeSt");
 
-		assertNotNull(user.getCredentials());
-		assertNotNull(user.getId());
+		assertNotNull(person.getCredentials());
+		assertNotNull(person.getId());
 
-		User loggedInUser = userService.getByEmailAndPassword("test2@test.test", "TeSt");
+		Person loggedInUser = personService.getByEmailAndPassword("test2@test.test", "TeSt");
 
 		assertNotNull(loggedInUser);
-		assertEquals(user, loggedInUser);
+		assertEquals(person, loggedInUser);
 	}
 
 	@Test
 	public void testGetUserByCredentials() {
-		User user = userService.getByEmailAndPassword("test@test.test", "TeSt");
-		assertNotNull(user);
-		assertEquals("test@test.test", user.getEmail());
+		Person person = personService.getByEmailAndPassword("test@test.test", "TeSt");
+		assertNotNull(person);
+		assertEquals("test@test.test", person.getEmail());
 
 		try {
-			userService.getByEmailAndPassword("Test1", "wrong_password");
+			personService.getByEmailAndPassword("Test1", "wrong_password");
 			fail();
 		}
 		catch (CredentialsException e) {
@@ -85,7 +85,7 @@ public class UserServiceTest extends ArquillianDBUnitTestBase {
 		}
 
 		try {
-			userService.getByEmailAndPassword("non_existant_username", "password");
+			personService.getByEmailAndPassword("non_existant_username", "password");
 			fail();
 		}
 		catch (CredentialsException e) {
@@ -95,21 +95,21 @@ public class UserServiceTest extends ArquillianDBUnitTestBase {
 
 	@Test
 	public void testUpdatePassword() {
-		User user = userService.getByEmailAndPassword("test@test.test", "TeSt");
+		Person person = personService.getByEmailAndPassword("test@test.test", "TeSt");
 
-		userService.updatePassword(user, "TeSt2");
+		personService.updatePassword(person, "TeSt2");
 
 		try {
-			userService.getByEmailAndPassword("test@test.test", "TeSt");
+			personService.getByEmailAndPassword("test@test.test", "TeSt");
 			fail();
 		}
 		catch (Exception e) {
 			// Exception should be thrown here
 		}
 
-		User loggedInUser = userService.getByEmailAndPassword("test@test.test", "TeSt2");
+		Person loggedInUser = personService.getByEmailAndPassword("test@test.test", "TeSt2");
 		assertNotNull(loggedInUser);
-		assertEquals(user, loggedInUser);
+		assertEquals(person, loggedInUser);
 	}
 
 }

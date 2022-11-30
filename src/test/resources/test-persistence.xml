@@ -12,7 +12,7 @@
 		<jta-data-source>java:app/kickoff/TestDataSource</jta-data-source>
 
 		<mapping-file>META-INF/LoginToken.xml</mapping-file>
-		<mapping-file>META-INF/User.xml</mapping-file>
+		<mapping-file>META-INF/Person.xml</mapping-file>
 
 		<properties>
 			<property name="jakarta.persistence.schema-generation.database.action" value="drop-and-create" />

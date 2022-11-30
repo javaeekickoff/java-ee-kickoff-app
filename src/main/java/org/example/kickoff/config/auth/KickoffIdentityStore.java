@@ -13,52 +13,52 @@ import jakarta.security.enterprise.credential.UsernamePasswordCredential;
 import jakarta.security.enterprise.identitystore.CredentialValidationResult;
 import jakarta.security.enterprise.identitystore.IdentityStore;
 
+import org.example.kickoff.business.exception.CredentialsException;
 import org.example.kickoff.business.exception.EmailNotVerifiedException;
 import org.example.kickoff.business.exception.InvalidGroupException;
-import org.example.kickoff.business.exception.CredentialsException;
-import org.example.kickoff.business.service.UserService;
-import org.example.kickoff.model.User;
+import org.example.kickoff.business.service.PersonService;
+import org.example.kickoff.model.Person;
 
 @ApplicationScoped
 public class KickoffIdentityStore implements IdentityStore {
 
 	@Inject
-	private UserService userService;
+	private PersonService personService;
 
 	@Override
 	public CredentialValidationResult validate(Credential credential) {
-		Supplier<User> userSupplier = null;
+		Supplier<Person> personSupplier = null;
 
 		if (credential instanceof UsernamePasswordCredential) {
 			String email = ((UsernamePasswordCredential) credential).getCaller();
 			String password = ((UsernamePasswordCredential) credential).getPasswordAsString();
-			userSupplier = () -> userService.getByEmailAndPassword(email, password);
+			personSupplier = () -> personService.getByEmailAndPassword(email, password);
 		}
 		else if (credential instanceof CallerOnlyCredential) {
 			String email = ((CallerOnlyCredential) credential).getCaller();
-			userSupplier = () -> userService.getByEmail(email);
+			personSupplier = () -> personService.getByEmail(email);
 		}
 
-		return validate(userSupplier);
+		return validate(personSupplier);
 	}
 
-	static CredentialValidationResult validate(Supplier<User> userSupplier) {
-		if (userSupplier == null) {
+	static CredentialValidationResult validate(Supplier<Person> personSupplier) {
+		if (personSupplier == null) {
 			return NOT_VALIDATED_RESULT;
 		}
 
 		try {
-			User user = userSupplier.get();
+			Person person = personSupplier.get();
 
-			if (!user.getGroups().contains(USER)) {
+			if (!person.getGroups().contains(USER)) {
 				throw new InvalidGroupException();
 			}
 
-			if (!user.isEmailVerified()) {
+			if (!person.isEmailVerified()) {
 				throw new EmailNotVerifiedException();
 			}
 
-			return new CredentialValidationResult(new KickoffCallerPrincipal(user), user.getRolesAsStrings());
+			return new CredentialValidationResult(new KickoffCallerPrincipal(person), person.getRolesAsStrings());
 		}
 		catch (CredentialsException e) {
 			return INVALID_RESULT;

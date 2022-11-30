@@ -8,8 +8,8 @@ import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
-import org.example.kickoff.business.service.UserService;
-import org.example.kickoff.model.User;
+import org.example.kickoff.business.service.PersonService;
+import org.example.kickoff.model.Person;
 import org.omnifaces.cdi.Param;
 
 @Named
@@ -17,18 +17,18 @@ import org.omnifaces.cdi.Param;
 public class EditUserBacking {
 
 	@Inject @Param(name="id")
-	private User user;
+	private Person person;
 
 	@Inject
-	private UserService userService;
+	private PersonService personService;
 
 	public void save() throws IOException {
-		userService.update(user);
+		personService.update(person);
 		redirect("admin/users");
 	}
 
-	public User getUser() {
-		return user;
+	public Person getPerson() {
+		return person;
 	}
 
 }

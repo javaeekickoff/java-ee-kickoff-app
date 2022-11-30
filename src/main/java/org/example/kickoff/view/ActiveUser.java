@@ -11,8 +11,8 @@ import jakarta.security.enterprise.SecurityContext;
 
 import org.example.kickoff.config.auth.KickoffCallerPrincipal;
 import org.example.kickoff.model.Group;
+import org.example.kickoff.model.Person;
 import org.example.kickoff.model.Role;
-import org.example.kickoff.model.User;
 
 @Named
 @SessionScoped
@@ -24,16 +24,16 @@ public class ActiveUser implements Serializable {
 	private Map<String, Boolean> can = new ConcurrentHashMap<>();
 	private Map<String, Boolean> canView = new ConcurrentHashMap<>();
 
-	private User activeUser;
+	private Person activeUser;
 
 	@Inject
 	private SecurityContext securityContext;
 
-	public User get() { // For use in backing beans.
+	public Person get() { // For use in backing beans.
 		if (activeUser == null) {
 			activeUser = securityContext
 				.getPrincipalsByType(KickoffCallerPrincipal.class).stream()
-				.map(KickoffCallerPrincipal::getUser)
+				.map(KickoffCallerPrincipal::getPerson)
 				.findAny().orElse(null);
 		}
 

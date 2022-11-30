@@ -13,7 +13,7 @@ import jakarta.inject.Inject;
 import org.example.kickoff.business.exception.InvalidUsernameException;
 import org.example.kickoff.model.LoginToken;
 import org.example.kickoff.model.LoginToken.TokenType;
-import org.example.kickoff.model.User;
+import org.example.kickoff.model.Person;
 import org.omnifaces.persistence.service.BaseEntityService;
 
 @Stateless
@@ -22,7 +22,7 @@ public class LoginTokenService extends BaseEntityService<Long, LoginToken> {
 	private static final String MESSAGE_DIGEST_ALGORITHM = "SHA-256";
 
 	@Inject
-	private UserService userService;
+	private PersonService personService;
 
 	public String generate(String email, String ipAddress, String description, TokenType tokenType) {
 		Instant expiration = now().plus(14, DAYS);
@@ -31,7 +31,7 @@ public class LoginTokenService extends BaseEntityService<Long, LoginToken> {
 
 	public String generate(String email, String ipAddress, String description, TokenType tokenType, Instant expiration) {
 		String rawToken = randomUUID().toString();
-		User user = userService.findByEmail(email).orElseThrow(InvalidUsernameException::new);
+		Person person = personService.findByEmail(email).orElseThrow(InvalidUsernameException::new);
 
 		LoginToken loginToken = new LoginToken();
 		loginToken.setTokenHash(digest(rawToken, MESSAGE_DIGEST_ALGORITHM));
@@ -39,8 +39,8 @@ public class LoginTokenService extends BaseEntityService<Long, LoginToken> {
 		loginToken.setDescription(description);
 		loginToken.setType(tokenType);
 		loginToken.setIpAddress(ipAddress);
-		loginToken.setUser(user);
-		user.getLoginTokens().add(loginToken);
+		loginToken.setPerson(person);
+		person.getLoginTokens().add(loginToken);
 		return rawToken;
 	}
 

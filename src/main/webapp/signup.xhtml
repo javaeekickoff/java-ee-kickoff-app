@@ -12,9 +12,9 @@
 >
 	<ui:define name="content">
 		<k:form id="signupForm">
-			<k:input id="firstName" value="#{signupBacking.user.firstName}" />
-			<k:input id="lastName" value="#{signupBacking.user.lastName}" />
-			<k:input id="email" type="email" value="#{signupBacking.user.email}" autocomplete="false">
+			<k:input id="firstName" value="#{signupBacking.person.firstName}" />
+			<k:input id="lastName" value="#{signupBacking.person.lastName}" />
+			<k:input id="email" type="email" value="#{signupBacking.person.email}" autocomplete="false">
 				<f:validator validatorId="duplicateEmailValidator" />
 			</k:input>
 			<k:input id="password" type="password" value="#{signupBacking.password}" autocomplete="false" />

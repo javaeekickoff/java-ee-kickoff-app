@@ -15,10 +15,10 @@
 		<k:form id="userForm">
 			<h2>#{i18n['user_profile.header.account']}</h2>
 
-			<k:input id="firstName" value="#{profileBacking.user.firstName}" />
-			<k:input id="lastName" value="#{profileBacking.user.lastName}" />
-			<k:input id="email" value="#{profileBacking.user.email}" disabled="true" />
-			<k:input id="id" value="#{profileBacking.user.id}" disabled="true" />
+			<k:input id="firstName" value="#{profileBacking.person.firstName}" />
+			<k:input id="lastName" value="#{profileBacking.person.lastName}" />
+			<k:input id="email" value="#{profileBacking.person.email}" disabled="true" />
+			<k:input id="id" value="#{profileBacking.person.id}" disabled="true" />
 
 			<k:buttons>
 				<k:button id="save" action="#{profileBacking.save}" />

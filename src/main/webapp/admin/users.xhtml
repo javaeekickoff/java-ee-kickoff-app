@@ -13,7 +13,7 @@
 >
 	<ui:define name="content">
 		<k:form id="usersForm" fieldset="false">
-			<k:table id="usersTable" value="#{usersBacking.users}">
+			<k:table id="usersTable" value="#{usersBacking.model}">
 				<k:column field="id" type="number" />
 				<k:column field="email" />
 				<k:column field="emailVerified" type="boolean" visible="false" />
@@ -29,7 +29,7 @@
 						<f:param name="id" value="#{item.id}" />
 					</k:link>
 					<p:commandLink id="delete" rendered="#{item.id gt 1}"
-						onclick="if(!confirm('Are you sure to delete user with ID #{user.id}?'))return false" 
+						onclick="if(!confirm('Are you sure to delete user with ID #{item.id}?'))return false" 
 						action="#{usersBacking.delete(item)}" update="@form"><i class="fa fa-trash" />
 					</p:commandLink>
 				</p:column>
@@ -41,7 +41,7 @@
 <!-- 
 				<p:column headerText="Password">
 					<p:commandButton id="selectButton" value="Change password" update=":passwordForm:changePassword" oncomplete="passwordDialog.show()">  
-						<f:setPropertyActionListener value="#{user}" target="#{changePasswordBacking.user}" />  
+						<f:setPropertyActionListener value="#{item}" target="#{changePasswordBacking.person}" />  
 					</p:commandButton>
 				</p:column>
 
@@ -52,7 +52,7 @@
 				<h:messages id="messages" />
 				<h:panelGrid id="changePassword" columns="2">
 					<f:facet name="header">
-						Change password for user #{changePasswordBacking.user.email}
+						Change password for #{changePasswordBacking.person.email}
 					</f:facet>
 	
 					<o:outputLabel for="password" value="Password" /><h:inputSecret id="password" value="#{changePasswordBacking.newPassword}" required="true" />

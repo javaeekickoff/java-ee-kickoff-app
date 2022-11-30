@@ -16,7 +16,7 @@ import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
-import org.example.kickoff.business.service.UserService;
+import org.example.kickoff.business.service.PersonService;
 import org.omnifaces.cdi.Param;
 
 @Named
@@ -27,7 +27,7 @@ public class ResetPasswordBacking extends AuthBacking {
 	private String token;
 
 	@Inject
-	private UserService userService;
+	private PersonService personService;
 
 	@Inject
 	private Logger logger;
@@ -37,18 +37,18 @@ public class ResetPasswordBacking extends AuthBacking {
 	public void init() {
 		super.init();
 
-		if (token != null && !userService.findByLoginToken(token, RESET_PASSWORD).isPresent()) {
+		if (token != null && !personService.findByLoginToken(token, RESET_PASSWORD).isPresent()) {
 			addFlashGlobalWarn("reset_password.message.warn.invalid_token");
 			redirect("reset-password");
 		}
 	}
 
 	public void requestResetPassword() {
-		String email = user.getEmail();
+		String email = person.getEmail();
 		String ipAddress = getRemoteAddr();
 
 		try {
-			userService.requestResetPassword(email, ipAddress, getRequestURL() + "?token=%s");
+			personService.requestResetPassword(email, ipAddress, getRequestURL() + "?token=%s");
 		}
 		catch (Exception e) {
 			logger.warning(ipAddress + " made a failed attempt to reset password for email " + email + ": " + e);
@@ -58,7 +58,7 @@ public class ResetPasswordBacking extends AuthBacking {
 	}
 
 	public void saveNewPassword() throws IOException {
-		userService.updatePassword(token, password);
+		personService.updatePassword(token, password);
 		addFlashGlobalInfo("reset_password.message.info.password_changed");
 		redirect("user/profile");
 	}

@@ -2,7 +2,7 @@ package org.example.kickoff.business.email;
 
 import jakarta.mail.internet.InternetAddress;
 
-import org.example.kickoff.model.User;
+import org.example.kickoff.model.Person;
 
 public class EmailUser {
 
@@ -10,8 +10,8 @@ public class EmailUser {
 	private final String email;
 	private final String fullName;
 
-	public EmailUser(User user) {
-		this(user.getId(), user.getEmail(), user.getFullName());
+	public EmailUser(Person person) {
+		this(person.getId(), person.getEmail(), person.getFullName());
 	}
 
 	public EmailUser(String email, String fullName) {

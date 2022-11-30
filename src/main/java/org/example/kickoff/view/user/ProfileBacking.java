@@ -8,8 +8,8 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.validation.constraints.NotNull;
 
-import org.example.kickoff.business.service.UserService;
-import org.example.kickoff.model.User;
+import org.example.kickoff.business.service.PersonService;
+import org.example.kickoff.model.Person;
 import org.example.kickoff.model.validator.Password;
 import org.example.kickoff.view.ActiveUser;
 
@@ -17,7 +17,7 @@ import org.example.kickoff.view.ActiveUser;
 @RequestScoped
 public class ProfileBacking {
 
-	private User user;
+	private Person person;
 	private @NotNull @Password String currentPassword;
 	private @NotNull @Password String newPassword;
 
@@ -25,25 +25,25 @@ public class ProfileBacking {
 	private ActiveUser activeUser;
 
 	@Inject
-	private UserService userService;
+	private PersonService personService;
 
 	@PostConstruct
 	public void init() {
-		user = activeUser.get();
+		person = activeUser.get();
 	}
 
 	public void save() {
-		userService.update(user);
+		personService.update(person);
 		addGlobalInfo("user_profile.message.info.account_updated");
 	}
 
 	public void changePassword() {
-		userService.updatePassword(user, newPassword);
+		personService.updatePassword(person, newPassword);
 		addGlobalInfo("user_profile.message.info.password_changed");
 	}
 
-	public User getUser() {
-		return user;
+	public Person getPerson() {
+		return person;
 	}
 
 	public String getCurrentPassword() {
