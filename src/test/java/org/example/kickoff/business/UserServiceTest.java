@@ -4,8 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
-import jakarta.ejb.EJB;
-
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
@@ -24,6 +22,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.xml.sax.InputSource;
 
+import jakarta.ejb.EJB;
+
 @RunWith(Arquillian.class)
 public class UserServiceTest extends ArquillianDBUnitTestBase {
 
@@ -35,7 +35,7 @@ public class UserServiceTest extends ArquillianDBUnitTestBase {
 			.as(WebArchive.class)
 			.addAsWebInfResource("test-web.xml", "web.xml")
 			.addAsResource("test-persistence.xml", "META-INF/persistence.xml")
-			.addClass(ArquillianDBUnitTestBase.class)
+			.addClasses(ArquillianDBUnitTestBase.class)
 			.addAsResource("dbunit/UserServiceTest.xml");
 	}
 

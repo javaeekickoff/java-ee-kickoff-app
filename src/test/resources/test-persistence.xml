@@ -21,6 +21,14 @@
 			<property name="hibernate.show_sql" value="true" />
 			<property name="hibernate.cache.use_second_level_cache" value="false" />
 			<property name="hibernate.cache.use_query_cache" value="false" />
+            
+            <!-- 
+                Needed because org.example.kickoff.config.InstantConverter is used, and Hibernate does not seem to fully apply it.
+                Without this it will still think the SQL type is 3003 (org.hibernate.types.SqlTypes.TIMESTAMP_UTC) and therefor complain
+                when it's actually 93 (java.sql.Types.TIMESTAMP).
+             -->
+            <property name="hibernate.type.preferred_instant_jdbc_type" value="TIMESTAMP"/>
+            
 			<property name="wildfly.jpa.twophasebootstrap" value="false" /> <!-- https://issues.jboss.org/browse/WFLY-2727 -->
 			
 			<!-- EclipseLink specific options -->
@@ -28,6 +36,11 @@
 			<property name="eclipselink.logging.level.sql" value="FINEST" />
 			<property name="eclipselink.logging.level" value="FINEST" />
 			<property name="eclipselink.logging.level.cache" value="FINEST" />
+            <property name="eclipselink.deploy-on-startup" value="true" />
+            
+            
+            
+            
 		</properties>
 	</persistence-unit>
 </persistence>

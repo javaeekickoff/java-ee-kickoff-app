@@ -7,7 +7,14 @@
 	</comment>
 
 	<entry key="className">org.h2.jdbcx.JdbcDataSource</entry>
-	<entry key="url">jdbc:h2:mem:kickoff;DB_CLOSE_DELAY=-1</entry>
+    <!-- 
+            Legacy mode is required, since EclipseLink generates "CREATE TABLE PERSON (ID BIGINT IDENTITY NOT NULL, ...) which
+            H2 2.x now hates:
+            
+            org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "CREATE TABLE PERSON (ID BIGINT [*]IDENTITY NOT NULL
+        
+    -->
+	<entry key="url">jdbc:h2:mem:kickoff;DB_CLOSE_DELAY=-1;MODE=LEGACY</entry>
 	<entry key="user">sa</entry>
 	<entry key="password">sa</entry>
 </properties>

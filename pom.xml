@@ -22,8 +22,8 @@
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
 		
-		<test.wildfly.version>27.0.0.Final</test.wildfly.version>
-		<test.glassfish.version>7.0.0-M10</test.glassfish.version>
+		<test.wildfly.version>27.0.1.Final</test.wildfly.version>
+		<test.glassfish.version>7.0.0</test.glassfish.version>
 	</properties>
 
 	<dependencyManagement>
@@ -34,13 +34,6 @@
 				<groupId>org.jboss.arquillian</groupId>
 				<artifactId>arquillian-bom</artifactId>
 				<version>1.7.0.Alpha13</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.jboss.arquillian.extension</groupId>
-				<artifactId>arquillian-drone-bom</artifactId>
-				<version>3.0.0-alpha.6</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -105,7 +98,6 @@
 			<groupId>org.dbunit</groupId>
 			<artifactId>dbunit</artifactId>
 			<version>2.7.3</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.arquillian.junit</groupId>
@@ -113,33 +105,14 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.jboss.arquillian.extension</groupId>
-			<artifactId>arquillian-persistence-dbunit</artifactId>
-			<version>1.0.0.Alpha7</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.jboss.shrinkwrap.resolver</groupId>
 			<artifactId>shrinkwrap-resolver-impl-maven-archive</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.jboss.arquillian.graphene</groupId>
-			<artifactId>graphene-webdriver</artifactId>
-			<version>2.5.4</version>
-			<type>pom</type>
-			<scope>test</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>xml-apis</groupId>
-					<artifactId>xml-apis</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-api</artifactId>
-            <version>4.2.2</version>
+            <artifactId>selenium-java</artifactId>
+            <version>4.7.2</version>
         </dependency>
 		<dependency>
 			<groupId>com.google.guava</groupId>
@@ -180,7 +153,7 @@
                 <version>3.10.1</version>
                 <configuration>
                     <release>11</release>
-                    <compilerArgument>-Xlint:unchecked</compilerArgument>
+                    <compilerArgument>-proc:none</compilerArgument>
                 </configuration>
             </plugin>
             
@@ -216,7 +189,7 @@
             <dependencies>
                 <dependency>
                     <groupId>org.omnifaces.arquillian</groupId>
-                    <artifactId>glassfish-client-ee9</artifactId>
+                    <artifactId>glassfish-client-ee10</artifactId>
                     <version>1.2</version>
                 </dependency>
 
