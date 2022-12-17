@@ -3,10 +3,10 @@
 	This is a copy of web.xml with data source and several settings adjusted for UT and IT.
  -->
 <web-app
-    xmlns="https://jakarta.ee/xml/ns/jakartaee"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
-    version="6.0"
+	xmlns="https://jakarta.ee/xml/ns/jakartaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+	version="6.0"
 >
 	<display-name>Kickoff Example</display-name>
 
@@ -37,9 +37,14 @@
 		<param-name>jakarta.faces.SERIALIZE_SERVER_STATE</param-name>
 		<param-value>true</param-value>
 	</context-param>
+	 <context-param>
+		<param-name>jakarta.faces.FACELETS_LIBRARIES</param-name>
+		<param-value>/WEB-INF/kickoff.taglib.xml</param-value>
+	</context-param>
+	
 
 
-	<!-- Mojarra/RI specific settings. -->
+	<!-- Mojarra specific settings. -->
 
 	<context-param>
 		<param-name>com.sun.faces.defaultResourceMaxAge</param-name>
@@ -160,6 +165,9 @@
 		<exception-type>jakarta.faces.application.ViewExpiredException</exception-type>
 		<location>/WEB-INF/errorpages/expired.xhtml</location>
 	</error-page>
+
+
+	<!-- Resources -->
 
 	<data-source>
 		<name>java:app/kickoff/TestDataSource</name>
