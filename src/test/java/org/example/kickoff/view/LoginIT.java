@@ -23,12 +23,16 @@ public class LoginIT {
 
 	@Deployment(testable=false)
 	public static WebArchive createDeployment() {
-		return ShrinkWrap.create(MavenImporter.class)
+	    WebArchive webArchive = ShrinkWrap.create(MavenImporter.class)
 			.loadPomFromFile("pom.xml")
 			.importBuildOutput()
 			.as(WebArchive.class)
 			.addAsWebInfResource("test-web.xml", "web.xml")
 			.addAsResource("test-persistence.xml", "META-INF/persistence.xml");
+
+	    System.out.println(webArchive.toString(true));
+
+	    return webArchive;
 	}
 
 	private WebDriver browser = new ChromeDriver();
