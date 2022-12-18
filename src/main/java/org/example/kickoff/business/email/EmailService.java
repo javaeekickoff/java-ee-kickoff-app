@@ -34,7 +34,7 @@ public abstract class EmailService  {
 
 	@PostConstruct
 	public void init() {
-		defaultEmailUser = new EmailUser(fromEmail, "The Java EE Kickoff Team");
+		defaultEmailUser = new EmailUser(fromEmail, "The Jakarta EE Kickoff Team");
 	}
 
 	public void sendTemplate(EmailTemplate templateEmail) {
@@ -54,7 +54,7 @@ public abstract class EmailService  {
 			String email = fromUser.getEmail();
 
 			if (email != null && email.contains("@") && !ALLOWED_FROM_DOMAINS.contains(email.substring(email.indexOf("@") + 1))) {
-				templateEmail.setFromUser(new EmailUser(defaultEmailUser.getEmail(), fromUser.getFullName() + " via Java EE Kickoff App"));
+				templateEmail.setFromUser(new EmailUser(defaultEmailUser.getEmail(), fromUser.getFullName() + " via Jakarta EE Kickoff App"));
 				templateEmail.setReplyTo(fromUser.getEmail());
 			}
 		}

@@ -1,17 +1,20 @@
-[java-ee-kickoff-app](http://javaeekickoff.omnifaces.org/) [![Build Status](https://travis-ci.org/javaeekickoff/java-ee-kickoff-app.svg?branch=master)](https://travis-ci.org/javaeekickoff/java-ee-kickoff-app)
+Jakarta EE kickoff app
 ===================
 
-Basic project template to kickoff a new Java EE web application.
+Basic project template to kickoff a new Jakarta EE or Java EE web application.
 
 ## Usage
 
 Clone the branch matching your target environment into a new project. There are currently three branches available.
 
+- [Jakarta EE 10 with Faces 4.0](https://github.com/javaeekickoff/java-ee-kickoff-app/tree/master) (master)
 - [Java EE 8 with JSF 2.3](https://github.com/javaeekickoff/java-ee-kickoff-app/tree/javaee8-jsf23)
 - [Java EE 7 with JSF 2.3](https://github.com/javaeekickoff/java-ee-kickoff-app/tree/javaee7-jsf23)
 - [Java EE 7 with JSF 2.2](https://github.com/javaeekickoff/java-ee-kickoff-app/tree/javaee7-jsf22)
 
 Note: For usage on JBoss EAP 7 alpha/beta or WildFly 10rc4 and below, JASPIC needs to be activated before the application can be deployed. See also http://arjan-tijms.omnifaces.org/2015/08/activating-jaspic-in-jboss-wildfly.html
+
+Fow WildFly 25 and higher Jakarta Authentication (new name for JASPIC) once again needs to be activated before the application can be deployed (it's a recurring theme for WilfFly it seems). See also https://stackoverflow.com/a/70240973/472792
 
 ## Database
 

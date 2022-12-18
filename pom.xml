@@ -7,7 +7,7 @@
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>war</packaging>
 
-	<name>Java EE kickoff app</name>
+	<name>Jakarta EE kickoff app</name>
 	<url>https://github.com/javaeekickoff/java-ee-kickoff-app</url>
 
 	<scm>
