@@ -200,6 +200,8 @@
 
             <build>
                 <plugins>
+                    
+                    <!-- Download and install (unzip) GlassFish -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-dependency-plugin</artifactId>
@@ -227,6 +229,7 @@
                             </execution>
                         </executions>
                     </plugin>
+                    
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>
@@ -264,6 +267,7 @@
 		<profile>
 			<id>wildfly</id>
 			
+			<!-- The actual Arquillian connector -->
 			<dependencies>
 				<dependency>
 					<groupId>org.wildfly.arquillian</groupId>
@@ -272,8 +276,11 @@
 					<scope>test</scope>
 				</dependency>
 			</dependencies>
+			
 			<build>
 				<plugins>
+                    
+                    <!-- Download and install (unzip) WildFly -->
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-dependency-plugin</artifactId>
@@ -300,6 +307,35 @@
 							<outputDirectory>${project.build.directory}</outputDirectory>
 						</configuration>
 					</plugin>
+					
+					<!-- 
+					   Unfortunately, and against the spec, WildFly needs to have security explicitly enabled before it works. 
+					   This plug-in starts WF, activates security, then stops it again.
+					-->
+                    <plugin>
+                        <groupId>org.wildfly.plugins</groupId>
+                        <artifactId>wildfly-maven-plugin</artifactId>
+                        <version>4.0.0.Final</version>
+                        <executions>
+                            <execution>
+                                <id>wildfly-enable-security</id>
+                                <goals>
+                                    <goal>start</goal>
+                                    <goal>execute-commands</goal>
+                                    <goal>shutdown</goal>
+                                </goals>
+                                <phase>pre-integration-test</phase>
+                                <configuration>
+                                    <jbossHome>${project.build.directory}/wildfly-${test.wildfly.version}</jbossHome>
+                                    <commands>
+                                        <command>/subsystem=elytron/policy=jacc:add(jacc-policy={})</command>
+                                        <command>/subsystem=undertow/application-security-domain=other:write-attribute(name=integrated-jaspi, value=false)</command>
+                                    </commands>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+					
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-surefire-plugin</artifactId>
