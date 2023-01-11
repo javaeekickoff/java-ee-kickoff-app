@@ -1,47 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>org.example.kickoff</groupId>
-	<artifactId>java-ee-kickoff-app</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
-	<packaging>war</packaging>
+    <groupId>org.example.kickoff</groupId>
+    <artifactId>java-ee-kickoff-app</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>war</packaging>
 
-	<name>Jakarta EE kickoff app</name>
-	<url>https://github.com/javaeekickoff/java-ee-kickoff-app</url>
+    <name>Jakarta EE kickoff app</name>
+    <url>https://github.com/javaeekickoff/java-ee-kickoff-app</url>
 
-	<scm>
-		<url>https://github.com/javaeekickoff/java-ee-kickoff-app</url>
-		<connection>scm:git:git@github.com:javaeekickoff/java-ee-kickoff-app.git</connection>
-		<developerConnection>scm:git:git@github.com:javaeekickoff/java-ee-kickoff-app.git</developerConnection>
-	</scm>
+    <scm>
+        <url>https://github.com/javaeekickoff/java-ee-kickoff-app</url>
+        <connection>scm:git:git@github.com:javaeekickoff/java-ee-kickoff-app.git</connection>
+        <developerConnection>scm:git:git@github.com:javaeekickoff/java-ee-kickoff-app.git</developerConnection>
+    </scm>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<maven.compiler.source>11</maven.compiler.source>
-		<maven.compiler.target>11</maven.compiler.target>
-		
-		<test.wildfly.version>27.0.1.Final</test.wildfly.version>
-		<test.glassfish.version>7.0.0</test.glassfish.version>
-	</properties>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        
+        <test.wildfly.version>27.0.1.Final</test.wildfly.version>
+        <test.glassfish.version>7.0.0</test.glassfish.version>
+        <test.piranha.version>23.1.0-SNAPSHOT</test.piranha.version>
+    </properties>
 
-	<dependencyManagement>
-		<dependencies>
+    <dependencyManagement>
+        <dependencies>
 
-			<!-- Test dependencies.	-->
-			<dependency>
-				<groupId>org.jboss.arquillian</groupId>
-				<artifactId>arquillian-bom</artifactId>
-				<version>1.7.0.Alpha13</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
-	<dependencies>
+            <!-- Test dependencies.    -->
+            <dependency>
+                <groupId>org.jboss.arquillian</groupId>
+                <artifactId>arquillian-bom</artifactId>
+                <version>1.7.0.Alpha13</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    <dependencies>
 
-		<!-- Target Jakarta EE 10 server. -->
+        <!-- Target Jakarta EE 10 server. -->
         <dependency>
             <groupId>jakarta.platform</groupId>
             <artifactId>jakarta.jakartaee-api</artifactId>
@@ -49,78 +50,78 @@
             <scope>provided</scope>
         </dependency>
 
-		<!-- Runtime dependencies. -->
-		<dependency>
-			<groupId>org.omnifaces</groupId>
-			<artifactId>omnifaces</artifactId>
-			<version>4.0.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.omnifaces</groupId>
-			<artifactId>omnisettings</artifactId>
-			<version>0.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.omnifaces</groupId>
-			<artifactId>omniutils</artifactId>
-			<version>0.13</version>
-		</dependency>
-		<dependency>
-			<groupId>org.omnifaces</groupId>
-			<artifactId>omnipersistence</artifactId>
-			<version>0.20.J2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.omnifaces</groupId>
-			<artifactId>optimusfaces</artifactId>
-			<version>0.16.J1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.primefaces</groupId>
-			<artifactId>primefaces</artifactId>
-			<version>12.0.0</version>
-			<classifier>jakarta</classifier>
-		</dependency>
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<version>2.1.214</version>
-		</dependency>
+        <!-- Runtime dependencies. -->
+        <dependency>
+            <groupId>org.omnifaces</groupId>
+            <artifactId>omnifaces</artifactId>
+            <version>4.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.omnifaces</groupId>
+            <artifactId>omnisettings</artifactId>
+            <version>0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.omnifaces</groupId>
+            <artifactId>omniutils</artifactId>
+            <version>0.13</version>
+        </dependency>
+        <dependency>
+            <groupId>org.omnifaces</groupId>
+            <artifactId>omnipersistence</artifactId>
+            <version>0.20.J3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.omnifaces</groupId>
+            <artifactId>optimusfaces</artifactId>
+            <version>0.16.J1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.primefaces</groupId>
+            <artifactId>primefaces</artifactId>
+            <version>12.0.0</version>
+            <classifier>jakarta</classifier>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>2.1.214</version>
+        </dependency>
 
-		<!-- Test dependencies.	-->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.13.2</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.dbunit</groupId>
-			<artifactId>dbunit</artifactId>
-			<version>2.7.3</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jboss.arquillian.junit</groupId>
-			<artifactId>arquillian-junit-container</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jboss.shrinkwrap.resolver</groupId>
-			<artifactId>shrinkwrap-resolver-impl-maven-archive</artifactId>
-			<scope>test</scope>
-		</dependency>
+        <!-- Test dependencies.    -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.dbunit</groupId>
+            <artifactId>dbunit</artifactId>
+            <version>2.7.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.arquillian.junit</groupId>
+            <artifactId>arquillian-junit-container</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.shrinkwrap.resolver</groupId>
+            <artifactId>shrinkwrap-resolver-impl-maven-archive</artifactId>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
             <version>4.7.2</version>
             <scope>test</scope>
         </dependency>
-	</dependencies>
+    </dependencies>
 
-	<build>
-		<finalName>${project.artifactId}</finalName>
-		<plugins>
-		    <!-- Sets minimal Maven version -->
+    <build>
+        <finalName>${project.artifactId}</finalName>
+        <plugins>
+            <!-- Sets minimal Maven version -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
@@ -157,21 +158,21 @@
                 <version>3.3.2</version>
             </plugin>
             
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-archetype-plugin</artifactId>
-				<version>3.2.1</version>
-				<configuration>
-					<propertyFile>archetype.properties</propertyFile>
-					<archetypeFilteredExtensions>java,xml,xhtml</archetypeFilteredExtensions>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-archetype-plugin</artifactId>
+                <version>3.2.1</version>
+                <configuration>
+                    <propertyFile>archetype.properties</propertyFile>
+                    <archetypeFilteredExtensions>java,xml,xhtml</archetypeFilteredExtensions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
-	<profiles>
-	
-	   <profile>
+    <profiles>
+    
+       <profile>
             <id>glassfish</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
@@ -261,57 +262,137 @@
                 </plugins>
             </build>
         </profile>
-	
+        
+        
+        <!-- Piranha Cloud integration test profile: mvn verify -P piranha -->
+        <profile>
+            <id>piranha</id>
+            
+            <properties>
+                <piranha.version>${test.piranha.version}</piranha.version>
+                <piranha.offline>false</piranha.offline>
+            </properties>
+            
+            <!-- The actual Arquillian connector -->
+            <dependencies>
+                <dependency>
+                    <groupId>cloud.piranha.arquillian</groupId>
+                    <artifactId>piranha-arquillian-server</artifactId>
+                    <version>23.1.0-SNAPSHOT</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+            
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <version>3.0.0-M7</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <systemPropertyVariables>
+                                <piranha.offline>${piranha.offline}</piranha.offline>
+                            </systemPropertyVariables>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        
+        <profile>
+            <id>piranha-download</id>
+            <build>
+                <plugins>
+                    <!-- Download Piranha (for manual testing) -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>copy</id>
+                                <phase>process-test-classes</phase>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${session.executionRootDirectory}/target</outputDirectory>
+                                    <markersDirectory>${session.executionRootDirectory}/target/dependency-maven-plugin-markers</markersDirectory>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>cloud.piranha.micro.shrinkwrap</groupId>
+                                            <artifactId>piranha-micro-shrinkwrap</artifactId>
+                                            <version>23.1.0-SNAPSHOT</version>
+                                            
+                                            <overWrite>false</overWrite>
+                                            <outputDirectory>${session.executionRootDirectory}/target</outputDirectory>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    
 
-		<!-- WildFly integration test profile: mvn verify -P wildfly -->
-		<profile>
-			<id>wildfly</id>
-			
-			<!-- The actual Arquillian connector -->
-			<dependencies>
-				<dependency>
-					<groupId>org.wildfly.arquillian</groupId>
-					<artifactId>wildfly-arquillian-container-managed</artifactId>
-					<version>5.0.0.Alpha6</version>
-					<scope>test</scope>
-				</dependency>
-			</dependencies>
-			
-			<build>
-				<plugins>
+        <!-- WildFly integration test profile: mvn verify -P wildfly -->
+        <profile>
+            <id>wildfly</id>
+            
+            <!-- The actual Arquillian connector -->
+            <dependencies>
+                <dependency>
+                    <groupId>org.wildfly.arquillian</groupId>
+                    <artifactId>wildfly-arquillian-container-managed</artifactId>
+                    <version>5.0.0.Alpha6</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+            
+            <build>
+                <plugins>
                     
                     <!-- Download and install (unzip) WildFly -->
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-dependency-plugin</artifactId>
-						<version>3.3.0</version>
-						<executions>
-							<execution>
-								<phase>process-test-classes</phase>
-								<goals>
-									<goal>unpack</goal>
-								</goals>
-								<configuration>
-									<artifactItems>
-										<artifactItem>
-											<groupId>org.wildfly</groupId>
-											<artifactId>wildfly-dist</artifactId>
-											<version>${test.wildfly.version}</version>
-											<type>zip</type>
-										</artifactItem>
-									</artifactItems>
-								</configuration>
-							</execution>
-						</executions>
-						<configuration>
-							<outputDirectory>${project.build.directory}</outputDirectory>
-						</configuration>
-					</plugin>
-					
-					<!-- 
-					   Unfortunately, and against the spec, WildFly needs to have security explicitly enabled before it works. 
-					   This plug-in starts WF, activates security, then stops it again.
-					-->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <version>3.3.0</version>
+                        <executions>
+                            <execution>
+                                <phase>process-test-classes</phase>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.wildfly</groupId>
+                                            <artifactId>wildfly-dist</artifactId>
+                                            <version>${test.wildfly.version}</version>
+                                            <type>zip</type>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                        </configuration>
+                    </plugin>
+                    
+                    <!-- 
+                       Unfortunately, and against the spec, WildFly needs to have security explicitly enabled before it works. 
+                       This plug-in starts WF, activates security, then stops it again.
+                    -->
                     <plugin>
                         <groupId>org.wildfly.plugins</groupId>
                         <artifactId>wildfly-maven-plugin</artifactId>
@@ -335,37 +416,37 @@
                             </execution>
                         </executions>
                     </plugin>
-					
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-surefire-plugin</artifactId>
-						<version>3.0.0-M7</version>
-						<configuration>
-							<systemPropertyVariables>
-								<jboss.home>${project.build.directory}/wildfly-${test.wildfly.version}</jboss.home>
-							</systemPropertyVariables>
-						</configuration>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-failsafe-plugin</artifactId>
-						<version>3.0.0-M7</version>
-						<executions>
-							<execution>
-								<goals>
-									<goal>integration-test</goal>
-									<goal>verify</goal>
-								</goals>
-							</execution>
-						</executions>
-						<configuration>
-							<systemPropertyVariables>
-								<jboss.home>${project.build.directory}/wildfly-${test.wildfly.version}</jboss.home>
-							</systemPropertyVariables>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
+                    
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>3.0.0-M7</version>
+                        <configuration>
+                            <systemPropertyVariables>
+                                <jboss.home>${project.build.directory}/wildfly-${test.wildfly.version}</jboss.home>
+                            </systemPropertyVariables>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <version>3.0.0-M7</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <systemPropertyVariables>
+                                <jboss.home>${project.build.directory}/wildfly-${test.wildfly.version}</jboss.home>
+                            </systemPropertyVariables>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
