@@ -36,7 +36,6 @@
             
             <property name="eclipselink.logging.logger" value="ServerLogger"/>
             
-            <property name="eclipselink.logging.file" value="output.log" />
 			<property name="eclipselink.logging.level.sql" value="FINEST" />
             <property name="eclipselink.logging.parameters" value="true"/>
 			<property name="eclipselink.logging.level" value="FINEST" />
