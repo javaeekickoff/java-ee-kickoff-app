@@ -93,6 +93,10 @@
 
 	<!-- Filters. NOTE: ordering of filter-mapping matters! -->
 
+    <filter>
+        <filter-name>localeFilter</filter-name>
+        <filter-class>org.example.kickoff.view.filter.LocaleFilter</filter-class>
+    </filter>
  	<filter>
 		<filter-name>characterEncodingFilter</filter-name>
 		<filter-class>org.omnifaces.filter.CharacterEncodingFilter</filter-class>
