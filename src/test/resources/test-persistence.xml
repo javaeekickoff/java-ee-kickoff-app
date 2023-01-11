@@ -15,7 +15,7 @@
 		<mapping-file>META-INF/Person.xml</mapping-file>
 
 		<properties>
-			<property name="jakarta.persistence.schema-generation.database.action" value="drop-and-create" />
+			<property name="jakarta.persistence.schema-generation.database.action" value="create" />
 			
 			<!-- Hibernate specific options -->
 			<property name="hibernate.show_sql" value="true" />
@@ -33,7 +33,12 @@
 			
 			<!-- EclipseLink specific options -->
 			<property name="eclipselink.weaving" value="static" />
+            
+            <property name="eclipselink.logging.logger" value="ServerLogger"/>
+            
+            <property name="eclipselink.logging.file" value="output.log" />
 			<property name="eclipselink.logging.level.sql" value="FINEST" />
+            <property name="eclipselink.logging.parameters" value="true"/>
 			<property name="eclipselink.logging.level" value="FINEST" />
 			<property name="eclipselink.logging.level.cache" value="FINEST" />
             <property name="eclipselink.deploy-on-startup" value="true" />
